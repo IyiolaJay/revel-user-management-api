@@ -1,0 +1,31 @@
+###
+GET http://localhost:5500/
+
+###
+POST http://localhost:4500/api/v1/admin/createAdmin
+Content-Type: application/json
+
+{
+    "email" : "admin3@admin.com",
+    "name" : "admin name",
+    "password" : "hettheeeksnuutoncunc"
+}
+
+###
+POST http://localhost:4500/api/v1/admin/login
+Content-Type: application/json
+
+{
+    "email" : "superadmin@admin.com",
+    "password" : "admin001"
+}
+
+
+###
+POST http://localhost:4500/api/v1/admin/verifyToken
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgwNGZlYWYzLTI3N2YtNDczNi1iNWNkLWM5NTIzYTgxOTJmNyIsInR5cGUiOiJTVVBFUiBBRE1JTiIsInBlcm1pc3Npb25zIjpbIkFMTCJdLCJpYXQiOjE3Mjk0NDEzNDUsImV4cCI6MTcyOTQ0MjI0NX0.cuZ7mFUfru1QqAhHM8_8YCWsvEQZlWxa8a_2GrHiOEM
+
+{
+    "token" : "28628"
+}
