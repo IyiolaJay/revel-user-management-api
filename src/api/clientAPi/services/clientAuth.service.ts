@@ -1,5 +1,4 @@
 import httpStatus from "http-status";
-import { IAdmin, IAdminRepository } from "../../../interfaces/admin.interface";
 import ApiError from "../../../utilities/error.base";
 import SecurityHelperService from "../../../helpers/security";
 import {
@@ -7,52 +6,53 @@ import {
   ITokenData,
 } from "../../../interfaces/token.interface";
 import OtpRepository from "../../../repositories/otp.repository";
+import { IClient, IClientRepository } from "../../../interfaces/client.interface";
 
-export default class AdminAuthService {
-  private AdminRepository: IAdminRepository;
+export default class ClientAuthService {
+  private ClientRepository: IClientRepository;
   private securityHelperService: SecurityHelperService =
     new SecurityHelperService();
   private otpRepository: IOtpRepository;
 
-  constructor(adminRepository: IAdminRepository) {
-    this.AdminRepository = adminRepository;
+  constructor(clientRepository: IClientRepository) {
+    this.ClientRepository = clientRepository;
     this.otpRepository = new OtpRepository();
   }
 
   //
-  async CreateAdminAccount(admin: IAdmin) {
-    const checkAdmin = await this.AdminRepository.findOneByFilter({
-      email: { $regex: new RegExp(`^${admin.email}$`, "i") },
+  async CreateClientAccount(client: IClient) {
+    const checkClient = await this.ClientRepository.findOneByFilter({
+      email: { $regex: new RegExp(`^${client.email}$`, "i") },
     });
 
-    if (checkAdmin)
+    if (checkClient)
       throw new ApiError(
         httpStatus.CONFLICT,
         "Admin account exists with this email"
       );
 
-    await this.AdminRepository.create({
-      ...admin,
-      password: await this.securityHelperService.HashPassword(admin.password),
+    await this.ClientRepository.create({
+      ...client,
+      password: await this.securityHelperService.HashPassword(client.password),
     });
 
     return;
   }
 
   //
-  async LoginAdminAccount(admin: Partial<IAdmin>) {
-    const adminData = await this.AdminRepository.findOneByFilter({
-      email: { $regex: new RegExp(`^${admin.email}$`, "i") },
+  async LoginClientAccount(client: Partial<IClient>) {
+    const clientData = await this.ClientRepository.findOneByFilter({
+      email: { $regex: new RegExp(`^${client.email}$`, "i") },
     });
 
-    if (!adminData)
+    if (!clientData)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
 
     //
     if (
       !(await this.securityHelperService.ComparePassword(
-        admin.password!,
-        adminData.password
+        client.password!,
+        clientData.password
       ))
     )
       throw new ApiError(
@@ -61,7 +61,7 @@ export default class AdminAuthService {
       );
 
     const token = await this.otpRepository.create({
-      ownerId: adminData.adminId,
+      ownerId: clientData.establishmentId,
       otpToken: this.securityHelperService.generateOtp(),
     });
     console.log(token);
@@ -69,9 +69,9 @@ export default class AdminAuthService {
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
         {
-          id: adminData.adminId.toString(),
-          type: adminData.adminType,
-          permissions: adminData.permissionSet,
+          id: clientData.establishmentId.toString(),
+          type: clientData.clientType,
+          permissions: clientData.permissionSet,
         },
         "15m"
       ),

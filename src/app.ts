@@ -1,14 +1,14 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import morgan from "morgan";
-import AdminRoutes from "./api/adminApi/admin.api"
+import AdminApi from "./api/adminApi/admin.api"
 import { ErrorMiddleware } from "./middlewares/error.middleware";
-
+import ClientApi from "./api/clientAPi/client.api"
 class App {
   private app: Express;
   private apiPrefix : string = '/api/v1'; 
-  private adminRoutes : AdminRoutes = new AdminRoutes();
-
+  private adminApi : AdminApi = new AdminApi();
+  private clientApi : ClientApi = new ClientApi();
 
 
   constructor() {
@@ -38,7 +38,8 @@ class App {
 
 
     //
-    this.app.use(`${this.apiPrefix}/admin`, this.adminRoutes.getApp())
+    this.app.use(`${this.apiPrefix}/admin`, this.adminApi.getApp())
+    this.app.use(`${this.apiPrefix}/client`, this.clientApi.getApp())
   }
 
 
