@@ -179,7 +179,7 @@
     "@types/range-parser" "*"
     "@types/send" "*"
 
-"@types/express@^5.0.0":
+"@types/express@*", "@types/express@^5.0.0":
   version "5.0.0"
   resolved "https://registry.npmjs.org/@types/express/-/express-5.0.0.tgz"
   integrity sha512-DvZriSMehGHL1ZNLzi6MidnsDhUZM/x2pRdDIKdwbUNqqwHxMlRdkxtn6/EPKyqKpHqTl/4nRZsRNLpZxZRpPQ==
@@ -258,6 +258,19 @@
     "@types/http-errors" "*"
     "@types/node" "*"
     "@types/send" "*"
+
+"@types/swagger-jsdoc@^6.0.4":
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/@types/swagger-jsdoc/-/swagger-jsdoc-6.0.4.tgz#bb4f60f3a5f103818e022f2e29ff8935113fb83d"
+  integrity sha512-W+Xw5epcOZrF/AooUM/PccNMSAFOKWZA5dasNyMujTwsBkU74njSJBpvCCJhHAJ95XRMzQrrW844Btu0uoetwQ==
+
+"@types/swagger-ui-express@^4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@types/swagger-ui-express/-/swagger-ui-express-4.1.6.tgz#d0929e3fabac1a96a8a9c6c7ee8d42362c5cdf48"
+  integrity sha512-UVSiGYXa5IzdJJG3hrc86e8KdZWLYxyEsVoUI4iPXc7CO4VZ3AfNP8d/8+hrDRIqz+HAaSMtZSqAsF3Nq2X/Dg==
+  dependencies:
+    "@types/express" "*"
+    "@types/serve-static" "*"
 
 "@types/uuid@^10.0.0":
   version "10.0.0"
@@ -1487,6 +1500,7 @@ require-directory@^2.1.1:
     "@types/mongoose" "^5.11.97"
     "@types/morgan" "^1.9.9"
     "@types/node" "^22.7.5"
+    "@types/uuid" "^10.0.0"
     axios "^1.7.7"
     bcrypt "^5.1.1"
     config "^3.3.12"
@@ -1499,7 +1513,7 @@ require-directory@^2.1.1:
     jsonwebtoken "^9.0.2"
     mongoose "^8.7.2"
     morgan "^1.10.0"
-    revel-user-management "file:../../AppData/Local/Yarn/Cache/v6/npm-revel-user-management-1.0.0-6985029c-e804-4c80-92b2-344c269b532c-1729426879295/node_modules/revel-user-management"
+    revel-user-management "file:../../AppData/Local/Yarn/Cache/v6/npm-revel-user-management-1.0.0-3cac7591-8335-4f13-bbbc-640563718f84-1729500054576/node_modules/revel-user-management"
     swagger-jsdoc "^6.2.8"
     swagger-ui-express "^5.0.1"
     ts-node "^10.9.2"

@@ -4,6 +4,7 @@ import morgan from "morgan";
 import AdminApi from "./api/adminApi/admin.api"
 import { ErrorMiddleware } from "./middlewares/error.middleware";
 import ClientApi from "./api/clientAPi/client.api"
+import SwaggerService from "./docs/swagger";
 class App {
   private app: Express;
   private apiPrefix : string = '/api/v1'; 
@@ -23,6 +24,10 @@ class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cors());
     this.app.use(morgan("combined"));
+    
+    //
+    const swaggerService = new SwaggerService(this.app);
+    swaggerService.init();
   }
 
   //
