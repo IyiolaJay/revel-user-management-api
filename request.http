@@ -24,8 +24,21 @@ Content-Type: application/json
 ###
 POST http://localhost:4500/api/v1/admin/verifyToken
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgwNGZlYWYzLTI3N2YtNDczNi1iNWNkLWM5NTIzYTgxOTJmNyIsInR5cGUiOiJTVVBFUiBBRE1JTiIsInBlcm1pc3Npb25zIjpbIkFMTCJdLCJpYXQiOjE3Mjk0NDEzNDUsImV4cCI6MTcyOTQ0MjI0NX0.cuZ7mFUfru1QqAhHM8_8YCWsvEQZlWxa8a_2GrHiOEM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJmZDA4ZTNlLTRmZDMtNDQwZi1hZDJmLTMxZGQ1YzQ4ZGU5YiIsInR5cGUiOiJTVVBFUiBBRE1JTiIsInBlcm1pc3Npb25zIjpbIkFMTCJdLCJpYXQiOjE3Mjk2MTQyNTgsImV4cCI6MTcyOTYxNTE1OH0.nMS2JDaBHnmjWU4VtU4hrsT1pWdqJGTbdD7kkM6CeL0
 
 {
-    "token" : "28628"
+    "token" : "83136"
+}
+
+
+
+#########
+POST http://localhost:4500/api/v1/client/createAccount
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJmZDA4ZTNlLTRmZDMtNDQwZi1hZDJmLTMxZGQ1YzQ4ZGU5YiIsInR5cGUiOiJTVVBFUiBBRE1JTiIsInBlcm1pc3Npb25zIjpbIkFMTCJdLCJpYXQiOjE3Mjk2MTQyOTUsImV4cCI6MTcyOTcwMDY5NX0.VB8i-pSW3KzVcAVqeSkz8OSemT6SCD270pCxmb4YSF8
+
+{
+    "email" : "m4tech@m4tech.com",
+    "name" : "M4 Tech",
+    "password" : "hettheeeksnuutoncunc"
 }

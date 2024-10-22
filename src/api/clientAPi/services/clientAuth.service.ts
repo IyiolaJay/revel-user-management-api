@@ -28,7 +28,7 @@ export default class ClientAuthService {
     if (checkClient)
       throw new ApiError(
         httpStatus.CONFLICT,
-        "Admin account exists with this email"
+        "Client account exists with this email"
       );
 
     await this.ClientRepository.create({
