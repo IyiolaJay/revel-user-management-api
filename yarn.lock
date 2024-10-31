@@ -239,7 +239,7 @@
 
 "@types/nodemailer@^6.4.16":
   version "6.4.16"
-  resolved "https://registry.npmjs.org/@types/nodemailer/-/nodemailer-6.4.16.tgz"
+  resolved "https://registry.yarnpkg.com/@types/nodemailer/-/nodemailer-6.4.16.tgz#db006abcb1e1c8e6ea2fb53b27fefec3c03eaa6c"
   integrity sha512-uz6hN6Pp0upXMcilM61CoKyjT7sskBoOWpptkjjJp8jIMlTdc3xG01U7proKkXzruMS4hS0zqtHNkNPFB20rKQ==
   dependencies:
     "@types/node" "*"
@@ -1578,7 +1578,7 @@ require-directory@^2.1.1:
     mongoose "^8.7.2"
     morgan "^1.10.0"
     nodemailer "^6.9.16"
-    revel-user-management "file:../../AppData/Local/Yarn/Cache/v6/npm-revel-user-management-1.0.0-0cc72f85-7ab4-4aa7-b20a-ece5893342eb-1730373155368/node_modules/revel-user-management"
+    revel-user-management "file:../../AppData/Local/Yarn/Cache/v6/npm-revel-user-management-1.0.0-f05a5c28-9af1-4725-aab7-bbccb51e0ad2-1730384679705/node_modules/revel-user-management"
     swagger-jsdoc "^6.2.8"
     swagger-ui-express "^5.0.1"
     ts-node "^10.9.2"
