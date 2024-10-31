@@ -4,8 +4,7 @@ import clientValidator from "../validators/clientAuth.validators";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
 import ClientAuthController from "../controllers/clientAuth.controller";
-import PermissionValidation from "../../../middlewares/permission.middleware";
-import { Permissions } from "../../../utilities/enums/permissions.enum";
+
 
 export default class ClientAuthRoutes extends BaseRoute{
   constructor() {
@@ -17,13 +16,6 @@ export default class ClientAuthRoutes extends BaseRoute{
     const clientAuthController :  ClientAuthController = new ClientAuthController();
     const authenticationMiddleware :  AuthenticationMiddleware = new AuthenticationMiddleware();
     
-    this.router.post(
-      "/createAccount",
-      RequestValidator.validateRequestSchema(clientValidator.createClient),
-      authenticationMiddleware.AuthorizeUser,
-      PermissionValidation.PermissionMiddleware([Permissions.CREATE_CLIENT]),
-      clientAuthController.ClientAccountCreationController
-    );
 
     this.router.post(
       "/login",
@@ -36,6 +28,14 @@ export default class ClientAuthRoutes extends BaseRoute{
       authenticationMiddleware.AuthorizeUser,
       RequestValidator.validateRequestSchema(clientValidator.verifyToken),
       clientAuthController.VerifyTokenController
+    )
+    
+    //
+    this.router.patch(
+      "/changePassword",
+      RequestValidator.validateRequestSchema(clientValidator.changePassword),
+      RequestValidator.validateRequestSchema(clientValidator.changePasswordQuery, "query"),
+      clientAuthController.ChangePasswordController
     )
 
     // Add other routes here...

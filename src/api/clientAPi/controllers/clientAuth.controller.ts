@@ -14,16 +14,6 @@ export default class ClientAuthController extends BaseController{
         this.ClientService = new ClientAuthService(new ClientRepository());
     }
 
-    ClientAccountCreationController = this.wrapAsync(
-        async (req: Request, res: Response, _: NextFunction) => {
-            await this.ClientService.CreateClientAccount(req.body as IClient)
-            this.sendResponse(res, httpStatus.NO_CONTENT, {
-                success: true,
-                message: "Client account created",
-                data: null,
-              });
-        }
-    )
 
     ClientAccountLoginController = this.wrapAsync(
         async (req: Request, res: Response, _: NextFunction) => {
@@ -45,6 +35,20 @@ export default class ClientAuthController extends BaseController{
                 success: true,
                 message: "Token verified",
                 data: apiToken,
+              });
+        }
+    )
+
+
+    ChangePasswordController = this.wrapAsync(
+        async (req: Request, res: Response, _: NextFunction) => {
+            const {userId} = req.query;
+            const {password} = req.body
+            await this.ClientService.ChangePassword(userId as string, password)
+            this.sendResponse(res, httpStatus.OK, {
+                success: true,
+                message: "Password changed, please login again",
+                data: null,
               });
         }
     )

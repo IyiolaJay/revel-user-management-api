@@ -3,12 +3,13 @@ import IGenericRepository from "./generic.repository.interface";
 
 export interface IClient {
   _id?: Schema.Types.ObjectId;
-  establishmentId: Schema.Types.UUID;
+  clientId :Schema.Types.UUID;
+  establishmentId: string;
+  establishmentUrl: string;
   email: string;
   name: string;
-  businessName: string;
-  url: string;
   password : string;
+  isGeneratedPassword : boolean,
   clientType : string;
   permissionSet : string[];
 }

@@ -1,15 +1,23 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { ClientType } from "../../utilities/enums/enum";
-import { v4 as uuidV4 } from "uuid";
 import { IClient } from "../../interfaces/client.interface";
+import { v4 as uuidV4} from "uuid";
 
 const clientSchema = new Schema<IClient>(
   {
-    establishmentId: {
-      type: Schema.Types.UUID,
+    clientId: {
+      type: String,
       required: true,
-      unique: true,
-      default: () => uuidV4(),
+      unique : true,
+      default : () => uuidV4(),
+    },
+    establishmentId: {
+      type: String,
+      required: true,
+    },
+    establishmentUrl: {
+      type: String,
+      required: true,
     },
     email: {
       type: String,
@@ -25,11 +33,16 @@ const clientSchema = new Schema<IClient>(
       required: true,
       minlength: 8,
     },
+    isGeneratedPassword: {
+      type: Boolean,
+      required: true,
+      default : false
+    },
     clientType: {
       type: String,
       required: true,
-      enum: Object.values(ClientType),
-      default: ClientType.CLIENT_USER,
+      enum: Object.keys(ClientType),
+      default: "CLIENT_USER",
     },
     permissionSet: {
       type: [String],

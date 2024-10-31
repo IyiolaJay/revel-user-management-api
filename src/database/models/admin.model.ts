@@ -3,6 +3,7 @@ import { IAdmin } from "../../interfaces/admin.interface";
 import { AdminType } from "../../utilities/enums/enum";
 import { v4 as uuidV4 } from "uuid";
 
+
 const adminSchema = new Schema<IAdmin>(
   {
     adminId: {
@@ -23,13 +24,17 @@ const adminSchema = new Schema<IAdmin>(
     password: {
       type: String,
       required: true,
-      minlength: 8,
+    },
+    isGeneratedPassword: {
+      type: Boolean,
+      required: true,
+      default : false
     },
     adminType: {
       type: String,
       required: true,
-      enum: Object.values(AdminType),
-      default: AdminType.REGULAR_ADMIN,
+      enum: Object.keys(AdminType),
+      default: "REGULAR_ADMIN",
     },
     permissionSet: {
       type: [String],
@@ -51,6 +56,9 @@ const adminSchema = new Schema<IAdmin>(
     },
   }
 );
+
+
+
 
 const Admin: Model<IAdmin> = mongoose.model("admins", adminSchema);
 

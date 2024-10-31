@@ -3,7 +3,7 @@ import IGenericRepository from "./generic.repository.interface";
 
 export interface ITokenData {
     id: string;
-    type : string;
+    role : string;
     permissions : string[] 
   }
   

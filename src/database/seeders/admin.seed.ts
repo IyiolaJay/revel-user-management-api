@@ -1,23 +1,23 @@
 import SecurityHelperService from "../../helpers/security";
-import { AdminType } from "../../utilities/enums/enum";
 import Admin from "../models/admin.model";
 import config from "config";
 
 export const createSuperAdmin = async () => {
   try {
     const existingAdmin = await Admin.findOne({
-      email: "superadmin@admin.com",
+      email: "superadmin@yopmail.com",
     });
 
     if (!existingAdmin) {
       const adminPassword = config.get("SUPER_ADMIN_PASSWORD");
       const superAdmin = new Admin({
-        email: "superadmin@admin.com",
+        email: "superadmin@yopmail.com",
         name: "Super Admin",
+        isGeneratedPassword : false,
         password: await new SecurityHelperService().HashPassword(
           adminPassword as string
-        ), // Replace with a hashed password if necessary
-        adminType: AdminType.SUPER_ADMIN,
+        ),
+        adminType: "SUPER_ADMIN",
         permissionSet: ["ALL"],
       });
 
@@ -28,5 +28,6 @@ export const createSuperAdmin = async () => {
     }
   } catch (error) {
     console.log("Error creating Super Admin:", error);
+    process.exit();
   }
 };

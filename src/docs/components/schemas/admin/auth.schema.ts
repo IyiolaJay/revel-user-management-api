@@ -13,8 +13,10 @@
  *                type: string
  *             name:
  *                type: string
- *             password:
- *                type: string
+ *             permissionSet:
+ *                type: array
+ *                items:
+ *                  type: string
  */
 
 /**
@@ -44,5 +46,38 @@
  *             - token:
  *          properties:
  *             token:
+ *                type: string
+ */
+
+/**
+ * @openapi
+ * components:
+ *    schemas:
+ *       ChangePassword:
+ *          type: object
+ *          required:
+ *             - password:
+ *          properties:
+ *             password:
+ *                type: string
+ */
+
+/**
+ * @openapi
+ * components:
+ *    schemas:
+ *       ClientCreation:
+ *          type: object
+ *          required:
+ *             - email:
+ *             - name:
+ *          properties:
+ *             email:
+ *                type: string
+ *             name:
+ *                type: string
+ *             establishmentId:
+ *                type: string
+ *             establishmentUrl:
  *                type: string
  */

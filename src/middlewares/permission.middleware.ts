@@ -33,7 +33,6 @@ export default class PermissionValidation {
   public static PermissionMiddleware = (permissions : Permissions[]) => (_ : Request, res : Response, next : NextFunction)=>{
     const userPermisions : ITokenData = res?.locals?.user;
 
-    console.log(userPermisions);
     const hasPermission = PermissionValidation.checkUserPermission(permissions, userPermisions.permissions ?? []);
     if(!hasPermission){
         throw new ApiError(

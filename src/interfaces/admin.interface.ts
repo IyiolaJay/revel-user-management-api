@@ -7,6 +7,7 @@ export interface IAdmin {
   email: string;
   name: string;
   password: string;
+  isGeneratedPassword : boolean,
   adminType: string;
   permissionSet: string[];
 }

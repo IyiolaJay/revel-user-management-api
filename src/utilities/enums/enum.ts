@@ -8,3 +8,17 @@ export enum ClientType{
     CLIENT_ADMIN = "CLIENT ADMIN",
     CLIENT_USER = "CLIENT USER"
 }
+
+export enum Currency{
+    GHS = "GHANA CEDIS",
+    USD = "US DOLLARS",
+    EUR = "EURO",
+    GBP =  "GREAT BRITAIN POUNDS"
+}
+
+
+export enum EmailType{
+    VerifyEmail = "verify",
+    CredentialsEmail = "credentials",
+    ResetEmail = "reset"
+}

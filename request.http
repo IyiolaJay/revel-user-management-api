@@ -30,6 +30,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJmZDA4ZTNlL
     "token" : "83136"
 }
 
+###
+GET http://localhost:4500/api/v1/admin/permissions
+
+
 
 
 #########

@@ -1,67 +1,63 @@
-// import mongoose, { Model, Schema } from "mongoose";
-// import { IUser } from "./_interfaces/user.interface";
+import mongoose, { Model, Schema } from "mongoose";
+import { IService } from "../../interfaces/service.interface";
+import {v4 as uuidV4} from "uuid";
+import { Currency } from "../../utilities/enums/enum";
 
-// const userSchema = new Schema<IUser>(
-//   {
-//     email: {
-//       type: String,
-//     },
-//     phoneNumber: {
-//       type: String,
-//     },
-//     fullName: {
-//       type: String,
-//       default: null,
-//     },
-//     username : {
-//       type : String,
-//       unique : true,
-//       default : " ",
-//       required : true
-//     },
-//     password: {
-//       type: String,
-//       minlength: 8,
-//       default: null,
-//     },
-//     avatarUrl: String,
-//     dateOfBirth: { type: Date },
-//     bio : {
-//       type : String,
-//       maxlength : 100,
-//       default : ""
-//     },
-//     isVerified: {
-//       type: Boolean,
-//       default: false,
-//       required: true,
-//     },
-//     createdAt: {
-//       type: Date,
-//       default: Date.now,
-//     },
-//   },
-//   {
-//     timestamps: true,
-//     versionKey: false,
-//     id: true,
-//     toJSON: {
-//       virtuals: true,
-//       transform: (_, ret) => {
-//         delete ret._id;
-//         delete ret.password;
-//         return ret;
-//       },
-//     },
-//   }
-// );
+const serviceSchema = new Schema<IService>(
+  {
+    serviceId: {
+      type: Schema.Types.UUID,
+      required : true,
+      default : () => uuidV4(),
+      unique : true,
+    },
+    serviceTypeName: {
+      type: String,
+      required : true,
+      unique : true,
+    },
+    serviceDescription: {
+      type: String,
+      default : " "
+    },
+    serviceCost : {
+      type : Number,
+      required : true,
+      default : 0.0
+    },
+    serviceCostCurrency:{
+        type : String,
+        required : true,
+        enum : Object.keys(Currency),
+        default : Currency.USD
+    },
+    serviceTenureType:{
+        type : String,
+        required : true,
+        default : "MONTH"
+    },
+    minimumTenureDuration:{
+        type : Number,
+        required : true,
+        default : 1,
+    },
+    
+},
+  {
+    timestamps: true,
+    versionKey: false,
+    id: true,
+    toJSON: {
+      virtuals: true,
+      transform: (_, ret) => {
+        delete ret._id;
+        return ret;
+      },
+    },
+  }
+);
 
 
-// userSchema.index(
-//   { createdAt: 1 },
-//   { expireAfterSeconds: 1000, partialFilterExpression: { password: null } }
-// );
+const Service: Model<IService> = mongoose.model("services", serviceSchema);
 
-// const User: Model<IUser> = mongoose.model("users", userSchema);
-
-// export default User;
+export default Service;

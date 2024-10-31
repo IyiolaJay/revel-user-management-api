@@ -7,39 +7,29 @@ import {
 } from "../../../interfaces/token.interface";
 import OtpRepository from "../../../repositories/otp.repository";
 import { IClient, IClientRepository } from "../../../interfaces/client.interface";
+import EmailService from "../../../email/emailer";
+import { EmailType } from "../../../utilities/enums/enum";
 
 export default class ClientAuthService {
   private ClientRepository: IClientRepository;
   private securityHelperService: SecurityHelperService =
     new SecurityHelperService();
   private otpRepository: IOtpRepository;
+  private emailService = new EmailService();
+
 
   constructor(clientRepository: IClientRepository) {
     this.ClientRepository = clientRepository;
     this.otpRepository = new OtpRepository();
+    
   }
 
-  //
-  async CreateClientAccount(client: IClient) {
-    const checkClient = await this.ClientRepository.findOneByFilter({
-      email: { $regex: new RegExp(`^${client.email}$`, "i") },
-    });
 
-    if (checkClient)
-      throw new ApiError(
-        httpStatus.CONFLICT,
-        "Client account exists with this email"
-      );
-
-    await this.ClientRepository.create({
-      ...client,
-      password: await this.securityHelperService.HashPassword(client.password),
-    });
-
-    return;
-  }
-
-  //
+  /**
+   * 
+   * @param client 
+   * @returns 
+   */
   async LoginClientAccount(client: Partial<IClient>) {
     const clientData = await this.ClientRepository.findOneByFilter({
       email: { $regex: new RegExp(`^${client.email}$`, "i") },
@@ -48,6 +38,13 @@ export default class ClientAuthService {
     if (!clientData)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
 
+        //check if password is system generated
+    if(clientData.isGeneratedPassword === true){
+          throw new ApiError(
+            httpStatus.NOT_ACCEPTABLE,
+            "You are using a system generated password, please change your password. Thanks"
+          )
+        }
     //
     if (
       !(await this.securityHelperService.ComparePassword(
@@ -61,16 +58,25 @@ export default class ClientAuthService {
       );
 
     const token = await this.otpRepository.create({
-      ownerId: clientData.establishmentId,
+      ownerId: clientData.clientId,
       otpToken: this.securityHelperService.generateOtp(),
     });
-    console.log(token);
+
+    this.emailService.SendEMailToUser(
+      {
+        to : clientData.email,
+        bodyParts : {
+          otp : token.otpToken
+        }
+      },
+      EmailType.VerifyEmail
+    )
 
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
         {
           id: clientData.establishmentId.toString(),
-          type: clientData.clientType,
+          role: clientData.clientType,
           permissions: clientData.permissionSet,
         },
         "15m"
@@ -78,7 +84,12 @@ export default class ClientAuthService {
     };
   }
 
-  //
+  /**
+   * 
+   * @param token 
+   * @param owner 
+   * @returns 
+   */
   async VerifyToken(token: string, owner: ITokenData) {
     const isValidToken = await this.otpRepository.findOneByFilter({
       otpToken: token,
@@ -94,11 +105,29 @@ export default class ClientAuthService {
       accessToken: await this.securityHelperService.GenerateJWT(
         {
           id: owner.id.toString(),
-          type: owner.type,
+          role: owner.role,
           permissions: owner.permissions,
         },
         "24h"
       ),
     };
+  }
+
+  async ChangePassword(id : string, password : string){
+    const user = await this.ClientRepository.findById(id);
+
+    if(!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+
+    if(await this.securityHelperService.ComparePassword(password, user.password)) {
+      throw new ApiError(
+        httpStatus.NOT_ACCEPTABLE,
+        "Use a different password that's not your old password"
+      )
+    }
+
+    await this.ClientRepository.update(id, {
+      password : await this.securityHelperService.HashPassword(password),
+      isGeneratedPassword : false,
+    });
   }
 }

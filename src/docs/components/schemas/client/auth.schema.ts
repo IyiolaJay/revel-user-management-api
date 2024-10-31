@@ -2,30 +2,11 @@
  * @openapi
  * components:
  *    schemas:
- *       ClientCreation:
- *          type: object
- *          required:
- *             - email:
- *             - name:
- *             - password:
- *          properties:
- *             email:
- *                type: string
- *             name:
- *                type: string
- *             password:
- *                type: string
- */
-
-/**
- * @openapi
- * components:
- *    schemas:
  *       ClientLogin:
  *          type: object
  *          required:
  *             - email:
- *             - password:
+ *             - name:
  *          properties:
  *             email:
  *                type: string
