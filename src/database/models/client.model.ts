@@ -59,6 +59,7 @@ const clientSchema = new Schema<IClient>(
       transform: (_, ret) => {
         delete ret._id;
         delete ret.password;
+        delete ret.isGeneratedPassword;
         return ret;
       },
     },

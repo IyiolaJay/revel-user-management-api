@@ -7,7 +7,7 @@ import { v4 as uuidV4 } from "uuid";
 const adminSchema = new Schema<IAdmin>(
   {
     adminId: {
-      type: Schema.Types.UUID,
+      type: String,
       required: true,
       unique: true,
       default: () => uuidV4(),
@@ -51,6 +51,7 @@ const adminSchema = new Schema<IAdmin>(
       transform: (_, ret) => {
         delete ret._id;
         delete ret.password;
+        delete ret.isGeneratedPassword;
         return ret;
       },
     },

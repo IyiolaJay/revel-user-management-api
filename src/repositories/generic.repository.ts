@@ -29,7 +29,7 @@ export default class GenericRepository<T> implements IGenericRepository<T> {
   async update(id: string, updateData: Partial<T>): Promise<void> {
     await this.model.updateOne({ _id: id }, { ...updateData });
   }
-  delete(id: string): void {
-    this.model.deleteOne({ _id: id });
+  async delete(id: string): Promise<void> {
+    console.log(await this.model.deleteOne({ _id: id }));
   }
 }

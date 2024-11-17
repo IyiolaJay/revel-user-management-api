@@ -1,13 +1,14 @@
 import "dotenv/config";
 import express, { Express } from 'express';
 import AdminAuthRoutes from "./routes/auth.routes";
-
+import AdminProfileRoutes from "./routes/profile.routes";
 /**
  * 
  */
 class App {
   private app: Express;
   private AdminAuthRoutes : AdminAuthRoutes = new AdminAuthRoutes();
+  private AdminProfileRoutes : AdminProfileRoutes = new AdminProfileRoutes();
 
   constructor() {
     this.app = express();
@@ -18,7 +19,7 @@ class App {
   private setupAppRoutes(): void {
 
     this.app.use(this.AdminAuthRoutes.getRouter())
-    
+    this.app.use("/profile",this.AdminProfileRoutes.getRouter())
     //other api routes
 
 

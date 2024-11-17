@@ -10,7 +10,7 @@ export interface ITokenData {
 
 export interface IOtp{
     _id? : Schema.Types.ObjectId,
-    ownerId : Schema.Types.UUID,
+    ownerId : string,
     otpToken : string,
     expiryInSecs? : Date
 }

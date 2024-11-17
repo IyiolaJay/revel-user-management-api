@@ -146,7 +146,8 @@ export default class AdminAuthService {
     if (!isValidToken) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid or Expired Token");
     }
-
+    console.log(isValidToken._id!.toString());
+    
     this.otpRepository.delete(isValidToken._id!.toString());
     return {
       accessToken: await this.securityHelperService.GenerateJWT(

@@ -3,7 +3,7 @@ import IGenericRepository from "./generic.repository.interface";
 
 export interface IAdmin {
   _id?: Schema.Types.ObjectId;
-  adminId : Schema.Types.UUID;
+  adminId : string;
   email: string;
   name: string;
   password: string;

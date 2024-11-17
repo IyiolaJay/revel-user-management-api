@@ -75,7 +75,7 @@ export default class ClientAuthService {
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
         {
-          id: clientData.establishmentId.toString(),
+          id: clientData.clientId.toString(),
           role: clientData.clientType,
           permissions: clientData.permissionSet,
         },
