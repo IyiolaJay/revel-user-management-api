@@ -11,7 +11,7 @@ import { generateRandomPassword } from "../../../helpers/password";
 import EmailService from "../../../email/emailer";
 import { EmailType } from "../../../utilities/enums/enum";
 import { IClient, IClientRepository } from "../../../interfaces/client.interface";
-import { mapPermisionValuesToKeys } from "../../../helpers/permissions.mapper";
+import { mapPermisionValuesToKeys, mapPermissionKeysToValues } from "../../../helpers/permissions.mapper";
 
 export default class AdminAuthService {
   private AdminRepository: IAdminRepository;
@@ -124,7 +124,7 @@ export default class AdminAuthService {
         {
           id: adminData.adminId.toString(),
           role: adminData.adminType,
-          permissions: adminData.permissionSet,
+          permissions: mapPermissionKeysToValues(adminData.permissionSet),
         },
         "15m"
       ),

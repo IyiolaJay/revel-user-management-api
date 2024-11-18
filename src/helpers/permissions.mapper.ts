@@ -8,3 +8,10 @@ export function mapPermisionValuesToKeys(values: string[]): (keyof typeof Permis
       )
       .filter((key): key is keyof typeof Permissions => key !== undefined); // Filter out any undefined values
   }
+
+
+  export function mapPermissionKeysToValues(keys: string[]): string[] {
+    return keys
+        .filter((key): key is keyof typeof Permissions => key in Permissions) // Filter valid keys
+        .map(key => Permissions[key]);
+}
