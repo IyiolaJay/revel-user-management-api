@@ -26,7 +26,7 @@ export default class AdminAuthRoutes extends BaseRoute{
     this.router.post(
       "/login",
       RequestValidator.validateRequestSchema(authValidator.loginAccount),
-      RequestValidator.validateRequestSchema(authValidator.loginAccountType, "query"),
+      authenticationMiddleware.GetAccountType,
       adminAuthController.AccountLoginController
     );
 

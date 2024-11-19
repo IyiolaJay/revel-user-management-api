@@ -32,14 +32,14 @@ export default class UserAuthController extends BaseController {
 
   AccountLoginController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const {accountType} = req.query;
+      const {loginType} = req.body;
       let token;
 
-      if(accountType === "admin"){
+      if(loginType === "admin"){
         token = await this.UserAuthService.LoginAdminAccount(
           req.body as IAdmin
         );
-      }else{
+      }else {
         token = await this.UserAuthService.LoginClientAccount(
           req.body as IClient
         )

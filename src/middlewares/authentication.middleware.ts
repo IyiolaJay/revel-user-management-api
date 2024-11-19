@@ -2,13 +2,13 @@ import httpStatus from "http-status";
 import SecurityService from "../helpers/security";
 import { NextFunction, Request, Response } from "express";
 import ApiError from "../utilities/error.base";
-import {
-  ITokenData,
-} from "../interfaces/token.interface";
+import { ITokenData } from "../interfaces/token.interface";
+import Client from "../database/models/client.model";
+import Admin from "../database/models/admin.model";
 
 class AuthenticationMiddleware {
   private securityService: SecurityService;
- 
+
   constructor() {
     this.securityService = new SecurityService();
   }
@@ -52,12 +52,43 @@ class AuthenticationMiddleware {
       res.locals.user = {
         ...decodedToken,
       };
-     
+
       next();
     } catch (error) {
       next(error);
     }
   };
+
+  public async GetAccountType(req: Request, _: Response, next: NextFunction) {
+   try{
+
+
+    const { email } = req.body;
+
+    if (
+      await Client.findOne({
+        email: { $regex: new RegExp(`^${email}$`, "i") },
+      })
+    ) {
+      req.body.loginType = "client";
+    } else if (
+      await Admin.findOne({
+        email: { $regex: new RegExp(`^${email}$`, "i") },
+      })
+    ) {
+      req.body.loginType = "admin";
+    } else {
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        "Account does not exist"
+      )
+    }
+    next();
+   }catch(error : any){
+    next(error);
+
+   }
+  }
 }
 
 export default AuthenticationMiddleware;

@@ -6,12 +6,6 @@
  *     summary: User account login (admin/client)
  *     tags:
  *       - Users
- *     parameters:
- *       - in : query
- *         name : accountType
- *         required : true
- *         schema:
- *           type : string
  *     requestBody:
  *       required: true
  *       content:

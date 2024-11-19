@@ -13,10 +13,6 @@ const loginAccount = RequestValidator.requestItemsStructure({
     password : Joi.string().required(),
 })
 
-const loginAccountType = RequestValidator.requestItemsStructure({
-    accountType : Joi.string().required().valid("client", "admin"),
-})
-
 const verifyToken = RequestValidator.requestItemsStructure({
     token : Joi.string().required(),
 })
@@ -41,7 +37,6 @@ export default {
     createAdmin,
     createClient,
     loginAccount,
-    loginAccountType,
     verifyToken,
     changePassword,
     changePasswordQuery
