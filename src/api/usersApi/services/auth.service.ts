@@ -84,13 +84,13 @@ export default class UserAuthService {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
 
 
-    //check if password is system generated
-    if(adminData.hasSetPassword === false){
-      throw new ApiError(
-        httpStatus.NOT_ACCEPTABLE,
-        "You are using a system generated password, please change your password. Thanks",
-      )
-    }
+    // //check if password is system generated
+    // if(adminData.hasSetPassword === false){
+    //   throw new ApiError(
+    //     httpStatus.NOT_ACCEPTABLE,
+    //     "You are using a system generated password, please change your password. Thanks",
+    //   )
+    // }
     
     //
     if (
@@ -242,13 +242,13 @@ export default class UserAuthService {
     if (!clientData)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
 
-        //check if password is system generated
-    if(clientData.hasSetPassword === false){
-          throw new ApiError(
-            httpStatus.NOT_ACCEPTABLE,
-            "You are using a system generated password, please change your password. Thanks"
-          )
-        }
+    //     //check if password is system generated
+    // if(clientData.hasSetPassword === false){
+    //       throw new ApiError(
+    //         httpStatus.NOT_ACCEPTABLE,
+    //         "You are using a system generated password, please change your password. Thanks"
+    //       )
+    //     }
     //
     if (
       !(await this.securityHelperService.ComparePassword(
