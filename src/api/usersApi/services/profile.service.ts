@@ -39,6 +39,9 @@ export default class UserProfileService {
         "Unable to fetch profile, user not found"
       );
 
-    return user;
+    return {
+      user,
+      accountType : userType
+    };
   }
 }

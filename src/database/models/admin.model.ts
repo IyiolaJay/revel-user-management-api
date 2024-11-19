@@ -25,10 +25,10 @@ const adminSchema = new Schema<IAdmin>(
       type: String,
       required: true,
     },
-    isGeneratedPassword: {
+    hasSetPassword: {
       type: Boolean,
       required: true,
-      default : true
+      default : false
     },
     adminType: {
       type: String,

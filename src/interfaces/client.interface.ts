@@ -9,7 +9,7 @@ export interface IClient {
   email: string;
   name: string;
   password : string;
-  isGeneratedPassword : boolean,
+  hasSetPassword : boolean,
   clientType : string;
   permissionSet : string[];
 }

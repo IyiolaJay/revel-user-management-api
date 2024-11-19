@@ -33,10 +33,10 @@ const clientSchema = new Schema<IClient>(
       required: true,
       minlength: 8,
     },
-    isGeneratedPassword: {
+    hasSetPassword: {
       type: Boolean,
       required: true,
-      default : true
+      default : false
     },
     clientType: {
       type: String,
