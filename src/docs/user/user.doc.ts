@@ -96,3 +96,15 @@
  *           "204":
  *             description: success and no content
  */
+
+
+/**
+ * @openapi
+ * /profile:
+ *      get:
+ *         tags:
+ *            - Users
+ *         responses:
+ *           "200":
+ *             description: success and no content
+ */
