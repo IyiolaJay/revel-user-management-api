@@ -5,11 +5,13 @@ import AdminApi from "./api/adminApi/admin.api"
 import { ErrorMiddleware } from "./middlewares/error.middleware";
 import ClientApi from "./api/clientAPi/client.api"
 import SwaggerService from "./docs/swagger";
+import UserApi from "./api/usersApi/user.api";
 class App {
   private app: Express;
   private apiPrefix : string = '/api/v1'; 
   private adminApi : AdminApi = new AdminApi();
   private clientApi : ClientApi = new ClientApi();
+  private userApi : UserApi = new UserApi()
 
 
   constructor() {
@@ -43,6 +45,7 @@ class App {
 
 
     //
+    this.app.use(`${this.apiPrefix}`, this.userApi.getApp())
     this.app.use(`${this.apiPrefix}/admin`, this.adminApi.getApp())
     this.app.use(`${this.apiPrefix}/client`, this.clientApi.getApp())
   }

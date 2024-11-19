@@ -1,20 +1,20 @@
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
 import BaseRoute from "../../../utilities/base.router";
-import ClientProfileController from "../controllers/profile.controller";
+import AdminProfileController from "../controllers/profile.controller";
 
-export default class ClientProfileRoutes extends BaseRoute{
+export default class UserProfileRoutes extends BaseRoute{
     constructor(){
         super();
     }
 
     protected override setupRoutes(): void {
-        const clientProfileController : ClientProfileController = new ClientProfileController();
+        const adminProfileController : AdminProfileController = new AdminProfileController();
         const authenticationMiddleware :  AuthenticationMiddleware = new AuthenticationMiddleware();
 
         this.router.get(
             "/",
             authenticationMiddleware.AuthorizeUser,
-            clientProfileController.GetProfile,
+            adminProfileController.GetAuthenticatedProfile,
         )
     }
 }

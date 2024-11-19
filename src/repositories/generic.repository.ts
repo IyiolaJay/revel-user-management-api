@@ -30,6 +30,6 @@ export default class GenericRepository<T> implements IGenericRepository<T> {
     await this.model.updateOne({ _id: id }, { ...updateData });
   }
   async delete(id: string): Promise<void> {
-    console.log(await this.model.deleteOne({ _id: id }));
+    await this.model.deleteOne({ _id: id });
   }
 }

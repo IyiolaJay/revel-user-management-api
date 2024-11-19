@@ -1,12 +1,13 @@
+
 /**
  * @openapi
  * components:
  *    schemas:
- *       ClientLogin:
+ *       UserLogin:
  *          type: object
  *          required:
  *             - email:
- *             - name:
+ *             - password:
  *          properties:
  *             email:
  *                type: string
@@ -25,5 +26,18 @@
  *             - token:
  *          properties:
  *             token:
+ *                type: string
+ */
+
+/**
+ * @openapi
+ * components:
+ *    schemas:
+ *       ChangePassword:
+ *          type: object
+ *          required:
+ *             - password:
+ *          properties:
+ *             password:
  *                type: string
  */

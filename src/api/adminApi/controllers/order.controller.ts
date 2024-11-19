@@ -7,7 +7,7 @@ export default class OrderController extends BaseController{
     GetOrderReceipts = this.wrapAsync(
         async (__: Request, res: Response, _: NextFunction) => {
             const orders = await OrderReceipt.find();
-            console.log(orders)
+            // console.log(orders)
           this.sendResponse(res, httpStatus.CREATED, {
             success: true,
             message: "Fetched",

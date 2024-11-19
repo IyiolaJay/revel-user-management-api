@@ -4,7 +4,8 @@ import IGenericRepository from "./generic.repository.interface";
 export interface ITokenData {
     id: string;
     role : string;
-    permissions : string[] 
+    permissions : string[],
+    accountType : string, 
   }
   
 

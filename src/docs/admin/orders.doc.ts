@@ -4,7 +4,7 @@
  *      get:
  *         summary: Get order receipts.
  *         tags:
- *            - Orders
+ *            - Admin
  *         responses:
  *           "200":
  *             description: success

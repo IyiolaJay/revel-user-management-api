@@ -23,25 +23,25 @@ export default class AdminAuthRoutes extends BaseRoute{
       adminAuthController.AdminAccountCreationController
     );
 
-    this.router.post(
-      "/login",
-      RequestValidator.validateRequestSchema(adminValidator.loginAdmin),
-      adminAuthController.AdminAccountLoginController
-    );
+    // this.router.post(
+    //   "/login",
+    //   RequestValidator.validateRequestSchema(adminValidator.loginAdmin),
+    //   adminAuthController.AdminAccountLoginController
+    // );
 
-    this.router.post(
-      "/verifyToken",
-      authenticationMiddleware.AuthorizeUser,
-      RequestValidator.validateRequestSchema(adminValidator.verifyToken),
-      adminAuthController.VerifyTokenController
-    );
+    // this.router.post(
+    //   "/verifyToken",
+    //   authenticationMiddleware.AuthorizeUser,
+    //   RequestValidator.validateRequestSchema(adminValidator.verifyToken),
+    //   adminAuthController.VerifyTokenController
+    // );
 
-    this.router.patch(
-      "/changePassword",
-      RequestValidator.validateRequestSchema(adminValidator.changePassword),
-      RequestValidator.validateRequestSchema(adminValidator.changePasswordQuery, "query"),
-      adminAuthController.ChangePasswordController
-    );
+    // this.router.patch(
+    //   "/changePassword",
+    //   RequestValidator.validateRequestSchema(adminValidator.changePassword),
+    //   RequestValidator.validateRequestSchema(adminValidator.changePasswordQuery, "query"),
+    //   adminAuthController.ChangePasswordController
+    // );
 
 
     this.router.post(

@@ -30,44 +30,44 @@ export default class AdminAuthController extends BaseController {
     }
   );
 
-  AdminAccountLoginController = this.wrapAsync(
-    async (req: Request, res: Response, _: NextFunction) => {
-      const token = await this.AdminService.LoginAdminAccount(
-        req.body as IAdmin
-      );
-      this.sendResponse(res, httpStatus.OK, {
-        success: true,
-        message: "Login success",
-        data: token,
-      });
-    }
-  );
+  // AdminAccountLoginController = this.wrapAsync(
+  //   async (req: Request, res: Response, _: NextFunction) => {
+  //     const token = await this.AdminService.LoginAdminAccount(
+  //       req.body as IAdmin
+  //     );
+  //     this.sendResponse(res, httpStatus.OK, {
+  //       success: true,
+  //       message: "Login success",
+  //       data: token,
+  //     });
+  //   }
+  // );
 
-  VerifyTokenController = this.wrapAsync(
-    async (req: Request, res: Response, _: NextFunction) => {
-      const { token } = req.body;
-      const { user } = res.locals;
-      const apiToken = await this.AdminService.VerifyToken(token, user);
-      this.sendResponse(res, httpStatus.OK, {
-        success: true,
-        message: "Token verified",
-        data: apiToken,
-      });
-    }
-  );
+  // VerifyTokenController = this.wrapAsync(
+  //   async (req: Request, res: Response, _: NextFunction) => {
+  //     const { token } = req.body;
+  //     const { user } = res.locals;
+  //     const apiToken = await this.AdminService.VerifyToken(token, user);
+  //     this.sendResponse(res, httpStatus.OK, {
+  //       success: true,
+  //       message: "Token verified",
+  //       data: apiToken,
+  //     });
+  //   }
+  // );
 
-  ChangePasswordController = this.wrapAsync(
-    async (req: Request, res: Response, _: NextFunction) => {
-      const { userId } = req.query;
-      const { password } = req.body;
-      await this.AdminService.ChangePassword(userId as string, password);
-      this.sendResponse(res, httpStatus.OK, {
-        success: true,
-        message: "Password changed, please login again",
-        data: null,
-      });
-    }
-  );
+  // ChangePasswordController = this.wrapAsync(
+  //   async (req: Request, res: Response, _: NextFunction) => {
+  //     const { userId } = req.query;
+  //     const { password } = req.body;
+  //     await this.AdminService.ChangePassword(userId as string, password);
+  //     this.sendResponse(res, httpStatus.OK, {
+  //       success: true,
+  //       message: "Password changed, please login again",
+  //       data: null,
+  //     });
+  //   }
+  // );
 
   ClientAccountCreationController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
