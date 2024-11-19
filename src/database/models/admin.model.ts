@@ -28,7 +28,7 @@ const adminSchema = new Schema<IAdmin>(
     isGeneratedPassword: {
       type: Boolean,
       required: true,
-      default : false
+      default : true
     },
     adminType: {
       type: String,
@@ -51,7 +51,7 @@ const adminSchema = new Schema<IAdmin>(
       transform: (_, ret) => {
         delete ret._id;
         delete ret.password;
-        delete ret.isGeneratedPassword;
+        // delete ret.isGeneratedPassword;
         return ret;
       },
     },

@@ -36,7 +36,7 @@ const clientSchema = new Schema<IClient>(
     isGeneratedPassword: {
       type: Boolean,
       required: true,
-      default : false
+      default : true
     },
     clientType: {
       type: String,
@@ -59,7 +59,7 @@ const clientSchema = new Schema<IClient>(
       transform: (_, ret) => {
         delete ret._id;
         delete ret.password;
-        delete ret.isGeneratedPassword;
+        // delete ret.isGeneratedPassword;
         return ret;
       },
     },
