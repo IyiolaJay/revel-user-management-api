@@ -10,28 +10,33 @@ import OtpRepository from "../../../repositories/otp.repository";
 // import { generateRandomPassword } from "../../../helpers/password";
 import EmailService from "../../../email/emailer";
 import { EmailType } from "../../../utilities/enums/enum";
-import { IClient, IClientRepository } from "../../../interfaces/client.interface";
-import {  mapPermissionKeysToValues } from "../../../helpers/permissions.mapper";
+import {
+  IClient,
+  IClientRepository,
+} from "../../../interfaces/client.interface";
+import { mapPermissionKeysToValues } from "../../../helpers/permissions.mapper";
 
 export default class UserAuthService {
   private AdminRepository: IAdminRepository;
-  private securityHelperService: SecurityHelperService = new SecurityHelperService();
+  private securityHelperService: SecurityHelperService =
+    new SecurityHelperService();
   private otpRepository: IOtpRepository;
   private emailService = new EmailService();
   private ClientRepository: IClientRepository;
 
-
-  constructor(adminRepository: IAdminRepository, clientRepository: IClientRepository) {
+  constructor(
+    adminRepository: IAdminRepository,
+    clientRepository: IClientRepository
+  ) {
     this.AdminRepository = adminRepository;
     this.otpRepository = new OtpRepository();
     this.ClientRepository = clientRepository;
-
   }
 
   // /**
-  //  * 
-  //  * @param admin 
-  //  * @returns 
+  //  *
+  //  * @param admin
+  //  * @returns
   //  */
   // async CreateAdminAccount(admin: IAdmin) {
   //   let _admin = await this.AdminRepository.findOneByFilter({
@@ -45,7 +50,7 @@ export default class UserAuthService {
   //     );
 
   //     admin.permissionSet = mapPermisionValuesToKeys(admin.permissionSet)
-    
+
   //     const genPassword = generateRandomPassword();
 
   //   _admin = await this.AdminRepository.create({
@@ -71,9 +76,9 @@ export default class UserAuthService {
   // }
 
   /**
-   * 
-   * @param admin 
-   * @returns 
+   *
+   * @param admin
+   * @returns
    */
   async LoginAdminAccount(admin: Partial<IAdmin>) {
     const adminData = await this.AdminRepository.findOneByFilter({
@@ -83,7 +88,6 @@ export default class UserAuthService {
     if (!adminData)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
 
-
     // //check if password is system generated
     // if(adminData.hasSetPassword === false){
     //   throw new ApiError(
@@ -91,7 +95,7 @@ export default class UserAuthService {
     //     "You are using a system generated password, please change your password. Thanks",
     //   )
     // }
-    
+
     //
     if (
       !(await this.securityHelperService.ComparePassword(
@@ -111,13 +115,13 @@ export default class UserAuthService {
 
     this.emailService.SendEMailToUser(
       {
-        to : adminData.email,
-        bodyParts : {
-          otp : token.otpToken
-        }
+        to: adminData.email,
+        bodyParts: {
+          otp: token.otpToken,
+        },
       },
       EmailType.VerifyEmail
-    )
+    );
 
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
@@ -125,7 +129,7 @@ export default class UserAuthService {
           id: adminData.adminId.toString(),
           role: adminData.adminType,
           permissions: mapPermissionKeysToValues(adminData.permissionSet),
-          accountType : "admin"
+          accountType: "admin",
         },
         "15m"
       ),
@@ -133,10 +137,10 @@ export default class UserAuthService {
   }
 
   /**
-   * 
-   * @param token 
-   * @param owner 
-   * @returns 
+   *
+   * @param token
+   * @param owner
+   * @returns
    */
   async VerifyToken(token: string, owner: ITokenData) {
     const isValidToken = await this.otpRepository.findOneByFilter({
@@ -148,7 +152,7 @@ export default class UserAuthService {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid or Expired Token");
     }
     console.log(isValidToken._id!.toString());
-    
+
     this.otpRepository.delete(isValidToken._id!.toString());
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
@@ -156,52 +160,63 @@ export default class UserAuthService {
           id: owner.id.toString(),
           role: owner.role,
           permissions: owner.permissions,
-          accountType : owner.accountType,
+          accountType: owner.accountType,
         },
         "24h"
       ),
-      accessTokenExpiration : new Date( new Date().getTime() + 24 * 60 * 60 * 1000 ).toISOString(),
-      accountType : owner.accountType,
+      accessTokenExpiration: new Date(
+        new Date().getTime() + 24 * 60 * 60 * 1000
+      ).toISOString(),
+      accountType: owner.accountType,
     };
   }
 
   /**
-   * 
-   * @param id 
-   * @param password 
+   *
+   * @param id
+   * @param password
    */
-  async ChangePassword(id : string, password : string, path : string){
+  async ChangePassword(id: string, password: string, path: string) {
     let user;
-    console.log(path)
-    if (path === "admin"){
-       user = await this.AdminRepository.findOneByFilter({
-        adminId : id
+
+    if (path === "admin") {
+      user = await this.AdminRepository.findOneByFilter({
+        adminId: id,
       });
-    }else{
+    } else {
       user = await this.ClientRepository.findOneByFilter({
-        clientId : id
-      })
+        clientId: id,
+      });
     }
 
-    if(!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
 
-    if(await this.securityHelperService.ComparePassword(password, user.password)) {
+    if (
+      await this.securityHelperService.ComparePassword(password, user.password)
+    ) {
       throw new ApiError(
         httpStatus.NOT_ACCEPTABLE,
         "Use a different password that's not your old password"
-      )
+      );
     }
 
-    await this.AdminRepository.update(id, {
-      password : await this.securityHelperService.HashPassword(password),
-      hasSetPassword : true,
-    });
+    if (path === "admin")
+      await this.AdminRepository.update(user._id!.toString(), {
+        password: await this.securityHelperService.HashPassword(password),
+        hasSetPassword: true,
+      });
+    
+    else
+      await this.ClientRepository.update(user._id!.toString(), {
+        password: await this.securityHelperService.HashPassword(password),
+        hasSetPassword: true,
+      });
   }
 
   // /**
-  //  * 
-  //  * @param client 
-  //  * @returns 
+  //  *
+  //  * @param client
+  //  * @returns
   //  */
   // async CreateClientAccount(client: IClient) {
   //   let _client = await this.ClientRepository.findOneByFilter({
@@ -240,9 +255,9 @@ export default class UserAuthService {
   // }
 
   /**
-   * 
-   * @param client 
-   * @returns 
+   *
+   * @param client
+   * @returns
    */
   async LoginClientAccount(client: Partial<IClient>) {
     const clientData = await this.ClientRepository.findOneByFilter({
@@ -278,13 +293,13 @@ export default class UserAuthService {
 
     this.emailService.SendEMailToUser(
       {
-        to : clientData.email,
-        bodyParts : {
-          otp : token.otpToken
-        }
+        to: clientData.email,
+        bodyParts: {
+          otp: token.otpToken,
+        },
       },
       EmailType.VerifyEmail
-    )
+    );
 
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
@@ -292,13 +307,10 @@ export default class UserAuthService {
           id: clientData.clientId.toString(),
           role: clientData.clientType,
           permissions: clientData.permissionSet,
-          accountType : "client"
+          accountType: "client",
         },
         "15m"
       ),
     };
   }
-
 }
-
-
