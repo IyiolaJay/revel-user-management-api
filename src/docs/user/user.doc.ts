@@ -82,7 +82,7 @@
  *            - Users
  *         parameters:
  *           - in: query
- *             name: userId
+ *             name: adminId
  *             required: true
  *             schema:
  *               type: string

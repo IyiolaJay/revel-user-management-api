@@ -22,7 +22,8 @@ const changePassword = RequestValidator.requestItemsStructure({
 })
 
 const changePasswordQuery = RequestValidator.requestItemsStructure({
-    userId : Joi.string().required(),
+    clientId : Joi.string(),
+    adminId : Joi.string()
 })
 
 const createClient = RequestValidator.requestItemsStructure({

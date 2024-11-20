@@ -69,9 +69,11 @@ export default class UserAuthController extends BaseController {
 
   ChangePasswordController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const { userId } = req.query;
+      const  userId = req.query.clientId ?? req.query.adminId;
+      const path = req.query.clientId ? "client" : "admin"
+
       const { password } = req.body;
-      await this.UserAuthService.ChangePassword(userId as string, password);
+      await this.UserAuthService.ChangePassword(userId as string, password, path);
       this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: "Password changed, please login again",

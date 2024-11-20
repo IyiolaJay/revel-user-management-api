@@ -170,8 +170,18 @@ export default class UserAuthService {
    * @param id 
    * @param password 
    */
-  async ChangePassword(id : string, password : string){
-    const user = await this.AdminRepository.findById(id);
+  async ChangePassword(id : string, password : string, path : string){
+    let user;
+    console.log(path)
+    if (path === "admin"){
+       user = await this.AdminRepository.findOneByFilter({
+        adminId : id
+      });
+    }else{
+      user = await this.ClientRepository.findOneByFilter({
+        clientId : id
+      })
+    }
 
     if(!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
 
