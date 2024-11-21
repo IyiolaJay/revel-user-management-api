@@ -1,10 +1,10 @@
 /**
  * @openapi
- * /admin/orders/all:
+ * /client/management/getClients:
  *      get:
- *         summary: Get order receipts.
+ *         summary: Get client account.
  *         tags:
- *            - Admin
+ *            - Client
  *         parameters:
  *           - in: query
  *             name: offset

@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
 import IGenericRepository from "../interfaces/generic.repository.interface";
 
 export default class GenericRepository<T> implements IGenericRepository<T> {
@@ -15,16 +15,21 @@ export default class GenericRepository<T> implements IGenericRepository<T> {
     return await this.model.findById(id);
   }
 
-  async findAll(): Promise<T[]> {
-    return await this.model.find();
+  async findAll(
+    offset: number = 1,
+    limit: number = 20,
+    filterQuery: FilterQuery<T> = {}
+  ): Promise<T[]> {
+    const skip = (offset - 1) * limit;
+    return await this.model.find(filterQuery).skip(skip).limit(limit).sort({createdAt : -1});
   }
   async findOneByFilter(filterQuery: any): Promise<T | null> {
     return await this.model.findOne(filterQuery);
   }
 
-  async findAllByFilter(filterQuery: any): Promise<T[]> {
-    return await this.model.find(filterQuery);
-  }
+  // async findAllByFilter(filterQuery: any): Promise<T[]> {
+  //   return await this.model.find(filterQuery);
+  // }
 
   async update(id: string, updateData: Partial<T>): Promise<void> {
     await this.model.updateOne({ _id: id }, { ...updateData });

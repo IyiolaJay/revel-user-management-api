@@ -1,6 +1,8 @@
 // import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
+import RequestValidator from "../../../middlewares/schema.middleware";
 import BaseRoute from "../../../utilities/base.router";
 import OrderController from "../controllers/order.controller";
+import orderValidators from "../validators/order.validators";
 export default class OrderReceiptRoutes extends BaseRoute{
     constructor(){
         super();
@@ -11,7 +13,15 @@ export default class OrderReceiptRoutes extends BaseRoute{
 
         this.router.get(
             "/all",
+            RequestValidator.validateRequestSchema(orderValidators.fetchOrderQuery,"query"),
             orderController.GetOrderReceipts,
+        )
+
+        //
+        this.router.put(
+            "/createOrderReceipts",            
+            RequestValidator.validateRequestSchema(orderValidators.createOrderReceipt),
+            orderController.CreateOrderReceipts,
         )
     }
 }
