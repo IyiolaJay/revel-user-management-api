@@ -5,13 +5,12 @@ const createOrderReceipt = RequestValidator.requestItemsStructure({
     items : Joi.array().required()
 })
 
-const fetchOrderQuery = RequestValidator.requestItemsStructure({
-    offset : Joi.string().required(),
-    limit : Joi.string(),
-})
+// const fetchOrderQuery = RequestValidator.requestItemsStructure({
+//     offset : Joi.string().required(),
+//     limit : Joi.string(),
+// })
 
 
 export default {
     createOrderReceipt,
-    fetchOrderQuery
 }

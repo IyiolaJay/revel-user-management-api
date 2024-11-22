@@ -3,6 +3,7 @@ import express, { Express } from 'express';
 import AdminAuthRoutes from "./routes/auth.routes";
 import AdminProfileRoutes from "./routes/profile.routes";
 import OrderReceiptRoutes from "./routes/order.routes";
+import ServiceRoutes from "./routes/services.routes";
 /**
  * 
  */
@@ -11,6 +12,7 @@ class App {
   private AdminAuthRoutes : AdminAuthRoutes = new AdminAuthRoutes();
   private AdminProfileRoutes : AdminProfileRoutes = new AdminProfileRoutes();
   private OrderReceiptRoutes : OrderReceiptRoutes = new OrderReceiptRoutes();
+  private ServiceRoutes : ServiceRoutes = new ServiceRoutes();
 
   constructor() {
     this.app = express();
@@ -19,10 +21,12 @@ class App {
   }
 
   private setupAppRoutes(): void {
-
-    this.app.use(this.AdminAuthRoutes.getRouter())
-    this.app.use("/profile",this.AdminProfileRoutes.getRouter())
-    this.app.use("/orders",this.OrderReceiptRoutes.getRouter())
+    const resource = "/admin";
+    this.app.use(`${resource}`,this.AdminAuthRoutes.getRouter())
+    this.app.use(`${resource}/profile`,this.AdminProfileRoutes.getRouter())
+    this.app.use(`${resource}/orders`,this.OrderReceiptRoutes.getRouter())
+    this.app.use("/services",this.ServiceRoutes.getRouter())
+  
     //other api routes
 
 

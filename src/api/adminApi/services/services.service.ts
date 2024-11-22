@@ -9,14 +9,36 @@ export default class ServicesService{
         this.ServiceRepository = serviceRepository;
     }
 
-    async CreateService(service : IService) : Promise<void>{
+    /**
+     * 
+     * @param service 
+     * @param createdBy 
+     * @returns 
+     */
+    async CreateService(service : IService, createdBy : string) : Promise<void>{
         let _service = await this.ServiceRepository.findOneByFilter({
-            serviceTypeName : {$regex : new RegExp(`${service.serviceTypeName}`, "i")},
+            serviceTypeName : {$regex : new RegExp(`${service.serviceName}`, "i")},
         });
 
         if (_service) throw new ApiError(
             httpStatus.CONFLICT,
             "Service name already exists"
         )
+
+        await this.ServiceRepository.create({
+            ...service,
+            createdBy
+        })
+        return;
+    }
+
+    /**
+     * 
+     * @param offset 
+     * @param limit 
+     * @returns 
+     */
+    async GetAllServices(offset: number = 1, limit : number = 10){
+        return await this.ServiceRepository.findAll(offset, limit);
     }
 }

@@ -1,13 +1,12 @@
 import Joi from "joi";
 import RequestValidator from "../../../middlewares/schema.middleware";
 
-
-
-const getClients = RequestValidator.requestItemsStructure({
+const paginationParams = RequestValidator.requestItemsStructure({
     offset : Joi.string().required(),
-    limit : Joi.string()
+    limit : Joi.string(),
 })
 
+
 export default {
-    getClients
+    paginationParams
 }

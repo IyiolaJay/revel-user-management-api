@@ -6,12 +6,12 @@ import { Currency } from "../../utilities/enums/enum";
 const serviceSchema = new Schema<IService>(
   {
     serviceId: {
-      type: Schema.Types.UUID,
+      type: String,
       required : true,
       default : () => uuidV4(),
       unique : true,
     },
-    serviceTypeName: {
+    serviceName: {
       type: String,
       required : true,
       unique : true,
@@ -41,6 +41,10 @@ const serviceSchema = new Schema<IService>(
         required : true,
         default : 1,
     },
+    createdBy:{
+      type : String,
+      required : true
+    }
     
 },
   {

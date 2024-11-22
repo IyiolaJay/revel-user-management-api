@@ -1,9 +1,9 @@
 // import express, { Router } from "express";
 import BaseRoute from "../../../utilities/base.router";
-import clientValidator from "../validators/clientAuth.validators";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
 import ClientAuthController from "../controllers/client.management.controller";
+import filterValidators from "../validators";
 // import PermissionValidation from "../../../middlewares/permission.middleware";
 // import { Permissions } from "../../../utilities/enums/permissions.enum";
 
@@ -21,7 +21,7 @@ export default class ClientAuthRoutes extends BaseRoute{
 
     this.router.get(
       "/getClients",
-      RequestValidator.validateRequestSchema(clientValidator.getClients, "query"),
+      RequestValidator.validateRequestSchema(filterValidators.paginationParams, "query"),
       authenticationMiddleware.AuthorizeUser,
       clientAuthController.GetAllClients
     );

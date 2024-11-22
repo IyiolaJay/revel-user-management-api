@@ -10,7 +10,20 @@ const orderReceiptSchema = new Schema<IOrderReceipt>({
     type: Object,
     required : true
   },
-});
+},
+{
+  timestamps: true,
+  versionKey: false,
+  id: true,
+  toJSON: {
+    virtuals: true,
+    transform: (_, ret) => {
+      delete ret._id;
+      return ret;
+    },
+  },
+}
+);
 
 const OrderReceipt: Model<IOrderReceipt> = mongoose.model(
   "orderReceipts",
