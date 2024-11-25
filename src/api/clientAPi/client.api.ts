@@ -1,14 +1,14 @@
 import "dotenv/config";
 import express, { Express } from 'express';
 import ClientManagementRoutes from "./routes/client.management.routes";
-// import ClientProfileRoutes from "./routes/profile.routes";
+import OrderRoutes from "./routes/order.routes";
 /**
  * 
  */
 class App {
   private app: Express;
   private ClientManagementRoutes : ClientManagementRoutes = new ClientManagementRoutes()
-  // private ClientProfileRoutes : ClientProfileRoutes = new ClientProfileRoutes()
+  private OrderRoutes : OrderRoutes = new OrderRoutes()
 
   constructor() {
     this.app = express();
@@ -19,7 +19,7 @@ class App {
   private setupAppRoutes(): void {
 
     this.app.use("/management",this.ClientManagementRoutes.getRouter())
-    // this.app.use("/profile",this.ClientProfileRoutes.getRouter())
+    this.app.use("/orders",this.OrderRoutes.getRouter())
 
 
 

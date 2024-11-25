@@ -4,7 +4,7 @@ import IGenericRepository from "./generic.repository.interface";
 export interface IClient {
   _id?: Schema.Types.ObjectId;
   clientId :string;
-  establishmentId: string;
+  establishmentId: number[];
   establishmentUrl: string;
   email: string;
   name: string;

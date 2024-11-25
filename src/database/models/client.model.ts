@@ -12,7 +12,7 @@ const clientSchema = new Schema<IClient>(
       default : () => uuidV4(),
     },
     establishmentId: {
-      type: String,
+      type: [Number],
       required: true,
     },
     establishmentUrl: {

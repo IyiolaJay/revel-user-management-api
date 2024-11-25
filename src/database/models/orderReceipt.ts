@@ -2,6 +2,11 @@ import mongoose, { Model, Schema } from "mongoose";
 import {IOrderReceipt} from "../../interfaces/order.interface";
 
 const orderReceiptSchema = new Schema<IOrderReceipt>({
+
+  establishmentId: {
+    type: Number,
+    required: true,
+  },
   orderItems: {
     type: Object,
     required: true,

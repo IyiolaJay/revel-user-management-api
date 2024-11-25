@@ -77,7 +77,7 @@
  *             name:
  *                type: string
  *             establishmentId:
- *                type: string
+ *                type: number
  *             establishmentUrl:
  *                type: string
  */
