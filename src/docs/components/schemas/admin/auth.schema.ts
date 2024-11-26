@@ -61,7 +61,6 @@
 //  *             password:
 //  *                type: string
 //  */
-
 /**
  * @openapi
  * components:
@@ -69,15 +68,17 @@
  *       ClientCreation:
  *          type: object
  *          required:
- *             - email:
- *             - name:
+ *             - email
+ *             - name
  *          properties:
  *             email:
  *                type: string
  *             name:
  *                type: string
  *             establishmentId:
- *                type: number
+ *                type: array
+ *                items:
+ *                   type: number
  *             establishmentUrl:
  *                type: string
  */

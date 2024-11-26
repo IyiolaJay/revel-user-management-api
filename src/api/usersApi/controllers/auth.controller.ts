@@ -34,22 +34,30 @@ export default class UserAuthController extends BaseController {
     async (req: Request, res: Response, _: NextFunction) => {
       const {loginType} = req.body;
       let token;
+      const {rememberDevice} = req.query ?? false;
+
+      const device = (req as any).deviceInfo;
 
       if(loginType === "admin"){
         token = await this.UserAuthService.LoginAdminAccount(
-          req.body as IAdmin
+          req.body as IAdmin,
+          device,
+          Boolean(rememberDevice)
         );
       }else {
         token = await this.UserAuthService.LoginClientAccount(
-          req.body as IClient
+          req.body as IClient,
+          device
         )
       }
 
       
       this.sendResponse(res, httpStatus.OK, {
         success: true,
-        message: "Login success",
-        data: token,
+        message: token.message ?? "Login success",
+        data: {
+          accessToken : token.accessToken
+        },
       });
     }
   );

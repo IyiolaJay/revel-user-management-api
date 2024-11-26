@@ -27,6 +27,7 @@ export default class AdminAuthRoutes extends BaseRoute{
       "/login",
       RequestValidator.validateRequestSchema(authValidator.loginAccount),
       authenticationMiddleware.GetAccountType,
+      authenticationMiddleware.GetDeviceInfo,
       adminAuthController.AccountLoginController
     );
 

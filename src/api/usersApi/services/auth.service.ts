@@ -3,6 +3,7 @@ import { IAdmin, IAdminRepository } from "../../../interfaces/admin.interface";
 import ApiError from "../../../utilities/error.base";
 import SecurityHelperService from "../../../helpers/security";
 import {
+  IDevice,
   IOtpRepository,
   ITokenData,
 } from "../../../interfaces/token.interface";
@@ -33,54 +34,16 @@ export default class UserAuthService {
     this.ClientRepository = clientRepository;
   }
 
-  // /**
-  //  *
-  //  * @param admin
-  //  * @returns
-  //  */
-  // async CreateAdminAccount(admin: IAdmin) {
-  //   let _admin = await this.AdminRepository.findOneByFilter({
-  //     email: { $regex: new RegExp(`^${admin.email}$`, "i") },
-  //   });
-
-  //   if (_admin)
-  //     throw new ApiError(
-  //       httpStatus.CONFLICT,
-  //       "Admin account exists with this email"
-  //     );
-
-  //     admin.permissionSet = mapPermisionValuesToKeys(admin.permissionSet)
-
-  //     const genPassword = generateRandomPassword();
-
-  //   _admin = await this.AdminRepository.create({
-  //     ...admin,
-  //     password: await this.securityHelperService.HashPassword(genPassword),
-  //   });
-
-  //   //send credentials to admin mail
-  //   this.emailService.SendEMailToUser(
-  //     {
-  //       to : admin.email,
-  //       bodyParts : {
-  //         name : _admin.name,
-  //         email : _admin.email,
-  //         password : genPassword,
-  //         _id : _admin._id
-  //         },
-  //     },
-  //     EmailType.CredentialsEmail
-  //   )
-
-  //   return;
-  // }
-
   /**
    *
    * @param admin
    * @returns
    */
-  async LoginAdminAccount(admin: Partial<IAdmin>) {
+  async LoginAdminAccount(
+    admin: Partial<IAdmin>,
+    deviceInfo: Partial<IDevice>,
+    rememberDevice : boolean = false
+  ) {
     const adminData = await this.AdminRepository.findOneByFilter({
       email: { $regex: new RegExp(`^${admin.email}$`, "i") },
     });
@@ -108,6 +71,36 @@ export default class UserAuthService {
         "Incorrect email or password..."
       );
 
+    // if remember device is set to true
+    if(rememberDevice){
+      await this.AdminRepository.update(adminData._id!.toString(), {
+        device : {
+          rememberMeExpires : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
+          ipAddress : deviceInfo.ipAddress as string,
+          userAgent : deviceInfo.userAgent as string
+        }
+      })
+    }
+
+    if (
+      deviceInfo.userAgent === adminData.device.userAgent &&
+      adminData.device.rememberMeExpires > new Date()
+    ) {
+      return {
+        accessToken: await this.securityHelperService.GenerateJWT(
+          {
+            id: adminData.adminId.toString(),
+            role: adminData.adminType,
+            permissions: mapPermissionKeysToValues(adminData.permissionSet),
+            accountType: "admin",
+          },
+          "24h"
+        ),
+      };
+    }
+
+    // if login is from a different device
+    // token is sent to user emails
     const token = await this.otpRepository.create({
       ownerId: adminData.adminId,
       otpToken: this.securityHelperService.generateOtp(),
@@ -133,6 +126,8 @@ export default class UserAuthService {
         },
         "15m"
       ),
+      message : "Verify OTP to complete login, OTP sent to user's email"
+
     };
   }
 
@@ -205,7 +200,6 @@ export default class UserAuthService {
         password: await this.securityHelperService.HashPassword(password),
         hasSetPassword: true,
       });
-    
     else
       await this.ClientRepository.update(user._id!.toString(), {
         password: await this.securityHelperService.HashPassword(password),
@@ -213,53 +207,16 @@ export default class UserAuthService {
       });
   }
 
-  // /**
-  //  *
-  //  * @param client
-  //  * @returns
-  //  */
-  // async CreateClientAccount(client: IClient) {
-  //   let _client = await this.ClientRepository.findOneByFilter({
-  //     email: { $regex: new RegExp(`^${client.email}$`, "i") },
-  //   });
-
-  //   if (_client){
-  //     throw new ApiError(
-  //       httpStatus.CONFLICT,
-  //       "Client account exists with this email"
-  //     );
-  //   }
-
-  //   const genPassword = generateRandomPassword();
-
-  //   _client = await this.ClientRepository.create({
-  //     ...client,
-  //     password: await this.securityHelperService.HashPassword(genPassword),
-  //   });
-
-  //   //send credentials to client mail
-  //   this.emailService.SendEMailToUser(
-  //     {
-  //       to : _client.email,
-  //       bodyParts : {
-  //         name : _client.name,
-  //         email : _client.email,
-  //         password : genPassword,
-  //         _id : _client._id
-  //         },
-  //     },
-  //     EmailType.CredentialsEmail
-  //   )
-
-  //   return;
-  // }
-
   /**
    *
    * @param client
    * @returns
    */
-  async LoginClientAccount(client: Partial<IClient>) {
+  async LoginClientAccount(
+    client: Partial<IClient>,
+    deviceInfo: Partial<IDevice>,
+    rememberDevice : boolean = false
+  ) {
     const clientData = await this.ClientRepository.findOneByFilter({
       email: { $regex: new RegExp(`^${client.email}$`, "i") },
     });
@@ -285,7 +242,39 @@ export default class UserAuthService {
         httpStatus.UNAUTHORIZED,
         "Incorrect email or password..."
       );
+    
 
+    // if remember device is set to true
+    if(rememberDevice){
+      await this.AdminRepository.update(clientData._id!.toString(), {
+        device : {
+          rememberMeExpires : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
+          ipAddress : deviceInfo.ipAddress as string,
+          userAgent : deviceInfo.userAgent as string
+        }
+      })
+    }
+
+    if (
+      deviceInfo.userAgent === clientData.device.userAgent &&
+      clientData.device.rememberMeExpires > new Date()
+    ) {
+      return {
+        accessToken: await this.securityHelperService.GenerateJWT(
+          {
+            id: clientData.clientId.toString(),
+            role: clientData.clientType,
+            permissions: clientData.permissionSet,
+            accountType: "client",
+          },
+          "24h"
+        ),
+      };
+    }
+
+
+    // if login is from a different device
+    // token is sent to user emails
     const token = await this.otpRepository.create({
       ownerId: clientData.clientId,
       otpToken: this.securityHelperService.generateOtp(),
@@ -311,6 +300,7 @@ export default class UserAuthService {
         },
         "15m"
       ),
+      message : "Verify OTP to complete login, OTP sent to user's email"
     };
   }
 }

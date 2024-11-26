@@ -60,34 +60,44 @@ class AuthenticationMiddleware {
   };
 
   public async GetAccountType(req: Request, _: Response, next: NextFunction) {
-   try{
+    try {
+      const { email } = req.body;
 
-
-    const { email } = req.body;
-
-    if (
-      await Client.findOne({
-        email: { $regex: new RegExp(`^${email}$`, "i") },
-      })
-    ) {
-      req.body.loginType = "client";
-    } else if (
-      await Admin.findOne({
-        email: { $regex: new RegExp(`^${email}$`, "i") },
-      })
-    ) {
-      req.body.loginType = "admin";
-    } else {
-      throw new ApiError(
-        httpStatus.NOT_FOUND,
-        "Account does not exist"
-      )
+      if (
+        await Client.findOne({
+          email: { $regex: new RegExp(`^${email}$`, "i") },
+        })
+      ) {
+        req.body.loginType = "client";
+      } else if (
+        await Admin.findOne({
+          email: { $regex: new RegExp(`^${email}$`, "i") },
+        })
+      ) {
+        req.body.loginType = "admin";
+      } else {
+        throw new ApiError(httpStatus.NOT_FOUND, "Account does not exist");
+      }
+      next();
+    } catch (error: any) {
+      next(error);
     }
-    next();
-   }catch(error : any){
-    next(error);
+  }
 
-   }
+  public async GetDeviceInfo(req: any, _: Response, next: NextFunction) {
+    try {
+      const userAgent = req.headers['user-agent'] || "";
+      const ipAddress = req.ip || "";
+      req.deviceInfo = {
+        userAgent,
+        ipAddress
+      }
+
+
+      next();
+    } catch (error: any) {
+      next(error);
+    }
   }
 }
 

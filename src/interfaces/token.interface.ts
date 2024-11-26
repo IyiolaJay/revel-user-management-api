@@ -16,6 +16,12 @@ export interface IOtp{
     expiryInSecs? : Date
 }
 
+export interface IDevice{
+  userAgent: string,
+  ipAddress: string,
+  rememberMeExpires: Date,
+}
+
 export interface IOtpRepository extends IGenericRepository<IOtp>{
 
 }

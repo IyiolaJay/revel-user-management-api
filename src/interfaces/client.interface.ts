@@ -1,5 +1,6 @@
 import { Schema } from "mongoose";
 import IGenericRepository from "./generic.repository.interface";
+import { IDevice } from "./token.interface";
 
 export interface IClient {
   _id?: Schema.Types.ObjectId;
@@ -12,6 +13,7 @@ export interface IClient {
   hasSetPassword : boolean,
   clientType : string;
   permissionSet : string[];
+  device : IDevice
 }
 
 

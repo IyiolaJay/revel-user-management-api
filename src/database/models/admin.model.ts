@@ -41,6 +41,12 @@ const adminSchema = new Schema<IAdmin>(
       required: true,
       default: [],
     },
+    device: 
+      {
+        userAgent: String,
+        ipAddress: String,
+        rememberMeExpires: Date,
+      },
   },
   {
     timestamps: true,
