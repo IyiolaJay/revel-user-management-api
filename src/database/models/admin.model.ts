@@ -57,7 +57,7 @@ const adminSchema = new Schema<IAdmin>(
       transform: (_, ret) => {
         delete ret._id;
         delete ret.password;
-        // delete ret.isGeneratedPassword;
+        delete ret.device;
         return ret;
       },
     },

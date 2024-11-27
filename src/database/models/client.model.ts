@@ -49,13 +49,12 @@ const clientSchema = new Schema<IClient>(
       required: true,
       default: [],
     },
-    device: [
-      {
-        userAgent: String,
-        ipAddress: String,
-        rememberMeExpires: Date,
-      },
-    ],
+    device: 
+    {
+      userAgent: String,
+      ipAddress: String,
+      rememberMeExpires: Date,
+    },
   },
   {
     timestamps: true,
@@ -66,7 +65,7 @@ const clientSchema = new Schema<IClient>(
       transform: (_, ret) => {
         delete ret._id;
         delete ret.password;
-        // delete ret.isGeneratedPassword;
+        delete ret.device;
         return ret;
       },
     },
