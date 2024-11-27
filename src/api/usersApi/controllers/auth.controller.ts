@@ -32,32 +32,29 @@ export default class UserAuthController extends BaseController {
 
   AccountLoginController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const {loginType} = req.body;
+      const { loginType } = req.body;
       let token;
-      const {rememberDevice} = req.query ?? false;
 
       const device = (req as any).deviceInfo;
 
-      if(loginType === "admin"){
+      if (loginType === "admin") {
         token = await this.UserAuthService.LoginAdminAccount(
           req.body as IAdmin,
-          device,
-          Boolean(rememberDevice)
+          device
         );
-      }else {
+      } else {
         token = await this.UserAuthService.LoginClientAccount(
           req.body as IClient,
           device
-        )
+        );
       }
 
-      
       this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: token.message ?? "Login success",
         data: {
-          accessToken : token.accessToken,
-          rememberDevice : token.rememberDevice ?? false
+          accessToken: token.accessToken,
+          rememberDevice: token.rememberDevice ?? false,
         },
       });
     }
@@ -67,7 +64,15 @@ export default class UserAuthController extends BaseController {
     async (req: Request, res: Response, _: NextFunction) => {
       const { token } = req.body;
       const { user } = res.locals;
-      const apiToken = await this.UserAuthService.VerifyToken(token, user);
+      const { rememberDevice } = req.query;
+     const device = (req as any).deviceInfo;
+
+      const apiToken = await this.UserAuthService.VerifyToken(
+        token,
+        user,
+        Boolean(rememberDevice),
+        device
+      );
       this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: "Token verified",
@@ -78,11 +83,15 @@ export default class UserAuthController extends BaseController {
 
   ChangePasswordController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const  userId = req.query.clientId ?? req.query.adminId;
-      const path = req.query.clientId ? "client" : "admin"
+      const userId = req.query.clientId ?? req.query.adminId;
+      const path = req.query.clientId ? "client" : "admin";
 
       const { password } = req.body;
-      await this.UserAuthService.ChangePassword(userId as string, password, path);
+      await this.UserAuthService.ChangePassword(
+        userId as string,
+        password,
+        path
+      );
       this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: "Password changed, please login again",

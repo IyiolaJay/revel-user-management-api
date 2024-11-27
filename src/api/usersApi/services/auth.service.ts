@@ -41,8 +41,7 @@ export default class UserAuthService {
    */
   async LoginAdminAccount(
     admin: Partial<IAdmin>,
-    deviceInfo: Partial<IDevice>,
-    rememberDevice : boolean = false
+    deviceInfo: Partial<IDevice>
   ) {
     const adminData = await this.AdminRepository.findOneByFilter({
       email: { $regex: new RegExp(`^${admin.email}$`, "i") },
@@ -51,15 +50,7 @@ export default class UserAuthService {
     if (!adminData)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
 
-    // //check if password is system generated
-    // if(adminData.hasSetPassword === false){
-    //   throw new ApiError(
-    //     httpStatus.NOT_ACCEPTABLE,
-    //     "You are using a system generated password, please change your password. Thanks",
-    //   )
-    // }
-
-    //
+    //check password
     if (
       !(await this.securityHelperService.ComparePassword(
         admin.password!,
@@ -71,36 +62,33 @@ export default class UserAuthService {
         "Incorrect email or password..."
       );
 
-    
+    //response data structure to be sent to the client
+    const tokenResponse = {
+      accessToken: await this.securityHelperService.GenerateJWT(
+        {
+          id: adminData.adminId.toString(),
+          role: adminData.adminType,
+          permissions: mapPermissionKeysToValues(adminData.permissionSet),
+          accountType: "admin",
+        },
+        "15m"
+      ),
+      message: "Verify OTP to complete login, OTP sent to user's email",
+      rememberDevice: false,
+    };
 
+    //
+    //check if remember device is set
     if (
       adminData.device &&
       deviceInfo.userAgent === adminData.device.userAgent &&
       adminData.device.rememberMeExpires > new Date()
     ) {
       return {
-        accessToken: await this.securityHelperService.GenerateJWT(
-          {
-            id: adminData.adminId.toString(),
-            role: adminData.adminType,
-            permissions: mapPermissionKeysToValues(adminData.permissionSet),
-            accountType: "admin",
-          },
-          "24h"
-        ),
-        rememberDevice : true,
+        ...tokenResponse,
+        message: "Login succesful",
+        rememberDevice: true,
       };
-    }
-
-    // if remember device is set to true
-    if(rememberDevice){
-      await this.AdminRepository.update(adminData._id!.toString(), {
-        device : {
-          rememberMeExpires : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
-          ipAddress : deviceInfo.ipAddress as string,
-          userAgent : deviceInfo.userAgent as string
-        }
-      })
     }
 
     // if login is from a different device
@@ -119,20 +107,7 @@ export default class UserAuthService {
       },
       EmailType.VerifyEmail
     );
-
-    return {
-      accessToken: await this.securityHelperService.GenerateJWT(
-        {
-          id: adminData.adminId.toString(),
-          role: adminData.adminType,
-          permissions: mapPermissionKeysToValues(adminData.permissionSet),
-          accountType: "admin",
-        },
-        "15m"
-      ),
-      message : "Verify OTP to complete login, OTP sent to user's email"
-
-    };
+    return tokenResponse;
   }
 
   /**
@@ -141,7 +116,12 @@ export default class UserAuthService {
    * @param owner
    * @returns
    */
-  async VerifyToken(token: string, owner: ITokenData) {
+  async VerifyToken(
+    token: string,
+    owner: ITokenData,
+    rememberDevice: boolean = false,
+    deviceInfo: IDevice
+  ) {
     const isValidToken = await this.otpRepository.findOneByFilter({
       otpToken: token,
       ownerId: owner.id,
@@ -150,9 +130,41 @@ export default class UserAuthService {
     if (!isValidToken) {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid or Expired Token");
     }
-    console.log(isValidToken._id!.toString());
 
     this.otpRepository.delete(isValidToken._id!.toString());
+
+    //
+    // if remember device is set to true
+    if (rememberDevice && owner.accountType === "client") {
+      const user = await this.ClientRepository.findOneByFilter({
+        clientId: owner.id,
+      });
+      console.log(user);
+
+      await this.ClientRepository.update(user!._id!.toString(), {
+        device: {
+          rememberMeExpires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
+          ipAddress: deviceInfo.ipAddress as string,
+          userAgent: deviceInfo.userAgent as string,
+        },
+      });
+    }
+    //
+    if (rememberDevice && owner.accountType === "admin") {
+      const user = await this.AdminRepository.findOneByFilter({
+        adminId: owner.id,
+      });
+
+      console.log(user);
+      await this.AdminRepository.update(user!._id!.toString(), {
+        device: {
+          rememberMeExpires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
+          ipAddress: deviceInfo.ipAddress as string,
+          userAgent: deviceInfo.userAgent as string,
+        },
+      });
+    }
+
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
         {
@@ -163,9 +175,7 @@ export default class UserAuthService {
         },
         "24h"
       ),
-      accessTokenExpiration: new Date(
-        new Date().getTime() + 24 * 60 * 60 * 1000
-      ).toISOString(),
+      accessTokenExpiration: 24,
       accountType: owner.accountType,
     };
   }
@@ -218,8 +228,7 @@ export default class UserAuthService {
    */
   async LoginClientAccount(
     client: Partial<IClient>,
-    deviceInfo: Partial<IDevice>,
-    rememberDevice : boolean = false
+    deviceInfo: Partial<IDevice>
   ) {
     const clientData = await this.ClientRepository.findOneByFilter({
       email: { $regex: new RegExp(`^${client.email}$`, "i") },
@@ -228,55 +237,45 @@ export default class UserAuthService {
     if (!clientData)
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
 
-    //     //check if password is system generated
-    // if(clientData.hasSetPassword === false){
-    //       throw new ApiError(
-    //         httpStatus.NOT_ACCEPTABLE,
-    //         "You are using a system generated password, please change your password. Thanks"
-    //       )
-    //     }
-    //
+    //check password
     if (
       !(await this.securityHelperService.ComparePassword(
         client.password!,
         clientData.password
       ))
-    )
+    ) {
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
         "Incorrect email or password..."
       );
-    
+    }
 
-   
+    //response data structure to be sent to the client
+    const tokenResponse =  {
+      accessToken: await this.securityHelperService.GenerateJWT(
+        {
+          id: clientData.clientId.toString(),
+          role: clientData.clientType,
+          permissions: clientData.permissionSet,
+          accountType: "client",
+        },
+        "15m"
+      ),
+      message: "Verify OTP to complete login, OTP sent to user's email",
+      rememberDevice : false,
+    };
 
+    //check if remember device was set
     if (
       deviceInfo.userAgent === clientData.device.userAgent &&
       clientData.device.rememberMeExpires > new Date()
     ) {
       return {
-        accessToken: await this.securityHelperService.GenerateJWT(
-          {
-            id: clientData.clientId.toString(),
-            role: clientData.clientType,
-            permissions: clientData.permissionSet,
-            accountType: "client",
-          },
-          "24h"
-        ),
+        ...tokenResponse,
+        message : "Login Successful",
         rememberDevice : true,
-      };
-    }
-
-     // if remember device is set to true
-     if(rememberDevice){
-      await this.ClientRepository.update(clientData._id!.toString(), {
-        device : {
-          rememberMeExpires : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
-          ipAddress : deviceInfo.ipAddress as string,
-          userAgent : deviceInfo.userAgent as string
-        }
-      })
+        
+      }
     }
 
     // if login is from a different device
@@ -296,17 +295,6 @@ export default class UserAuthService {
       EmailType.VerifyEmail
     );
 
-    return {
-      accessToken: await this.securityHelperService.GenerateJWT(
-        {
-          id: clientData.clientId.toString(),
-          role: clientData.clientType,
-          permissions: clientData.permissionSet,
-          accountType: "client",
-        },
-        "15m"
-      ),
-      message : "Verify OTP to complete login, OTP sent to user's email"
-    };
+    return tokenResponse;
   }
 }

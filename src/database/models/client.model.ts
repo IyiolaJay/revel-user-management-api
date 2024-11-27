@@ -59,7 +59,7 @@ const clientSchema = new Schema<IClient>(
   {
     timestamps: true,
     versionKey: false,
-    id: true,
+    id: false,
     toJSON: {
       virtuals: true,
       transform: (_, ret) => {

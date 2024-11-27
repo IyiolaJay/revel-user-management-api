@@ -51,7 +51,7 @@ const adminSchema = new Schema<IAdmin>(
   {
     timestamps: true,
     versionKey: false,
-    id: true,
+    id: false,
     toJSON: {
       virtuals: true,
       transform: (_, ret) => {

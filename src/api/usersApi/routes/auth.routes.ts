@@ -33,8 +33,9 @@ export default class AdminAuthRoutes extends BaseRoute{
 
     this.router.post(
       "/verifyToken",
-      authenticationMiddleware.AuthorizeUser,
       RequestValidator.validateRequestSchema(authValidator.verifyToken),
+      authenticationMiddleware.AuthorizeUser,
+      authenticationMiddleware.GetDeviceInfo,
       adminAuthController.VerifyTokenController
     );
 

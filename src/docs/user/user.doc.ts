@@ -6,11 +6,6 @@
  *     summary: User account login (admin/client)
  *     tags:
  *       - Users
- *     parameters:
- *       - in : query
- *         name: rememberDevice
- *         schema:
- *             type: Boolean
  *     requestBody:
  *       required: true
  *       content:
@@ -48,6 +43,11 @@
  *         summary: Verify Token
  *         tags:
  *            - Users
+ *         parameters:
+ *           - in : query
+ *             name: rememberDevice
+ *             schema:
+ *               type: Boolean
  *         requestBody:
  *              required: true
  *              content:
