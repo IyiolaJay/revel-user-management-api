@@ -71,18 +71,10 @@ export default class UserAuthService {
         "Incorrect email or password..."
       );
 
-    // if remember device is set to true
-    if(rememberDevice){
-      await this.AdminRepository.update(adminData._id!.toString(), {
-        device : {
-          rememberMeExpires : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
-          ipAddress : deviceInfo.ipAddress as string,
-          userAgent : deviceInfo.userAgent as string
-        }
-      })
-    }
+    
 
     if (
+      adminData.device &&
       deviceInfo.userAgent === adminData.device.userAgent &&
       adminData.device.rememberMeExpires > new Date()
     ) {
@@ -96,7 +88,19 @@ export default class UserAuthService {
           },
           "24h"
         ),
+        rememberDevice : true,
       };
+    }
+
+    // if remember device is set to true
+    if(rememberDevice){
+      await this.AdminRepository.update(adminData._id!.toString(), {
+        device : {
+          rememberMeExpires : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
+          ipAddress : deviceInfo.ipAddress as string,
+          userAgent : deviceInfo.userAgent as string
+        }
+      })
     }
 
     // if login is from a different device
@@ -244,16 +248,7 @@ export default class UserAuthService {
       );
     
 
-    // if remember device is set to true
-    if(rememberDevice){
-      await this.AdminRepository.update(clientData._id!.toString(), {
-        device : {
-          rememberMeExpires : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
-          ipAddress : deviceInfo.ipAddress as string,
-          userAgent : deviceInfo.userAgent as string
-        }
-      })
-    }
+   
 
     if (
       deviceInfo.userAgent === clientData.device.userAgent &&
@@ -269,9 +264,20 @@ export default class UserAuthService {
           },
           "24h"
         ),
+        rememberDevice : true,
       };
     }
 
+     // if remember device is set to true
+     if(rememberDevice){
+      await this.ClientRepository.update(clientData._id!.toString(), {
+        device : {
+          rememberMeExpires : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
+          ipAddress : deviceInfo.ipAddress as string,
+          userAgent : deviceInfo.userAgent as string
+        }
+      })
+    }
 
     // if login is from a different device
     // token is sent to user emails

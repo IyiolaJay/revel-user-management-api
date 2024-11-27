@@ -56,7 +56,8 @@ export default class UserAuthController extends BaseController {
         success: true,
         message: token.message ?? "Login success",
         data: {
-          accessToken : token.accessToken
+          accessToken : token.accessToken,
+          rememberDevice : token.rememberDevice ?? false
         },
       });
     }
