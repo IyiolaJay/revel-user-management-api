@@ -19,7 +19,7 @@ export default class ServiceRoutes extends BaseRoute{
 
         this.router.post(
             "/createService",
-            RequestValidator.validateRequestSchema(serviceValidators.createService,"query"),
+            RequestValidator.validateRequestSchema(serviceValidators.createService),
             authenticationMiddleware.AuthorizeUser,
             PermissionValidation.PermissionMiddleware([Permissions.CREATE_SERVICE]),
             serviceController.CreateService,

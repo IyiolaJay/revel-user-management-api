@@ -13,7 +13,8 @@ export interface IClient {
   hasSetPassword : boolean,
   clientType : string;
   permissionSet : string[];
-  device : IDevice
+  device : IDevice;
+  creatorId : string;
 }
 
 

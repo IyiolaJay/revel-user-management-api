@@ -70,126 +70,12 @@ export default class AdminAuthService {
     return;
   }
 
-  // /**
-  //  * 
-  //  * @param admin 
-  //  * @returns 
-  //  */
-  // async LoginAdminAccount(admin: Partial<IAdmin>) {
-  //   const adminData = await this.AdminRepository.findOneByFilter({
-  //     email: { $regex: new RegExp(`^${admin.email}$`, "i") },
-  //   });
-
-  //   if (!adminData)
-  //     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
-
-
-  //   //check if password is system generated
-  //   if(adminData.isGeneratedPassword === true){
-  //     throw new ApiError(
-  //       httpStatus.NOT_ACCEPTABLE,
-  //       "You are using a system generated password, please change your password. Thanks",
-  //     )
-  //   }
-    
-  //   //
-  //   if (
-  //     !(await this.securityHelperService.ComparePassword(
-  //       admin.password!,
-  //       adminData.password
-  //     ))
-  //   )
-  //     throw new ApiError(
-  //       httpStatus.UNAUTHORIZED,
-  //       "Incorrect email or password..."
-  //     );
-
-  //   const token = await this.otpRepository.create({
-  //     ownerId: adminData.adminId,
-  //     otpToken: this.securityHelperService.generateOtp(),
-  //   });
-
-  //   this.emailService.SendEMailToUser(
-  //     {
-  //       to : adminData.email,
-  //       bodyParts : {
-  //         otp : token.otpToken
-  //       }
-  //     },
-  //     EmailType.VerifyEmail
-  //   )
-
-  //   return {
-  //     accessToken: await this.securityHelperService.GenerateJWT(
-  //       {
-  //         id: adminData.adminId.toString(),
-  //         role: adminData.adminType,
-  //         permissions: mapPermissionKeysToValues(adminData.permissionSet),
-  //       },
-  //       "15m"
-  //     ),
-  //   };
-  // }
-
-  // /**
-  //  * 
-  //  * @param token 
-  //  * @param owner 
-  //  * @returns 
-  //  */
-  // async VerifyToken(token: string, owner: ITokenData) {
-  //   const isValidToken = await this.otpRepository.findOneByFilter({
-  //     otpToken: token,
-  //     ownerId: owner.id,
-  //   });
-
-  //   if (!isValidToken) {
-  //     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid or Expired Token");
-  //   }
-  //   console.log(isValidToken._id!.toString());
-    
-  //   this.otpRepository.delete(isValidToken._id!.toString());
-  //   return {
-  //     accessToken: await this.securityHelperService.GenerateJWT(
-  //       {
-  //         id: owner.id.toString(),
-  //         role: owner.role,
-  //         permissions: owner.permissions,
-  //       },
-  //       "24h"
-  //     ),
-  //   };
-  // }
-
-  // /**
-  //  * 
-  //  * @param id 
-  //  * @param password 
-  //  */
-  // async ChangePassword(id : string, password : string){
-  //   const user = await this.AdminRepository.findById(id);
-
-  //   if(!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
-
-  //   if(await this.securityHelperService.ComparePassword(password, user.password)) {
-  //     throw new ApiError(
-  //       httpStatus.NOT_ACCEPTABLE,
-  //       "Use a different password that's not your old password"
-  //     )
-  //   }
-
-  //   await this.AdminRepository.update(id, {
-  //     password : await this.securityHelperService.HashPassword(password),
-  //     isGeneratedPassword : false,
-  //   });
-  // }
-
   /**
    * 
    * @param client 
    * @returns 
    */
-  async CreateClientAccount(client: IClient) {
+  async CreateClientAccount(client: IClient, creatorId : string) {
     let _client = await this.ClientRepository.findOneByFilter({
       email: { $regex: new RegExp(`^${client.email}$`, "i") },
     });
@@ -205,6 +91,7 @@ export default class AdminAuthService {
 
     _client = await this.ClientRepository.create({
       ...client,
+      creatorId,
       password: await this.securityHelperService.HashPassword(genPassword),
     });
 

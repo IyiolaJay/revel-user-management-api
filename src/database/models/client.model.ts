@@ -11,6 +11,10 @@ const clientSchema = new Schema<IClient>(
       unique : true,
       default : () => uuidV4(),
     },
+    creatorId:{
+      type: String,
+      required: true,
+    },
     establishmentId: {
       type: [Number],
       required: true,

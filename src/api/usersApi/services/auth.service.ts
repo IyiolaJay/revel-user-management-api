@@ -86,6 +86,15 @@ export default class UserAuthService {
     ) {
       return {
         ...tokenResponse,
+        accessToken: await this.securityHelperService.GenerateJWT(
+          {
+            id: adminData.adminId.toString(),
+            role: adminData.adminType,
+            permissions: mapPermissionKeysToValues(adminData.permissionSet),
+            accountType: "admin",
+          },
+          "24h"
+        ),
         message: "Login succesful",
         rememberDevice: true,
       };
@@ -272,6 +281,15 @@ export default class UserAuthService {
     ) {
       return {
         ...tokenResponse,
+        accessToken: await this.securityHelperService.GenerateJWT(
+          {
+            id: clientData.clientId.toString(),
+            role: clientData.clientType,
+            permissions: clientData.permissionSet,
+            accountType: "client",
+          },
+          "24h"
+        ),
         message : "Login Successful",
         rememberDevice : true,
         

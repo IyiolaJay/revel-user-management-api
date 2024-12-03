@@ -71,7 +71,8 @@ export default class AdminAuthController extends BaseController {
 
   ClientAccountCreationController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      await this.AdminService.CreateClientAccount(req.body as IClient);
+      const {id} = res.locals.user;
+      await this.AdminService.CreateClientAccount(req.body as IClient, id);
       this.sendResponse(res, httpStatus.CREATED, {
         success: true,
         message:
