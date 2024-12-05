@@ -7,6 +7,7 @@ import httpStatus from "http-status";
 import ClientRepository from "../../../repositories/client.repository";
 import { IClient } from "../../../interfaces/client.interface";
 import { Permissions } from "../../../utilities/enums/permissions.enum";
+import ServiceRepository from "../../../repositories/service.repository";
 export default class AdminAuthController extends BaseController {
   private AdminService: AdminService;
 
@@ -15,7 +16,8 @@ export default class AdminAuthController extends BaseController {
 
     this.AdminService = new AdminService(
       new AdminRepository(),
-      new ClientRepository()
+      new ClientRepository(),
+      new ServiceRepository()
     );
   }
 
@@ -72,7 +74,8 @@ export default class AdminAuthController extends BaseController {
   ClientAccountCreationController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
       const {id} = res.locals.user;
-      await this.AdminService.CreateClientAccount(req.body as IClient, id);
+      const {defaultService} = req.body;
+      await this.AdminService.CreateClientAccount(req.body as IClient, id, defaultService);
       this.sendResponse(res, httpStatus.CREATED, {
         success: true,
         message:

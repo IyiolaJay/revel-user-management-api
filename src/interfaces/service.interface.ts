@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { FilterQuery, Schema } from "mongoose";
 import IGenericRepository from "./generic.repository.interface";
 
 export interface IService{
@@ -13,8 +13,15 @@ export interface IService{
     createdBy : string,
 }
 
+export interface IActiveService{
+    serviceId : string;
+    clientId : string;
+    startDate : Date;
+    expireDate : Date;
+}
 
 
 export interface IServiceRepository extends IGenericRepository<IService>{
-
+    findActiveServices(filter : FilterQuery<IActiveService>) : Promise<IActiveService[]>;
+    createActiveService(service : Partial<IActiveService>) : Promise<void>;
 }

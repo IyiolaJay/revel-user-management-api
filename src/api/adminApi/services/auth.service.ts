@@ -12,18 +12,20 @@ import EmailService from "../../../email/emailer";
 import { EmailType } from "../../../utilities/enums/enum";
 import { IClient, IClientRepository } from "../../../interfaces/client.interface";
 import { mapPermisionValuesToKeys } from "../../../helpers/permissions.mapper";
+import { IActiveService, IServiceRepository } from "../../../interfaces/service.interface";
 
 export default class AdminAuthService {
   private AdminRepository: IAdminRepository;
+  private ServiceRepository : IServiceRepository;
   private securityHelperService: SecurityHelperService = new SecurityHelperService();
   // private otpRepository: IOtpRepository;
   private emailService = new EmailService();
   private ClientRepository: IClientRepository;
 
 
-  constructor(adminRepository: IAdminRepository, clientRepository: IClientRepository) {
+  constructor(adminRepository: IAdminRepository, clientRepository: IClientRepository, serviceRepository : IServiceRepository) {
     this.AdminRepository = adminRepository;
-    // this.otpRepository = new OtpRepository();
+    this.ServiceRepository = serviceRepository;
     this.ClientRepository = clientRepository;
 
   }
@@ -75,7 +77,7 @@ export default class AdminAuthService {
    * @param client 
    * @returns 
    */
-  async CreateClientAccount(client: IClient, creatorId : string) {
+  async CreateClientAccount(client: IClient, creatorId : string, defaultService? : Partial<IActiveService>) {
     let _client = await this.ClientRepository.findOneByFilter({
       email: { $regex: new RegExp(`^${client.email}$`, "i") },
     });
@@ -108,6 +110,14 @@ export default class AdminAuthService {
       },
       EmailType.CredentialsEmail
     )
+
+    if(defaultService){
+      await this.ServiceRepository.createActiveService({
+        clientId : _client.clientId,
+        serviceId : defaultService.serviceId as string,
+        expireDate : defaultService.expireDate as Date,
+      })
+    }
 
     return;
   }

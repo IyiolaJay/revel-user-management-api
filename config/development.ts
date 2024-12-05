@@ -8,5 +8,7 @@ export default {
     MAIL_PASS : process.env.MAIL_PASS,
     MAIL_USER : process.env.MAIL_USER,
     MAIL_FROM : process.env.MAIL_FROM,
+    REDISCLOUD_URL : process.env.REDISCLOUD_URL,
+    SERVICE_ID : process.env.SERVICE_ID
   };
   
