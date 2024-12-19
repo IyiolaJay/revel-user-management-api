@@ -37,4 +37,29 @@ export default class ServiceController extends BaseController {
       });
     }
   );
+  
+  GetServiceById =  this.wrapAsync(
+    async (req: Request, res: Response, _: NextFunction) => {
+      const { serviceId } = req.params;
+      const allServices = await this.ServicesService.GetServiceById(serviceId ?? "");
+      this.sendResponse(res, httpStatus.OK, {
+        success: true,
+        message: "Service Fetched",
+        data: allServices,
+      });
+    }
+  );
+
+
+  EditService = this.wrapAsync(
+    async (req: Request, res: Response, _: NextFunction) => {
+      const { serviceId } = req.params;
+      await this.ServicesService.EditService(req.body, serviceId ?? "");
+      this.sendResponse(res, httpStatus.OK, {
+        success: true,
+        message: "Service Edited",
+        data: null,
+      });
+    }
+  );
 }

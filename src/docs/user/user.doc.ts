@@ -113,3 +113,50 @@
  *           "200":
  *             description: success and no content
  */
+
+
+/**
+ * @openapi
+ * /profile/client/all:
+ *      get:
+ *         summary: Get client users.
+ *         tags:
+ *            - Users
+ *         parameters:
+ *           - in: query
+ *             name: offset
+ *             required: true
+ *             default : 1
+ *             schema:
+ *               type: string 
+ *           - in: query
+ *             name: limit
+ *             schema:
+ *               type: string 
+ *         responses:
+ *           "200":
+ *             description: success
+ */
+
+
+/**
+ * @openapi
+ * /profile/client/edit/{clientId}:
+ *      patch:
+ *         summary: Edit client
+ *         tags:
+ *            - Users
+ *         parameters:
+ *           - in : path
+ *             name : clientId
+ *         requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                     schema:
+ *                        $ref: '#/components/schemas/ClientEdit'
+ *         responses:
+ *            "201":
+ *               description: created
+ *
+ */

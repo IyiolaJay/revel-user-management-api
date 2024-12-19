@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import { IAdminRepository } from "../../../interfaces/admin.interface";
 import ApiError from "../../../utilities/error.base";
-import { IClientRepository } from "../../../interfaces/client.interface";
+import { IClient, IClientRepository } from "../../../interfaces/client.interface";
 
 export default class UserProfileService {
   private AdminRepository: IAdminRepository;
@@ -43,5 +43,49 @@ export default class UserProfileService {
       user,
       accountType : userType
     };
+  }
+
+  /**
+   * 
+   * @param offset 
+   * @param limit 
+   * @returns 
+   */
+  async GetAllClients(offset: number = 1, limit : number = 20){
+    return await this.ClientRepository.findAll(offset, limit)
+  }
+
+  /**
+   * 
+   * @param clientUpdateData 
+   * @param clientId 
+   */
+  async EditClientProfileData(clientUpdateData : Partial<IClient>, clientId : string){
+    const id = await this.ClientRepository.findOneByFilter({
+      clientId : clientId,
+    })
+
+    if(!id) throw new ApiError(
+      httpStatus.NOT_FOUND,
+      "Account doesn't exists"
+    )
+    await this.ClientRepository.update(id._id!.toString(), clientUpdateData)
+  }
+  
+  /**
+   * 
+   * @param id 
+   * @returns 
+   */
+  async GetClientById(id : string){
+     const client = await this.ClientRepository.findOneByFilter({
+      clientId : id
+    })
+
+    if(!client) throw new ApiError(
+      httpStatus.NOT_FOUND,
+      "Client account doesnt exists"
+    )
+    return
   }
 }

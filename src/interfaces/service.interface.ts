@@ -3,7 +3,7 @@ import IGenericRepository from "./generic.repository.interface";
 
 export interface IService{
     _id? : Schema.Types.ObjectId,
-    serviceId : string,
+    // serviceId : string,
     serviceName : string,
     serviceDescription : string,
     serviceCost : number,

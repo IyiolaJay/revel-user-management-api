@@ -26,17 +26,17 @@ const changePasswordQuery = RequestValidator.requestItemsStructure({
     adminId : Joi.string()
 })
 
-const createClient = RequestValidator.requestItemsStructure({
-    email : Joi.string().email().required(),
-    name : Joi.string().required(),
-    establishmentId : Joi.string().required(),
-    establishmentUrl : Joi.string().required(),
-})
+// const createClient = RequestValidator.requestItemsStructure({
+//     email : Joi.string().email().required(),
+//     name : Joi.string().required(),
+//     establishmentId : Joi.string().required(),
+//     establishmentUrl : Joi.string().required(),
+// })
 
 
 export default {
     createAdmin,
-    createClient,
+    // createClient,
     loginAccount,
     verifyToken,
     changePassword,

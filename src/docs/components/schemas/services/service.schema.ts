@@ -22,5 +22,5 @@
  *             serviceTenureType:
  *                type: string
  *             minimumTenureDuration:
- *                type: string
+ *                type: number
  */

@@ -13,6 +13,17 @@ const createService = RequestValidator.requestItemsStructure({
     minimumTenureDuration : Joi.number().precision(0),
 })
 
+
+const editService = RequestValidator.requestItemsStructure({
+    serviceName : Joi.string(),
+    serviceDescription : Joi.string(),
+    serviceCost : Joi.number().precision(2),
+    serviceCostCurrency : Joi.string().valid(...Object.keys(Currency)),
+    serviceTenureType : Joi.string(),
+    minimumTenureDuration : Joi.number().precision(0),
+})
+
 export default {
-    createService
+    createService,
+    editService
 }

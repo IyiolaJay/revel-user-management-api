@@ -41,4 +41,30 @@ export default class ServicesService{
     async GetAllServices(offset: number = 1, limit : number = 10){
         return await this.ServiceRepository.findAll(offset, limit);
     }
+
+    /**
+     * 
+     * @param serviceId 
+     * @returns 
+     */
+    async GetServiceById(serviceId : string){
+        const service = await this.ServiceRepository.findById(serviceId);
+        if(!service) throw new ApiError(
+            httpStatus.NOT_FOUND,
+            "Service does not exists"
+        );
+
+
+        return service;
+
+    }
+
+    /**
+     * 
+     * @param serviceData 
+     * @param serviceId 
+     */
+    async EditService(serviceData : Partial<IService>, serviceId : string){
+        await this.ServiceRepository.update(serviceId, serviceData);
+    }
 }

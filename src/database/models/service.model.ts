@@ -1,16 +1,9 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IService } from "../../interfaces/service.interface";
-import {v4 as uuidV4} from "uuid";
 import { Currency } from "../../utilities/enums/enum";
 
 const serviceSchema = new Schema<IService>(
   {
-    serviceId: {
-      type: String,
-      required : true,
-      default : () => uuidV4(),
-      unique : true,
-    },
     serviceName: {
       type: String,
       required : true,
@@ -39,7 +32,7 @@ const serviceSchema = new Schema<IService>(
     minimumTenureDuration:{
         type : Number,
         required : true,
-        default : 1,
+        default : 6,
     },
     createdBy:{
       type : String,

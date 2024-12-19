@@ -31,5 +31,21 @@ export default class ServiceRoutes extends BaseRoute{
             RequestValidator.validateRequestSchema(filterValidators.paginationParams,"query"),
             serviceController.GetAllService,
         )
+
+        //
+         //
+         this.router.patch(
+            "/edit/:serviceId",
+            // authenticationMiddleware.AuthorizeUser,
+            RequestValidator.validateRequestSchema(serviceValidators.editService),
+            serviceController.EditService
+        )
+
+        //
+        this.router.get(
+            "/getService/:serviceId",
+            // authenticationMiddleware.AuthorizeUser,
+            serviceController.GetServiceById
+        )
     }
 }

@@ -29,4 +29,45 @@ export default class UserProfileController extends BaseController{
           });
         }
       );
+      
+    
+    GetAllClientProfile = this.wrapAsync(
+        async (req: Request, res: Response, _: NextFunction) => {
+          const {offset,limit} = req.query;
+      
+         const profile = await this.UserProfileService.GetAllClients(Number(offset), Number(limit));
+          this.sendResponse(res, httpStatus.OK, {
+            success: true,
+            message: "Clients profile fetch",
+            data: profile,
+          });
+        }
+      );
+    
+    
+      EditClientProfile = this.wrapAsync(
+        async (req: Request, res: Response, _: NextFunction) => { 
+          const {clientId} = req.params;
+
+          await this.UserProfileService.EditClientProfileData(req.body, clientId ?? "");
+          this.sendResponse(res, httpStatus.OK, {
+            success: true,
+            message: "Profile Updated",
+            data: null,
+          });
+        }
+      );
+
+      GetClientById = this.wrapAsync(
+        async (req: Request, res: Response, _: NextFunction) => { 
+          const {clientId} = req.params;
+
+          await this.UserProfileService.GetClientById(clientId as string);
+          this.sendResponse(res, httpStatus.OK, {
+            success: true,
+            message: "Client fetched",
+            data: null,
+          });
+        }
+      );
 }
