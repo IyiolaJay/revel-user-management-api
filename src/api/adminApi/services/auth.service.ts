@@ -2,11 +2,6 @@ import httpStatus from "http-status";
 import { IAdmin, IAdminRepository } from "../../../interfaces/admin.interface";
 import ApiError from "../../../utilities/error.base";
 import SecurityHelperService from "../../../helpers/security";
-// import {
-//   IOtpRepository,
-//   // ITokenData,
-// } from "../../../interfaces/token.interface";
-// import OtpRepository from "../../../repositories/otp.repository";
 import { generateRandomPassword } from "../../../helpers/password";
 import EmailService from "../../../email/emailer";
 import { EmailType } from "../../../utilities/enums/enum";
@@ -16,7 +11,6 @@ import {
 } from "../../../interfaces/client.interface";
 import { mapPermisionValuesToKeys } from "../../../helpers/permissions.mapper";
 import {
-  IActiveService,
   IServiceRepository,
 } from "../../../interfaces/service.interface";
 import { cacheData, getCacheData } from "../../../redis/redis.cache";
@@ -26,7 +20,6 @@ export default class AdminAuthService {
   private ServiceRepository: IServiceRepository;
   private securityHelperService: SecurityHelperService =
     new SecurityHelperService();
-  // private otpRepository: IOtpRepository;
   private emailService = new EmailService();
   private ClientRepository: IClientRepository;
 
@@ -90,7 +83,7 @@ export default class AdminAuthService {
   async CreateClientAccount(
     client: IClient,
     creatorId: string,
-    defaultService?: Partial<IActiveService>
+    subscribedService?: string[]
   ) {
     let _client = await this.ClientRepository.findOneByFilter({
       email: { $regex: new RegExp(`^${client.email}$`, "i") },
@@ -125,12 +118,30 @@ export default class AdminAuthService {
       EmailType.CredentialsEmail
     );
 
-    if (defaultService) {
-      await this.ServiceRepository.createActiveService({
-        clientId: _client.clientId,
-        serviceId: defaultService.serviceId as string,
-        expireDate: defaultService.expireDate as Date,
-      });
+    if (subscribedService && subscribedService.length > 0) {
+
+      const currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() + 6);
+
+      const subscriptions = subscribedService.map(service => ({
+        serviceId: service,
+        expireDate: currentDate,
+      }))
+
+
+      
+      subscriptions.forEach(async (s)=>{
+        await this.ServiceRepository.createActiveService({
+          clientId: _client.clientId,
+          serviceId: s.serviceId as string,
+          expireDate: s.expireDate as Date,
+        });
+      })
+      // await this.ServiceRepository.createActiveService({
+      //   clientId: _client.clientId,
+      //   serviceId: defaultService.serviceId as string,
+      //   expireDate: defaultService.expireDate as Date,
+      // });
 
       const cachedEstablishment = JSON.parse(
         (await getCacheData("acs_01")) ?? "[]"
@@ -142,7 +153,7 @@ export default class AdminAuthService {
         key: "acs_01",
         value: JSON.stringify([
           ...cachedEstablishment,
-          ...client.establishmentId,
+          ...client.establishmentId.map(item => ({estId : item, estUrl : client.establishmentUrl})),
         ]),
       });
     }

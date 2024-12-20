@@ -30,10 +30,9 @@ const createClient = RequestValidator.requestItemsStructure({
     name : Joi.string().required(),
     establishmentId : Joi.array().items(Joi.number()).required(),
     establishmentUrl : Joi.string().required(),
-    defaultService : Joi.object({
-        serviceId : Joi.string().required(),
-        expireDate : Joi.string().isoDate().required()
-    })
+    subscribedService : Joi.array().items(
+        Joi.string().required()
+    )
 })
 
 

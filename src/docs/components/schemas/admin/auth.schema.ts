@@ -87,19 +87,11 @@
  *             establishmentUrl:
  *                type: string
  *                example: "https://example.com"
- *             defaultService:
- *                type: object
- *                required:
- *                   - serviceId
- *                   - expireDate
- *                properties:
- *                   serviceId:
- *                      type: string
- *                      example: "6744fe5d0f01ae028f5a6195"
- *                   expireDate:
- *                      type: string
- *                      format: date-time
- *                      example: "2024-12-31T23:59:59Z"
+ *             subscribedService:
+ *                type: array
+ *                items:
+ *                   type: string
+ *                example : ["674f1b4b9a7d1e216e34d8fc"]
  */
 
 
