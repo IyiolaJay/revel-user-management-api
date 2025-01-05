@@ -16,6 +16,22 @@
  *             name: limit
  *             schema:
  *               type: string 
+ *           - in: query
+ *             name: from
+ *             schema:
+ *               type: string 
+ *           - in: query
+ *             name: to
+ *             schema:
+ *               type: string 
+ *           - in: query
+ *             name: establishmentId
+ *             schema:
+ *               type: string 
+ *           - in: query
+ *             name: clientId
+ *             schema:
+ *               type: string 
  *         responses:
  *           "200":
  *             description: success

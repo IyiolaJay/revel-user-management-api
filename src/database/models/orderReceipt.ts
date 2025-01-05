@@ -7,6 +7,10 @@ const orderReceiptSchema = new Schema<IOrderReceipt>({
     type: Number,
     required: true,
   },
+  clientId: {
+    type: String,
+    required: true,
+  },
   orderItems: {
     type: Object,
     required: true,

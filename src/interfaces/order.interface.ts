@@ -1,12 +1,10 @@
 import IGenericRepository from "./generic.repository.interface";
 
 export  interface IOrderReceipt {
-    // distributor_tin :  string;
-    // qr_code : string;
-    // message : object;
-    establishmentId : number,
+    establishmentId : number;
     orderItems : object;
-    orderReceipt : object
+    orderReceipt : object;
+    clientId : string;
 }
 
 export interface IOrderRepository extends IGenericRepository<IOrderReceipt>{

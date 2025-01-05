@@ -14,7 +14,7 @@ export default class OrderReceiptRoutes extends BaseRoute{
 
         this.router.get(
             "/all",
-            RequestValidator.validateRequestSchema(filterValidators.paginationParams,"query"),
+            RequestValidator.validateRequestSchema(filterValidators.paginationAndFilterParams,"query"),
             orderController.GetOrderReceipts,
         )
 

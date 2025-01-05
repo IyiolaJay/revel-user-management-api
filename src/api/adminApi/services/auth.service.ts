@@ -10,9 +10,7 @@ import {
   IClientRepository,
 } from "../../../interfaces/client.interface";
 import { mapPermisionValuesToKeys } from "../../../helpers/permissions.mapper";
-import {
-  IServiceRepository,
-} from "../../../interfaces/service.interface";
+import { IServiceRepository } from "../../../interfaces/service.interface";
 import { cacheData, getCacheData } from "../../../redis/redis.cache";
 
 export default class AdminAuthService {
@@ -119,24 +117,21 @@ export default class AdminAuthService {
     );
 
     if (subscribedService && subscribedService.length > 0) {
-
       const currentDate = new Date();
       currentDate.setMonth(currentDate.getMonth() + 6);
 
-      const subscriptions = subscribedService.map(service => ({
+      const subscriptions = subscribedService.map((service) => ({
         serviceId: service,
         expireDate: currentDate,
-      }))
+      }));
 
-
-      
-      subscriptions.forEach(async (s)=>{
+      subscriptions.forEach(async (s) => {
         await this.ServiceRepository.createActiveService({
           clientId: _client.clientId,
           serviceId: s.serviceId as string,
           expireDate: s.expireDate as Date,
         });
-      })
+      });
       // await this.ServiceRepository.createActiveService({
       //   clientId: _client.clientId,
       //   serviceId: defaultService.serviceId as string,
@@ -148,12 +143,16 @@ export default class AdminAuthService {
       );
 
       //caching data for realtime middleware service
-      // this block will add the new user establishment IDs for 
+      // this block will add the new user establishment IDs for
       await cacheData({
         key: "acs_01",
         value: JSON.stringify([
           ...cachedEstablishment,
-          ...client.establishmentId.map(item => ({estId : item, estUrl : client.establishmentUrl})),
+          ...client.establishmentId.map((item) => ({
+            estId: item,
+            estUrl: client.establishmentUrl,
+            clientId: client.clientId,
+          })),
         ]),
       });
     }

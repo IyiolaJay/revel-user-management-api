@@ -28,7 +28,7 @@ export default class ServiceRoutes extends BaseRoute{
         //
         this.router.get(
             "/all",            
-            RequestValidator.validateRequestSchema(filterValidators.paginationParams,"query"),
+            RequestValidator.validateRequestSchema(filterValidators.paginationAndFilterParams,"query"),
             serviceController.GetAllService,
         )
 
