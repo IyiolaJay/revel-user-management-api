@@ -34,11 +34,13 @@ const createClient = RequestValidator.requestItemsStructure({
   name: Joi.string().required(),
   establishmentId: Joi.array().items(Joi.number()).required(),
   establishmentUrl: Joi.string()
-    .uri({ scheme: ["http", "https"] })
-    .required()
-    .custom((value, _) => {
-        return value.replace(/\/$/, ''); // Removes trailing slash
-    }),
+  .required()
+  .custom((value, _) => {
+    if (!value.startsWith('http://') && !value.startsWith('https://')) {
+      return `https://${value}`; // Prepend https:// if not already present
+    }
+    return value; // Leave the value unchanged if it starts with http:// or https://
+  }, 'Prepend https:// if missing'),
   subscribedService: Joi.array().items(Joi.string().required()),
 });
 

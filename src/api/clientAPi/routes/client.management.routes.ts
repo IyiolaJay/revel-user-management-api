@@ -4,8 +4,8 @@ import RequestValidator from "../../../middlewares/schema.middleware";
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
 import ClientAuthController from "../controllers/client.management.controller";
 import filterValidators from "../validators";
-// import PermissionValidation from "../../../middlewares/permission.middleware";
-// import { Permissions } from "../../../utilities/enums/permissions.enum";
+import PermissionValidation from "../../../middlewares/permission.middleware";
+import { Permissions } from "../../../utilities/enums/permissions.enum";
 
 
 export default class ClientAuthRoutes extends BaseRoute{
@@ -23,6 +23,7 @@ export default class ClientAuthRoutes extends BaseRoute{
       "/getClients",
       RequestValidator.validateRequestSchema(filterValidators.paginationParams, "query"),
       authenticationMiddleware.AuthorizeUser,
+      PermissionValidation.PermissionMiddleware([Permissions.VIEW_CLIENT]),
       clientAuthController.GetAllClients
     );
     // Add other routes here...
