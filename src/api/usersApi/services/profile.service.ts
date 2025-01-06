@@ -52,7 +52,11 @@ export default class UserProfileService {
    * @returns 
    */
   async GetAllClients(offset: number = 1, limit : number = 20){
-    return await this.ClientRepository.findAll(offset, limit)
+    const clients = await this.ClientRepository.findAll(offset, limit);
+    return{
+      clients : clients.data,
+      totalCount : clients.totalCount
+    }
   }
 
   /**
