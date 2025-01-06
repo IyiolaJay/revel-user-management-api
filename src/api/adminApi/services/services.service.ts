@@ -39,7 +39,11 @@ export default class ServicesService{
      * @returns 
      */
     async GetAllServices(offset: number = 1, limit : number = 10){
-        return await this.ServiceRepository.findAll(offset, limit);
+        const services = await this.ServiceRepository.findAll(offset, limit)
+        return {
+            services : services.data,
+            totalCount : services.totalCount
+        };
     }
 
     /**

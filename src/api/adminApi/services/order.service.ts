@@ -31,7 +31,7 @@ export default class OrderService {
     }
 
     return {
-        data : orders.data,
+        orders : orders.data,
         totalOrders : orders.totalCount,
         totalAmount,
         totalVat
