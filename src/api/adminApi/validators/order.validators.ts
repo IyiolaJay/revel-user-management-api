@@ -7,6 +7,7 @@ const createOrderReceipt = RequestValidator.requestItemsStructure({
         establishmentId : Joi.number().required(),
         orderItems : Joi.object().required(),
         orderReceipt : Joi.object().required(),
+        clientId : Joi.string().required(),
         }
     )).required()
 })
