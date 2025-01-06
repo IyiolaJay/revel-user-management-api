@@ -65,6 +65,6 @@ export default class ServicesService{
      * @param serviceId 
      */
     async EditService(serviceData : Partial<IService>, serviceId : string){
-        await this.ServiceRepository.update(serviceId, serviceData);
+        await this.ServiceRepository.update({_id : serviceId}, serviceData);
     }
 }

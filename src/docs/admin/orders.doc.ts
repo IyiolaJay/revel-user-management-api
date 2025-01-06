@@ -17,13 +17,10 @@
  *             schema:
  *               type: string 
  *           - in: query
- *             name: from
+ *             name: createdAt_range
  *             schema:
  *               type: string 
- *           - in: query
- *             name: to
- *             schema:
- *               type: string 
+ *             example:  "2025-01-06T08:10:24.941Z,2025-01-06T08:10:24.941Z"
  *           - in: query
  *             name: establishmentId
  *             schema:

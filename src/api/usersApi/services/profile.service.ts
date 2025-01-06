@@ -61,15 +61,19 @@ export default class UserProfileService {
    * @param clientId 
    */
   async EditClientProfileData(clientUpdateData : Partial<IClient>, clientId : string){
-    const id = await this.ClientRepository.findOneByFilter({
-      clientId : clientId,
-    })
+    // const id = await this.ClientRepository.findOneByFilter({
+    //   clientId : clientId,
+    // })
 
-    if(!id) throw new ApiError(
+    // if(!id) throw new ApiError(
+    //   httpStatus.NOT_FOUND,
+    //   "Account doesn't exists"
+    // )
+    const editedClient = await this.ClientRepository.update({clientId : clientId}, clientUpdateData)
+    if(!editedClient) throw new ApiError(
       httpStatus.NOT_FOUND,
-      "Account doesn't exists"
+      "Client Account not found, no changes were made"
     )
-    await this.ClientRepository.update(id._id!.toString(), clientUpdateData)
   }
   
   /**

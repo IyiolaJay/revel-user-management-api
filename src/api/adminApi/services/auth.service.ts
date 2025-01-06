@@ -159,4 +159,21 @@ export default class AdminAuthService {
 
     return;
   }
+
+  async UpdateAdminAccount(adminId : string, updateData : Partial<IAdmin>){
+    const admin = await this.AdminRepository.update({adminId : adminId}, updateData);
+    if(!admin) throw new ApiError(
+      httpStatus.NOT_FOUND,
+      "Admin account not found"
+    )
+     return admin;
+  }
+
+  async GetAllAdmins(
+    offset: number = 1,
+    limit: number = 20,
+    filters : any,
+  ){
+    return await this.AdminRepository.findAll(offset,limit,filters)
+  }
 }

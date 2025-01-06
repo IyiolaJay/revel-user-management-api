@@ -32,45 +32,6 @@ export default class AdminAuthController extends BaseController {
     }
   );
 
-  // AdminAccountLoginController = this.wrapAsync(
-  //   async (req: Request, res: Response, _: NextFunction) => {
-  //     const token = await this.AdminService.LoginAdminAccount(
-  //       req.body as IAdmin
-  //     );
-  //     this.sendResponse(res, httpStatus.OK, {
-  //       success: true,
-  //       message: "Login success",
-  //       data: token,
-  //     });
-  //   }
-  // );
-
-  // VerifyTokenController = this.wrapAsync(
-  //   async (req: Request, res: Response, _: NextFunction) => {
-  //     const { token } = req.body;
-  //     const { user } = res.locals;
-  //     const apiToken = await this.AdminService.VerifyToken(token, user);
-  //     this.sendResponse(res, httpStatus.OK, {
-  //       success: true,
-  //       message: "Token verified",
-  //       data: apiToken,
-  //     });
-  //   }
-  // );
-
-  // ChangePasswordController = this.wrapAsync(
-  //   async (req: Request, res: Response, _: NextFunction) => {
-  //     const { userId } = req.query;
-  //     const { password } = req.body;
-  //     await this.AdminService.ChangePassword(userId as string, password);
-  //     this.sendResponse(res, httpStatus.OK, {
-  //       success: true,
-  //       message: "Password changed, please login again",
-  //       data: null,
-  //     });
-  //   }
-  // );
-
   ClientAccountCreationController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
       const {id} = res.locals.user;
@@ -96,4 +57,34 @@ export default class AdminAuthController extends BaseController {
       });
     }
   );
+
+  UpdateAdminAccount = this.wrapAsync(
+    async (req: Request, res: Response, _: NextFunction) => {
+      const {adminId} = req.params;
+      const admin = await this.AdminService.UpdateAdminAccount(adminId!, req.body);
+      this.sendResponse(res, httpStatus.OK, {
+        success: true,
+        message:
+          "Admin account modified",
+        data: admin,
+      });
+    }
+  );
+
+  GetAdmins = this.wrapAsync(
+      async (req: Request, res: Response, _: NextFunction) => {
+        const { offset, limit, ...filters } = req.query;
+        let pageLimit = isNaN(limit as any) ? 20 : Number(limit); //handle case when limit is not passed
+        const admins = await this.AdminService.GetAllAdmins(
+          Number(offset),
+          pageLimit,
+          filters,
+        );
+        this.sendResponse(res, httpStatus.OK, {
+          success: true,
+          message: "Fetched",
+          data: admins,
+        });
+      }
+    );
 }

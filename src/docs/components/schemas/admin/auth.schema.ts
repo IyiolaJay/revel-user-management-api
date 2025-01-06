@@ -19,48 +19,6 @@
  *                  type: string
  */
 
-// /**
-//  * @openapi
-//  * components:
-//  *    schemas:
-//  *       AdminLogin:
-//  *          type: object
-//  *          required:
-//  *             - email:
-//  *             - password:
-//  *          properties:
-//  *             email:
-//  *                type: string
-//  *             password:
-//  *                type: string
-//  */
-
-
-// /**
-//  * @openapi
-//  * components:
-//  *    schemas:
-//  *       VerifyToken:
-//  *          type: object
-//  *          required:
-//  *             - token:
-//  *          properties:
-//  *             token:
-//  *                type: string
-//  */
-
-// /**
-//  * @openapi
-//  * components:
-//  *    schemas:
-//  *       ChangePassword:
-//  *          type: object
-//  *          required:
-//  *             - password:
-//  *          properties:
-//  *             password:
-//  *                type: string
-//  */
 /**
  * @openapi
  * components:
@@ -122,4 +80,21 @@
  *             establishmentUrl:
  *                type: string
  *                example: "https://example.com"
+ */
+
+/**
+ * @openapi
+ * components:
+ *    schemas:
+ *       UpdateAdmin:
+ *          type: object
+ *          properties:
+ *             email:
+ *                type: string
+ *             name:
+ *                type: string
+ *             permissionSet:
+ *                type: array
+ *                items:
+ *                  type: string
  */

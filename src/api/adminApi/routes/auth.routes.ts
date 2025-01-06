@@ -20,7 +20,9 @@ export default class AdminAuthRoutes extends BaseRoute{
     this.router.post(
       "/createAdmin",
       RequestValidator.validateRequestSchema(adminValidator.createAdmin),
-      adminAuthController.AdminAccountCreationController
+      authenticationMiddleware.AuthorizeUser,
+      PermissionValidation.PermissionMiddleware([Permissions.CREATE_ADMIN]),
+      adminAuthController.AdminAccountCreationController,
     );
 
     // this.router.post(
@@ -58,7 +60,20 @@ export default class AdminAuthRoutes extends BaseRoute{
       adminAuthController.GetPermissionsController
     );
 
+    this.router.patch(
+      "/edit/:adminId",
+      RequestValidator.validateRequestSchema(adminValidator.updateAdmin),
+      authenticationMiddleware.AuthorizeUser,
+      PermissionValidation.PermissionMiddleware([Permissions.EDIT_ADMIN]),
+      adminAuthController.UpdateAdminAccount
+    );
 
+    this.router.get(
+      "/all",
+      authenticationMiddleware.AuthorizeUser,
+      PermissionValidation.PermissionMiddleware([Permissions.VIEW_ADMIN]),
+      adminAuthController.GetAdmins
+    );
     // Add other routes here...
   }
 }

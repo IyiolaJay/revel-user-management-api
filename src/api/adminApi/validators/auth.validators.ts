@@ -44,6 +44,16 @@ const createClient = RequestValidator.requestItemsStructure({
   subscribedService: Joi.array().items(Joi.string().required()),
 });
 
+const updateAdmin = RequestValidator.requestItemsStructure({
+  email: Joi.string().email(),
+  name: Joi.string(),
+  permissionSet: Joi.array().items(
+    Joi.string()
+      .valid(...Object.values(Permissions))
+      .invalid(Permissions.ALL)
+  ),
+});
+
 export default {
   createAdmin,
   createClient,
@@ -51,4 +61,5 @@ export default {
   verifyToken,
   changePassword,
   changePasswordQuery,
+  updateAdmin,
 };

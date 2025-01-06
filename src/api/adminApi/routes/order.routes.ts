@@ -3,7 +3,7 @@ import RequestValidator from "../../../middlewares/schema.middleware";
 import BaseRoute from "../../../utilities/base.router";
 import OrderController from "../controllers/order.controller";
 import orderValidators from "../validators/order.validators";
-import filterValidators from "../validators";
+// import filterValidators from "../validators";
 export default class OrderReceiptRoutes extends BaseRoute{
     constructor(){
         super();
@@ -14,7 +14,7 @@ export default class OrderReceiptRoutes extends BaseRoute{
 
         this.router.get(
             "/all",
-            RequestValidator.validateRequestSchema(filterValidators.paginationAndFilterParams,"query"),
+            // RequestValidator.validateRequestSchema(filterValidators.paginationAndFilterParams,"query"),
             orderController.GetOrderReceipts,
         )
 

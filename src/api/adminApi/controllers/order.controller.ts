@@ -12,11 +12,11 @@ export default class OrderController extends BaseController {
   }
   GetOrderReceipts = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const { offset, limit, ...filters } = req.query;
-
+      const  { offset, limit, ...filters } = req.query;
+      let pageLimit = isNaN(limit as any) ? 20 : Number(limit); //handle case when limit is not passed
       const orders = await this.orderService.GetOrderReceipts(
         Number(offset),
-        Number(limit),
+        pageLimit,
         filters,
       );
       this.sendResponse(res, httpStatus.OK, {

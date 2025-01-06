@@ -19,30 +19,20 @@ export default class OrderService {
     offset: number = 1,
     limit: number = 20,
     filters : any,
-  ) {
-    const findFilter = {
-        ...filters,
-        createdAt: {
-            $gte: new Date(filters.from) ?? "",
-            $lte: new Date(filters.to) ?? "",  
-        },
-    }
-
-    delete findFilter.from;
-    delete findFilter.to;    
-    const orders = await this.OrderRepository.findAll(offset, limit, findFilter);
+  ) {    
+    const orders = await this.OrderRepository.findAll(offset, limit, filters);
     let totalAmount = 0;
     let totalVat = 0;
-    if(orders.length > 0){
-        orders.forEach((order : any) =>{
+    if(orders.data.length > 0){
+        orders.data.forEach((order : any) =>{
             totalAmount += order.orderItems.totalAmount;
             totalVat += order.orderItems.totalVat;
         })
     }
 
     return {
-        data : orders,
-        totalOrders : orders.length,
+        data : orders.data,
+        totalOrders : orders.totalCount,
         totalAmount,
         totalVat
     }

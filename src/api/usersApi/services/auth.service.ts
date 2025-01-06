@@ -145,12 +145,11 @@ export default class UserAuthService {
     //
     // if remember device is set to true
     if (rememberDevice && owner.accountType === "client") {
-      const user = await this.ClientRepository.findOneByFilter({
-        clientId: owner.id,
-      });
-      console.log(user);
+      // const user = await this.ClientRepository.findOneByFilter({
+      //   clientId: owner.id,
+      // });
 
-      await this.ClientRepository.update(user!._id!.toString(), {
+      await this.ClientRepository.update({clientId: owner.id}, {
         device: {
           rememberMeExpires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
           ipAddress: deviceInfo.ipAddress as string,
@@ -160,12 +159,12 @@ export default class UserAuthService {
     }
     //
     if (rememberDevice && owner.accountType === "admin") {
-      const user = await this.AdminRepository.findOneByFilter({
-        adminId: owner.id,
-      });
+      // const user = await this.AdminRepository.findOneByFilter({
+      //   adminId: owner.id,
+      // });
 
-      console.log(user);
-      await this.AdminRepository.update(user!._id!.toString(), {
+      // console.log(user);
+      await this.AdminRepository.update({adminId : owner.id}, {
         device: {
           rememberMeExpires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
           ipAddress: deviceInfo.ipAddress as string,
@@ -219,12 +218,12 @@ export default class UserAuthService {
     }
 
     if (path === "admin")
-      await this.AdminRepository.update(user._id!.toString(), {
+      await this.AdminRepository.update({_id : user._id}, {
         password: await this.securityHelperService.HashPassword(password),
         hasSetPassword: true,
       });
     else
-      await this.ClientRepository.update(user._id!.toString(), {
+      await this.ClientRepository.update({_id : user._id}, {
         password: await this.securityHelperService.HashPassword(password),
         hasSetPassword: true,
       });
