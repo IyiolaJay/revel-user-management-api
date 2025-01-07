@@ -144,6 +144,7 @@ export default class AdminAuthService {
 
       //caching data for realtime middleware service
       // this block will add the new user establishment IDs for
+      console.log(_client.clientId)
       await cacheData({
         key: "acs_01",
         value: JSON.stringify([
@@ -151,7 +152,7 @@ export default class AdminAuthService {
           ...client.establishmentId.map((item) => ({
             estId: item,
             estUrl: client.establishmentUrl,
-            clientId: client.clientId,
+            clientId: _client.clientId,
           })),
         ]),
       });
