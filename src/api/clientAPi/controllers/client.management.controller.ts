@@ -16,8 +16,8 @@ export default class ClientAuthController extends BaseController{
 
     GetAllClients = this.wrapAsync(
         async (req: Request, res: Response, _: NextFunction) => {
-            const {offset, limit} = req.query;
-            const clients = await this.ClientService.FetchAllClients(Number(offset), Number(limit))
+            const {offset, limit, ...filters} = req.query;
+            const clients = await this.ClientService.FetchAllClients(Number(offset), Number(limit), filters)
             this.sendResponse(res, httpStatus.OK, {
                 success: true,
                 message: "Client accounts fetched",

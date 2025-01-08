@@ -18,14 +18,17 @@ export default class OrderController extends BaseController {
   //
   GetEstablishmentOrderReceipts = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const { offset, limit, establishmentId } = req.query;
+      const { offset, limit, establishmentId, ...filters } = req.query;
       const { id } = res.locals.user;
+      const pageLimit = isNaN(Number(limit)) ? 20 : Number(limit);
       const orders = await this.orderService.GetEstablishmentOrderReceipts(
         Number(offset),
-        Number(limit),
+        pageLimit,
         Number(establishmentId) ?? null,
-        id
+        id,
+        filters
       );
+      console.log(orders.data.length);
       this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: "Orders fetched",

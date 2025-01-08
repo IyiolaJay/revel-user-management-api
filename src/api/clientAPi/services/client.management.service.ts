@@ -11,8 +11,8 @@ export default class ClientAuthService {
     
   }
 
-  async FetchAllClients(offset: number = 1, limit : number = 20){
-    return await this.ClientRepository.findAll(offset,limit);
+  async FetchAllClients(offset: number = 1, limit : number = 20, filters : any){
+    return await this.ClientRepository.findAll(offset,limit, filters);
   }
 
 }

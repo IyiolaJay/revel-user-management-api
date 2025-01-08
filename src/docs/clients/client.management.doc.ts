@@ -16,6 +16,10 @@
  *             name: limit
  *             schema:
  *               type: string 
+ *           - in: query
+ *             name: createdAt_range
+ *             schema:
+ *               type: string 
  *         responses:
  *           "200":
  *             description: success
@@ -38,6 +42,11 @@
  *               type: string 
  *           - in: query
  *             name: limit
+ *             schema:
+ *               type: string 
+ *           - in: query
+ *             name: createdAt_range
+ *             example: "2025-01-06T08:10:24.941Z,2025-01-06T08:10:24.941Z"
  *             schema:
  *               type: string 
  *           - in: query

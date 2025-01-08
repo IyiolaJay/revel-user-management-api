@@ -21,7 +21,8 @@ export default class OrderService {
     offset: number = 1,
     limit: number = 20,
     establishmentId: number | null = null,
-    clientId: string
+    clientId: string,
+    filters : any
   ) {
     let user;
 
@@ -32,9 +33,8 @@ export default class OrderService {
 
     if (!establishmentId) {
 
-      console.log(user?.establishmentId);
-
       return await this.OrderRepository.findAll(offset,limit,{
+        ...filters,
         establishmentId : {$in : user?.establishmentId}
       })
     }
@@ -45,8 +45,8 @@ export default class OrderService {
         "EstablishmentId not found for this client"
       )
     }
-  
     return await this.OrderRepository.findAll(offset, limit,{
+        ...filters,
         establishmentId : {$in : establishmentId}
       });
   }

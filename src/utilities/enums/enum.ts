@@ -13,7 +13,8 @@ export enum Currency{
     GHS = "GHANA CEDIS",
     USD = "US DOLLARS",
     EUR = "EURO",
-    GBP =  "GREAT BRITAIN POUNDS"
+    GBP =  "GREAT BRITAIN POUNDS",
+    KWD = "KUWAIT DOLLARS"
 }
 
 
