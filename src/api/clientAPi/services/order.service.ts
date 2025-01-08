@@ -1,7 +1,9 @@
+import httpStatus from "http-status";
 import { IClientRepository } from "../../../interfaces/client.interface";
 import {
   IOrderRepository,
 } from "../../../interfaces/order.interface";
+import ApiError from "../../../utilities/error.base";
 
 export default class OrderService {
   private OrderRepository: IOrderRepository;
@@ -23,11 +25,12 @@ export default class OrderService {
   ) {
     let user;
 
-    //
+    //if establishment id is not passed, fetch all receipts based on the user's establishment ids
+    user = await this.ClientRepository.findOneByFilter({
+      clientId: clientId,
+    });
+
     if (!establishmentId) {
-      user = await this.ClientRepository.findOneByFilter({
-        clientId: clientId,
-      });
 
       console.log(user?.establishmentId);
 
@@ -35,6 +38,14 @@ export default class OrderService {
         establishmentId : {$in : user?.establishmentId}
       })
     }
+
+    if(!user?.establishmentId.includes(establishmentId)){
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        "EstablishmentId not found for this client"
+      )
+    }
+  
     return await this.OrderRepository.findAll(offset, limit,{
         establishmentId : {$in : establishmentId}
       });

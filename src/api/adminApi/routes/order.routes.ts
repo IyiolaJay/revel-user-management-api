@@ -1,9 +1,12 @@
 // import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
+import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
+import PermissionValidation from "../../../middlewares/permission.middleware";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import BaseRoute from "../../../utilities/base.router";
 import OrderController from "../controllers/order.controller";
 import orderValidators from "../validators/order.validators";
-// import filterValidators from "../validators";
+import { Permissions } from "../../../utilities/enums/permissions.enum";
+
 export default class OrderReceiptRoutes extends BaseRoute{
     constructor(){
         super();
@@ -11,10 +14,13 @@ export default class OrderReceiptRoutes extends BaseRoute{
 
     protected override setupRoutes(): void {
         const orderController : OrderController = new OrderController();
+        const authenticationMiddleware :  AuthenticationMiddleware = new AuthenticationMiddleware();
 
+        
         this.router.get(
             "/all",
-            // RequestValidator.validateRequestSchema(filterValidators.paginationAndFilterParams,"query"),
+            authenticationMiddleware.AuthorizeUser,
+            PermissionValidation.PermissionMiddleware([Permissions.VIEW_CLIENT]),
             orderController.GetOrderReceipts,
         )
 

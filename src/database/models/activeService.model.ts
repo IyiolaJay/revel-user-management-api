@@ -6,6 +6,7 @@ const activeServiceSchema = new Schema<IActiveService>(
     serviceId: {
       type: String,
       required : true,
+      ref : "services"
     },
     clientId: {
       type: String,

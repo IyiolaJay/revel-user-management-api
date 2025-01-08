@@ -20,6 +20,6 @@ export interface IClient {
 
 
 export interface IClientRepository extends IGenericRepository<IClient> {
-
+  getClientAndActiveServices() : Promise<any>;
 }
   
