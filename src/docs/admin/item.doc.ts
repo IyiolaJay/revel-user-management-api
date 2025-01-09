@@ -1,6 +1,6 @@
 /**
  * @openapi
- * /categories/createCategory:
+ * /items/createItem:
  *   post:
  *     summary: Create a new category
  *     tags:
@@ -12,6 +12,14 @@
  *           schema:
  *             type: object
  *             properties:
+ *               itemName:
+ *                 type: string
+ *               cost:
+ *                 type: string
+ *               currency:
+ *                 type: string
+ *               description:
+ *                 type: string
  *               categoryName:
  *                 type: string
  *                 example: Electronics
@@ -20,11 +28,12 @@
  *         description: Category created successfully
  */
 
+
 /**
  * @openapi
- * /categories/getCategories:
+ * /items/getItems:
  *   get:
- *     summary: Get all categories
+ *     summary: Get all items
  *     tags:
  *       - Category & Items
  *     parameters:
@@ -38,26 +47,26 @@
  *         schema:
  *           type: integer
  *       - in: query
- *         name: categoryName
+ *         name: itemName
  *         schema:
  *           type: string
  *           example: Electronics
  *     responses:
  *       200:
- *        description: Categories fetched
+ *          description: Items fetched
  */
 
 
 /**
  * @openapi
- * /categories/editCategory/{categoryId}:
+ * /items/editItem/{itemid}:
  *   patch:
- *     summary: Edit an existing category
+ *     summary: Edit an existing item
  *     tags:
  *       - Category & Items
  *     parameters:
  *       - in: path
- *         name: categoryId
+ *         name: itemId
  *         required: true
  *         schema:
  *           type: string
@@ -68,7 +77,7 @@
  *           schema:
  *             type: object
  *             properties:
- *               categoryName:
+ *               itemName:
  *                 type: string
  *     responses:
  *       200:

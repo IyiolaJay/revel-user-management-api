@@ -22,7 +22,7 @@ export default class CategoryRoutes extends BaseRoute {
         );
 
         this.router.get(
-            "/categories",
+            "/getCategories",
             authenticationMiddleware.AuthorizeUser,
             categoryController.GetCategories
         );

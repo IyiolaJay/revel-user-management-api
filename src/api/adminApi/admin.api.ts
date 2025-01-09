@@ -5,6 +5,7 @@ import AdminProfileRoutes from "./routes/profile.routes";
 import OrderReceiptRoutes from "./routes/order.routes";
 import ServiceRoutes from "./routes/services.routes";
 import CategoryRoutes from "./routes/category.routes";
+import ItemRoutes from "./routes/item.routes";
 /**
  * 
  */
@@ -15,6 +16,7 @@ class App {
   private OrderReceiptRoutes : OrderReceiptRoutes = new OrderReceiptRoutes();
   private ServiceRoutes : ServiceRoutes = new ServiceRoutes();
   private CategoryRoutes : CategoryRoutes = new CategoryRoutes();
+  private ItemRoutes : ItemRoutes = new ItemRoutes();
 
   constructor() {
     this.app = express();
@@ -29,6 +31,7 @@ class App {
     this.app.use(`${resource}/orders`,this.OrderReceiptRoutes.getRouter())
     this.app.use("/services",this.ServiceRoutes.getRouter())
     this.app.use("/categories", this.CategoryRoutes.getRouter());
+    this.app.use("/items", this.ItemRoutes.getRouter());
   
     //other api routes
 

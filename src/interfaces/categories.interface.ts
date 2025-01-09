@@ -6,5 +6,7 @@ export interface ICategory{
 }
 
 
+
 export interface ICategoryRepository extends IGenericRepository<ICategory>{
 }
+

@@ -3,7 +3,6 @@ import { ICategory, ICategoryRepository } from "../interfaces/categories.interfa
 import GenericRepository from "./generic.repository";
 
 export default class CategoryRepository extends GenericRepository<ICategory> implements ICategoryRepository {
-    
     constructor(){
         super(Category);
     }
