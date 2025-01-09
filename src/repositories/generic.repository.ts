@@ -23,7 +23,7 @@ export default class GenericRepository<T> implements IGenericRepository<T> {
     const skip = (offset - 1) * limit;
 
     //this block formats the query if date is included
-    let filters = filterQuery;
+    let filters = {...filterQuery};
     if(filterQuery.createdAt_range){
       const date = filterQuery.createdAt_range.split(",");
       filters = {

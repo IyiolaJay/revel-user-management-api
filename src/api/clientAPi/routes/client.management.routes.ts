@@ -43,6 +43,13 @@ export default class ClientAuthRoutes extends BaseRoute{
       PermissionValidation.PermissionMiddleware([Permissions.EDIT_CLIENT]),
       clientAuthController.UpgradeCustomerAccount
     );
+
+    this.router.get(
+      "/search",
+      // authenticationMiddleware.AuthorizeUser,
+      RequestValidator.validateRequestSchema(clientManagementValidators.searchClient, "query"),
+      clientAuthController.SearchClient
+    );
   }
 }
 

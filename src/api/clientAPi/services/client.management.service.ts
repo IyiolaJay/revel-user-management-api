@@ -68,4 +68,15 @@ export default class ClientAuthService {
 
     return ;
   }
+
+  async searchClient(offset: number, limit: number, searchText: string) {
+    const clients = await this.ClientRepository.findAll(offset, limit,{
+      name: { $regex: new RegExp(searchText, "i") },
+  });
+
+    if (!clients || clients.data.length === 0) {
+      throw new ApiError(httpStatus.NOT_FOUND, "No clients found");
+    }
+    return clients;
+  }
 }

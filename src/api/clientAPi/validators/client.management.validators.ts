@@ -14,7 +14,14 @@ const updateClient = RequestValidator.requestItemsStructure({
       }, 'Prepend https:// if missing'),
 })
 
+const searchClient = RequestValidator.requestItemsStructure({
+      searchText: Joi.string().required(),
+      offset: Joi.number().required(),
+      limit: Joi.number(),
+})
+
 
 export default {
     updateClient,
+    searchClient
 }

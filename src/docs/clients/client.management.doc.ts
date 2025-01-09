@@ -110,3 +110,26 @@
  *           "200":
  *             description: Client updated successfully
  */
+
+/**
+ * @openapi
+ * /client/management/search:
+ *      get:
+ *         summary: upgrade a customer account to client account.
+ *         tags:
+ *            - Client
+ *         parameters:
+ *           - in: query
+ *             name: searchText
+ *             required: true
+ *             schema:
+ *               type: string
+ *           - in: query
+ *             name: offset
+ *             required: true
+ *             schema:
+ *               type: number
+ *         responses:
+ *           "200":
+ *             description: Client search results
+ */
