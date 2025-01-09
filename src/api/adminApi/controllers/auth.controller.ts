@@ -40,7 +40,7 @@ export default class AdminAuthController extends BaseController {
       this.sendResponse(res, httpStatus.CREATED, {
         success: true,
         message:
-          "Client account created & credentials email sent to provided email",
+          "Client account created",
         data: null,
       });
     }

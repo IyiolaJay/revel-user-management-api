@@ -15,6 +15,8 @@ export interface IClient {
   permissionSet : string[];
   device : IDevice;
   creatorId : string;
+  phone? : string;
+  isCustomerOnly : boolean;
 }
 
 

@@ -18,10 +18,12 @@ const clientSchema = new Schema<IClient>(
     establishmentId: {
       type: [Number],
       required: true,
+      default : []
     },
     establishmentUrl: {
       type: String,
       required: true,
+      default : " "
     },
     email: {
       type: String,
@@ -59,6 +61,12 @@ const clientSchema = new Schema<IClient>(
       ipAddress: String,
       rememberMeExpires: Date,
     },
+    phone : String,
+    isCustomerOnly : {
+      type : Boolean,
+      required : true,
+      default : false
+    }
   },
   {
     timestamps: true,

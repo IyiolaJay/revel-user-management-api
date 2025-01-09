@@ -45,6 +45,8 @@
  *             establishmentUrl:
  *                type: string
  *                example: "https://example.com"
+ *             isCustomerOnly:
+ *                type: boolean
  *             subscribedService:
  *                type: array
  *                items:

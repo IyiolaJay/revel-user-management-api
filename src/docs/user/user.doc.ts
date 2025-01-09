@@ -139,24 +139,24 @@
  */
 
 
-/**
- * @openapi
- * /profile/client/edit/{clientId}:
- *      patch:
- *         summary: Edit client
- *         tags:
- *            - Users
- *         parameters:
- *           - in : path
- *             name : clientId
- *         requestBody:
- *              required: true
- *              content:
- *                  application/json:
- *                     schema:
- *                        $ref: '#/components/schemas/ClientEdit'
- *         responses:
- *            "201":
- *               description: created
- *
- */
+// /**
+//  * @openapi
+//  * /profile/client/edit/{clientId}:
+//  *      patch:
+//  *         summary: Edit client
+//  *         tags:
+//  *            - Users
+//  *         parameters:
+//  *           - in : path
+//  *             name : clientId
+//  *         requestBody:
+//  *              required: true
+//  *              content:
+//  *                  application/json:
+//  *                     schema:
+//  *                        $ref: '#/components/schemas/ClientEdit'
+//  *         responses:
+//  *            "201":
+//  *               description: created
+//  *
+//  */

@@ -102,19 +102,22 @@ export default class AdminAuthService {
       password: await this.securityHelperService.HashPassword(genPassword),
     });
 
-    //send credentials to client mail
-    this.emailService.SendEMailToUser(
-      {
-        to: _client.email,
-        bodyParts: {
-          name: _client.name,
-          email: _client.email,
-          password: genPassword,
-          _id: _client._id,
+    //send credentials only client users, 
+    if(!client.isCustomerOnly){
+      this.emailService.SendEMailToUser(
+        {
+          to: _client.email,
+          bodyParts: {
+            name: _client.name,
+            email: _client.email,
+            password: genPassword,
+            _id: _client._id,
+          },
         },
-      },
-      EmailType.CredentialsEmail
-    );
+        EmailType.CredentialsEmail
+      );
+    }
+    
 
     if (subscribedService && subscribedService.length > 0) {
       const currentDate = new Date();

@@ -57,3 +57,56 @@
  *           "200":
  *             description: success
  */
+
+
+/**
+ * @openapi
+ * /client/management/edit/{clientId}:
+ *      patch:
+ *         summary: Edit an existing client account.
+ *         tags:
+ *            - Client
+ *         parameters:
+ *           - in: path
+ *             name: clientId
+ *             required: true
+ *             schema:
+ *               type: string
+ *         requestBody:
+ *           required: true
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   email:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   establishmentId:
+ *                     type: string
+ *                   establishmentUrl:
+ *                     type: string
+ *         responses:
+ *           "200":
+ *             description: Client updated successfully
+ */
+
+
+/**
+ * @openapi
+ * /client/management/upgrade/{clientId}:
+ *      patch:
+ *         summary: upgrade a customer account to client account.
+ *         tags:
+ *            - Client
+ *         parameters:
+ *           - in: path
+ *             name: clientId
+ *             required: true
+ *             schema:
+ *               type: string
+ *         responses:
+ *           "200":
+ *             description: Client updated successfully
+ */
