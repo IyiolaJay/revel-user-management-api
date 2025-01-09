@@ -14,7 +14,7 @@ const updateItemSchema = RequestValidator.requestItemsStructure({
     itemName: Joi.string(),
     cost: Joi.number(),
     description: Joi.string(),
-    categoryName : Joi.string().required(),
+    categoryId : Joi.string(),
 });
 
 
