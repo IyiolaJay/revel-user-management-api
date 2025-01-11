@@ -6,6 +6,7 @@ import OrderReceiptRoutes from "./routes/order.routes";
 import ServiceRoutes from "./routes/services.routes";
 import CategoryRoutes from "./routes/category.routes";
 import ItemRoutes from "./routes/item.routes";
+import InvoiceRoutes from "./routes/invoice.routes";
 /**
  * 
  */
@@ -17,6 +18,7 @@ class App {
   private ServiceRoutes : ServiceRoutes = new ServiceRoutes();
   private CategoryRoutes : CategoryRoutes = new CategoryRoutes();
   private ItemRoutes : ItemRoutes = new ItemRoutes();
+  private InvoiceRoutes : InvoiceRoutes = new InvoiceRoutes();
 
   constructor() {
     this.app = express();
@@ -32,6 +34,7 @@ class App {
     this.app.use("/services",this.ServiceRoutes.getRouter())
     this.app.use("/categories", this.CategoryRoutes.getRouter());
     this.app.use("/items", this.ItemRoutes.getRouter());
+    this.app.use("/invoices", this.InvoiceRoutes.getRouter());
   
     //other api routes
 

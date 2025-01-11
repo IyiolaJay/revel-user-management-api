@@ -9,6 +9,8 @@ export default {
     MAIL_USER : process.env.MAIL_USER,
     MAIL_FROM : process.env.MAIL_FROM,
     REDISCLOUD_URL : process.env.REDISCLOUD_URL,
-    SERVICE_ID : process.env.SERVICE_ID
+    SERVICE_ID : process.env.SERVICE_ID,
+    TAP_API_KEY : process.env.TAP_API_KEY,
+    TAP_BASE_URL : process.env.TAP_BASE_URL,
   };
   

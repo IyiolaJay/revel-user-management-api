@@ -444,6 +444,15 @@ axios@^1.7.7:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
+axios@^1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.9.tgz#d7d071380c132a24accda1b2cfc1535b79ec650a"
+  integrity sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
@@ -1654,7 +1663,8 @@ require-directory@^2.1.1:
     morgan "^1.10.0"
     node-cron "^3.0.3"
     nodemailer "^6.9.16"
-    revel-user-management "file:../../AppData/Local/Yarn/Cache/v6/npm-revel-user-management-1.0.0-9b739a0b-5520-469d-a3f3-17bc3a196ace-1733332985453/node_modules/revel-user-management"
+    redis "^4.7.0"
+    revel-user-management "file:../../AppData/Local/Yarn/Cache/v6/npm-revel-user-management-1.0.0-c19e422d-65f6-4379-b235-06b0a54903bc-1736589494743/node_modules/revel-user-management"
     swagger-jsdoc "^6.2.8"
     swagger-ui-express "^5.0.1"
     ts-node "^10.9.2"
