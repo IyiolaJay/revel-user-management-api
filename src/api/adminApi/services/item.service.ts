@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import { IItem, IItemRepository } from "../../../interfaces/item.interface";
 import ApiError from "../../../utilities/error.base";
 import { ICategoryRepository } from "../../../interfaces/categories.interface";
-import { Schema } from "mongoose";
+// import { Schema } from "mongoose";
 
 export default class ItemService {
 private ItemRepository: IItemRepository;
@@ -35,7 +35,7 @@ async CreateItem(item: IItem, categoryName: string) {
     
     _item = await this.ItemRepository.create({
         ...item,
-        categoryId: new Schema.Types.ObjectId(_category._id!),
+        categoryId: _category._id! as any,
     });
 
     return _item;
