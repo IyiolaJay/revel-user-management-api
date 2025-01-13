@@ -22,7 +22,7 @@ export interface IClient {
 }
 
 interface IPhone{
-  countryCode : string;
+  country_code : string;
   number : string;
 }
 

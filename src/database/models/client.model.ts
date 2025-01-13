@@ -66,7 +66,7 @@ const clientSchema = new Schema<IClient>(
       rememberMeExpires: Date,
     },
     phone : {
-      countryCode : String,
+      country_code : String,
       number : String
     },
     hasAccount : {

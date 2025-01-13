@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revel</title>
+  <style>
+     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+    body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 40px 0;
+    }
+
+
+    .header {
+      text-align: left;
+      background-color: #f0f0f0;
+      padding: 20px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin: 0;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .content p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .credentials {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .footer {
+      text-align: left;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="content">
+    <p>Hello</p>
+    
+    <p>An account has been created for you on Revel Management Portal. Use the following credentials below to login to your account, please note that you will be required to change
+        your password on first login.</p>
+    
+    <p class="credentials">Name: <%= body.name %></p>
+    <p class="credentials">Email: <%= body.email %></p>
+    <p class="credentials">Password: <%= body.password %></p>
+    
+    
+    <p>Follow this link to change your password <a href="http://localhost:5000/changePassword?changeId=<%= body._id %>">here</a></p>
+    
+    <p>If you have any questions or need assistance, feel free to reach out.</p>
+    <p>We're here to help!</p>
+
+  </div>
+  <footer class="footer">
+    <p>Thanks,</p>
+    <p>Revel</p>
+  </footer>
+</body>
+</html>

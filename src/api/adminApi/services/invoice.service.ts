@@ -3,10 +3,13 @@ import { IInvoice, IInvoiceRepository } from "../../../interfaces/invoice.interf
 import ApiError from "../../../utilities/error.base";
 import TapInvoiceCallService from "../../../helpers/tap.invoice";
 import axios from "axios";
+// import EmailService from "../../../email/emailer";
 
 export default class InvoiceService {
     private InvoiceRepository: IInvoiceRepository;
     private tapInvoiceCallService: TapInvoiceCallService = new TapInvoiceCallService(axios);
+    // private emailService = new EmailService();
+
 
     constructor(invoiceRepository: IInvoiceRepository) {
         this.InvoiceRepository = invoiceRepository;
