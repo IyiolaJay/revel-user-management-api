@@ -47,6 +47,7 @@ const createClient = RequestValidator.requestItemsStructure({
     country_code: Joi.string().required(),
     number: Joi.string().required(),
   }),
+  company : Joi.string()
 });
 
 const updateAdmin = RequestValidator.requestItemsStructure({

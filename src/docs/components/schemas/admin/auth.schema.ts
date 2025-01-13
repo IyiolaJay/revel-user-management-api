@@ -50,6 +50,8 @@
  *                example: "https://example.com"
  *             hasAccount:
  *                type: boolean
+ *             company:
+ *                type: string
  *             phone:
  *                type: object
  *                properties:

@@ -73,7 +73,8 @@ const clientSchema = new Schema<IClient>(
       type : Boolean,
       required : true,
       default : false
-    }
+    },
+    company : String,
   },
   {
     timestamps: true,

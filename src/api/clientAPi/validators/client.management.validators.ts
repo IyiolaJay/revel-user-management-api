@@ -17,6 +17,7 @@ const updateClient = RequestValidator.requestItemsStructure({
         countryCode : Joi.string(),
         number : Joi.string()
       }),
+      company : Joi.string()
 })
 
 const searchClient = RequestValidator.requestItemsStructure({

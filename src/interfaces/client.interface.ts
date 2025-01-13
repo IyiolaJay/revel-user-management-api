@@ -19,6 +19,7 @@ export interface IClient {
   creatorId : string;
   phone? : IPhone;
   hasAccount : boolean;
+  company : string
 }
 
 interface IPhone{
