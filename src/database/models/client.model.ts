@@ -30,7 +30,11 @@ const clientSchema = new Schema<IClient>(
       required: true,
       unique: true,
     },
-    name: {
+    first_name: {
+      type: String,
+      required: true,
+    },
+    last_name: {
       type: String,
       required: true,
     },
@@ -61,8 +65,11 @@ const clientSchema = new Schema<IClient>(
       ipAddress: String,
       rememberMeExpires: Date,
     },
-    phone : String,
-    isCustomerOnly : {
+    phone : {
+      countryCode : String,
+      number : String
+    },
+    hasAccount : {
       type : Boolean,
       required : true,
       default : false

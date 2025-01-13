@@ -31,7 +31,8 @@ const changePasswordQuery = RequestValidator.requestItemsStructure({
 
 const createClient = RequestValidator.requestItemsStructure({
   email: Joi.string().email().required(),
-  name: Joi.string().required(),
+  first_name: Joi.string().required(),
+  last_name: Joi.string().required(),
   establishmentId: Joi.array().items(Joi.number().required()),
   establishmentUrl: Joi.string()
   .custom((value, _) => {
@@ -41,7 +42,11 @@ const createClient = RequestValidator.requestItemsStructure({
     return value; // Leave the value unchanged if it starts with http:// or https://
   }, 'Prepend https:// if missing'),
   subscribedService: Joi.array().items(Joi.string().required()),
-  isCustomerOnly : Joi.boolean()
+  hasAccount : Joi.boolean().default(false),
+  phone: Joi.object({
+    country_code: Joi.string().required(),
+    number: Joi.string().required(),
+  }),
 });
 
 const updateAdmin = RequestValidator.requestItemsStructure({

@@ -5,6 +5,8 @@ import { IDevice } from "./token.interface";
 export interface IClient {
   _id?: Schema.Types.ObjectId;
   clientId :string;
+  first_name : string;
+  last_name : string;
   establishmentId: number[];
   establishmentUrl: string;
   email: string;
@@ -15,10 +17,14 @@ export interface IClient {
   permissionSet : string[];
   device : IDevice;
   creatorId : string;
-  phone? : string;
-  isCustomerOnly : boolean;
+  phone? : IPhone;
+  hasAccount : boolean;
 }
 
+interface IPhone{
+  countryCode : string;
+  number : string;
+}
 
 
 export interface IClientRepository extends IGenericRepository<IClient> {

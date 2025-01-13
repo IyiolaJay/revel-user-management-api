@@ -3,7 +3,8 @@ import RequestValidator from "../../../middlewares/schema.middleware";
 
 const updateClient = RequestValidator.requestItemsStructure({
       email: Joi.string().email(),
-      name: Joi.string(),
+      first_name: Joi.string(),
+      last_name: Joi.string(),
       establishmentId: Joi.array().items(Joi.number()),
       establishmentUrl: Joi.string()
       .custom((value, _) => {
@@ -12,6 +13,10 @@ const updateClient = RequestValidator.requestItemsStructure({
         }
         return value; // Leave the value unchanged if it starts with http:// or https://
       }, 'Prepend https:// if missing'),
+      phone : Joi.object({
+        countryCode : Joi.string(),
+        number : Joi.string()
+      }),
 })
 
 const searchClient = RequestValidator.requestItemsStructure({

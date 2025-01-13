@@ -37,7 +37,7 @@ export default class ClientAuthService {
       throw new ApiError(httpStatus.NOT_FOUND, "Customer not found");
     }
 
-    if (!customer.isCustomerOnly) {
+    if (!customer.hasAccount) {
       throw new ApiError(
         httpStatus.BAD_REQUEST,
         "Customer account is already upgraded")
@@ -45,7 +45,7 @@ export default class ClientAuthService {
     
     await this.ClientRepository.update(
         { clientId: clientId },
-        {isCustomerOnly: true}
+        {hasAccount: true}
       );
 
 

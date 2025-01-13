@@ -34,7 +34,10 @@
  *             email:
  *                type: string
  *                example: user@example.com
- *             name:
+ *             first_name:
+ *                type: string
+ *                example: John Doe
+ *             last_name:
  *                type: string
  *                example: John Doe
  *             establishmentId:
@@ -45,8 +48,15 @@
  *             establishmentUrl:
  *                type: string
  *                example: "https://example.com"
- *             isCustomerOnly:
+ *             hasAccount:
  *                type: boolean
+ *             phone:
+ *                type: object
+ *                properties:
+ *                 country_code:
+ *                  type: string
+ *                 number:
+ *                  type: string
  *             subscribedService:
  *                type: array
  *                items:

@@ -16,7 +16,7 @@ const InvoiceSchema: Schema = new Schema<IInvoice>(
     note: { type: String, required: true,default : "test note" },
     notifications: {
       channels: { type: [String], required: true, default : ["EMAIL"] },
-      dispatch: { type: Boolean, required: true, default : true },
+      dispatch: { type: Boolean, required: true, default : false },
     },
     metadata: {
       udf1: { type: String, required: true, default: "1" },

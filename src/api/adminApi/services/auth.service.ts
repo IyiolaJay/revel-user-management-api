@@ -103,7 +103,7 @@ export default class AdminAuthService {
     });
 
     //send credentials only client users, 
-    if(!client.isCustomerOnly){
+    if(client.hasAccount){
       this.emailService.SendEMailToUser(
         {
           to: _client.email,
