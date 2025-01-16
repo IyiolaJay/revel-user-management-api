@@ -23,6 +23,11 @@ class EmailService {
     "templates",
     "resetPassword.template.ejs"
   );
+  private invoiceTemplatePath = path.join(
+    __dirname,
+    "templates",
+    "invoice.template.ejs"
+  );
 
   constructor() {
     this.transporter = nodemailer.createTransport({
@@ -75,6 +80,12 @@ class EmailService {
 
       case EmailType.CredentialsEmail:
         html = await ejs.renderFile(this.credentialsTemplatePath, {
+          body: optionsPart.bodyParts,
+        });
+        break;
+      
+      case EmailType.InvoiceEmail:
+        html = await ejs.renderFile(this.invoiceTemplatePath, {
           body: optionsPart.bodyParts,
         });
         break;

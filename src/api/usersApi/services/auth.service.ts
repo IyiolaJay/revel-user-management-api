@@ -66,7 +66,7 @@ export default class UserAuthService {
     const tokenResponse = {
       accessToken: await this.securityHelperService.GenerateJWT(
         {
-          id: adminData.adminId.toString(),
+          id: adminData._id.toString(),
           role: adminData.adminType,
           permissions: mapPermissionKeysToValues(adminData.permissionSet),
           accountType: "admin",
@@ -88,7 +88,7 @@ export default class UserAuthService {
         ...tokenResponse,
         accessToken: await this.securityHelperService.GenerateJWT(
           {
-            id: adminData.adminId.toString(),
+            id: adminData._id.toString(),
             role: adminData.adminType,
             permissions: mapPermissionKeysToValues(adminData.permissionSet),
             accountType: "admin",
@@ -103,7 +103,7 @@ export default class UserAuthService {
     // if login is from a different device
     // token is sent to user emails
     const token = await this.otpRepository.create({
-      ownerId: adminData.adminId,
+      ownerId: adminData._id.toString(),
       otpToken: this.securityHelperService.generateOtp(),
     });
 
@@ -262,7 +262,7 @@ export default class UserAuthService {
     const tokenResponse =  {
       accessToken: await this.securityHelperService.GenerateJWT(
         {
-          id: clientData.clientId.toString(),
+          id: clientData._id.toString(),
           role: clientData.clientType,
           permissions: clientData.permissionSet,
           accountType: "client",
@@ -282,7 +282,7 @@ export default class UserAuthService {
         ...tokenResponse,
         accessToken: await this.securityHelperService.GenerateJWT(
           {
-            id: clientData.clientId.toString(),
+            id: clientData._id.toString(),
             role: clientData.clientType,
             permissions: clientData.permissionSet,
             accountType: "client",
@@ -298,7 +298,7 @@ export default class UserAuthService {
     // if login is from a different device
     // token is sent to user emails
     const token = await this.otpRepository.create({
-      ownerId: clientData.clientId,
+      ownerId: clientData._id.toString(),
       otpToken: this.securityHelperService.generateOtp(),
     });
 

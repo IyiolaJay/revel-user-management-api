@@ -50,12 +50,10 @@ async GetItems(offset: number = 1, limit: number = 10, filters: any) {
 }
 
 async EditItem(itemId: string, item: IItem) {
-    let _item = await this.ItemRepository.findById(itemId);
-
+    const _item = await this.ItemRepository.update({ _id: itemId }, item);
     if (!_item)
         throw new ApiError(httpStatus.NOT_FOUND, "Item does not exist");
 
-    _item = await this.ItemRepository.update({ _id: itemId }, item);
 
     return _item;
 }

@@ -26,8 +26,13 @@ const searchClient = RequestValidator.requestItemsStructure({
       limit: Joi.number(),
 })
 
+const upgradeClient = RequestValidator.requestItemsStructure({
+       subscribeService: Joi.array().items(Joi.string()).required()
+});
+
 
 export default {
     updateClient,
-    searchClient
+    searchClient,
+    upgradeClient
 }

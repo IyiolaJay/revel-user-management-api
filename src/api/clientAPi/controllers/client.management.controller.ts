@@ -3,6 +3,7 @@ import BaseController from "../../../utilities/base.controller";
 import ClientAuthService from "../services/client.management.service";
 import httpStatus from "http-status";
 import ClientRepository from "../../../repositories/client.repository";
+import ServiceRepository from "../../../repositories/service.repository";
 
 export default class ClientAuthController extends BaseController {
   private ClientService: ClientAuthService;
@@ -10,7 +11,10 @@ export default class ClientAuthController extends BaseController {
   constructor() {
     super();
 
-    this.ClientService = new ClientAuthService(new ClientRepository());
+    this.ClientService = new ClientAuthService(
+      new ClientRepository(),
+      new ServiceRepository()
+    );
   }
 
   GetAllClients = this.wrapAsync(
@@ -47,7 +51,11 @@ export default class ClientAuthController extends BaseController {
   UpgradeCustomerAccount = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
       const { clientId } = req.params;
-      await this.ClientService.upgradeCustomerAccount(clientId as string);
+      const { subscribedService } = req.body;
+      await this.ClientService.upgradeCustomerAccount(
+        clientId as string,
+        subscribedService
+      );
       this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: "Customer account upgraded",
@@ -58,7 +66,7 @@ export default class ClientAuthController extends BaseController {
 
   SearchClient = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const { offset, limit,searchText } = req.query;
+      const { offset, limit, searchText } = req.query;
       const clients = await this.ClientService.searchClient(
         isNaN(Number(offset)) ? 1 : Number(offset),
         isNaN(Number(limit)) ? 20 : Number(limit),

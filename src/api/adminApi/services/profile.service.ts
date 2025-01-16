@@ -15,9 +15,7 @@ export default class AdminProfileService{
      * @returns 
      */
     async GetProfile(id : string){
-        const user = await this.AdminRepository.findOneByFilter({
-            adminId : id
-        });
+        const user = await this.AdminRepository.findById(id)
 
         if(!user) throw new ApiError(
             httpStatus.NOT_FOUND,

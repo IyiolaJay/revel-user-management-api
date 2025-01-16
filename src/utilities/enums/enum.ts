@@ -21,5 +21,6 @@ export enum Currency{
 export enum EmailType{
     VerifyEmail = "verify",
     CredentialsEmail = "credentials",
-    ResetEmail = "reset"
+    ResetEmail = "reset",
+    InvoiceEmail = "invoice"
 }

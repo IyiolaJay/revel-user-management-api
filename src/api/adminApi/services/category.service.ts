@@ -36,13 +36,12 @@ export default class CategoryService {
   }
 
   async EditCategory(categoryId: string, category: ICategory) {
-    let _category = await this.CategoryRepository.findById(categoryId);
-
-    if (!_category)
-      throw new ApiError(httpStatus.NOT_FOUND, "Category does not exists");
-
-    _category = await this.CategoryRepository.update({ _id: categoryId }, category);
-
+    let _category = await this.CategoryRepository.update({ _id: categoryId }, category);
+    
+        if (!_category)
+          throw new ApiError(httpStatus.NOT_FOUND, "Category does not exists");
+    
+    
     return _category;
   }
 }

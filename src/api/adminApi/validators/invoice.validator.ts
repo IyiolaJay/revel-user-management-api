@@ -3,6 +3,7 @@ import RequestValidator from "../../../middlewares/schema.middleware";
 import { Currency } from "../../../utilities/enums/enum";
 
 const createInvoiceSchema = RequestValidator.requestItemsStructure({
+    clientId : Joi.string().required(),
     draft: Joi.boolean().required(),
     due: Joi.number().required(),
     expiry: Joi.number().required(),

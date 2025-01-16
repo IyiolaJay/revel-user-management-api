@@ -3,8 +3,8 @@ import IGenericRepository from "./generic.repository.interface";
 import { IDevice } from "./token.interface";
 
 export interface IAdmin {
-  _id?: Schema.Types.ObjectId;
-  adminId : string;
+  _id: Schema.Types.ObjectId;
+  // adminId : string;
   email: string;
   name: string;
   password: string;

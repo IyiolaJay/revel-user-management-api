@@ -16,6 +16,9 @@
  *             draft:
  *                type: boolean
  *                description: Indicates if the invoice is a draft
+ *             clientId:
+ *                type: string
+ *                description: ID of the customer/client that the invoice is meant for
  *             due:
  *                type: number
  *                description: Due amount for the invoice

@@ -3,16 +3,20 @@ import { IInvoice, IInvoiceRepository } from "../../../interfaces/invoice.interf
 import ApiError from "../../../utilities/error.base";
 import TapInvoiceCallService from "../../../helpers/tap.invoice";
 import axios from "axios";
-// import EmailService from "../../../email/emailer";
+import EmailService from "../../../email/emailer";
+import { EmailType } from "../../../utilities/enums/enum";
+import { IClientRepository } from "../../../interfaces/client.interface";
 
 export default class InvoiceService {
     private InvoiceRepository: IInvoiceRepository;
+    private clientRepository : IClientRepository;
     private tapInvoiceCallService: TapInvoiceCallService = new TapInvoiceCallService(axios);
-    // private emailService = new EmailService();
+    private emailService = new EmailService();
 
 
-    constructor(invoiceRepository: IInvoiceRepository) {
+    constructor(invoiceRepository: IInvoiceRepository, clientRepository : IClientRepository) {
         this.InvoiceRepository = invoiceRepository;
+        this.clientRepository = clientRepository;
     }
 
     async CreateInvoice(invoice: IInvoice, userId: string) {
@@ -22,6 +26,13 @@ export default class InvoiceService {
 
         if (_invoice)
             throw new ApiError(httpStatus.CONFLICT, "Invoice already exists");
+
+        const client =await this.clientRepository.findById(invoice.clientId);
+
+        if (!client)
+            throw new ApiError(httpStatus.NOT_FOUND, "Client does not exist");
+
+
 
         //create invoice on tap
         const invoiceNumber = await this.InvoiceRepository.getNextInvoiceOrEstimateNumber(invoice.draft ? "estimate" : "invoice");
@@ -39,16 +50,36 @@ export default class InvoiceService {
             createdBy : userId
         });
         
-        // return;
         const tapInvoice = await this.tapInvoiceCallService.createInvoice(invoiceInstance);
-
-
+        
         _invoice = await this.InvoiceRepository.create({
             ...invoiceInstance._doc,
             tapInvoiceId : tapInvoice.invoice_number,
             invoiceUrl : tapInvoice.url,
         });
+        //name
+        //invoiceNumber
+        //amount
+        //due
+        //userId
+        //invoiceUrl
+        //otherPaymentOptionsLink
+        
+        if(!_invoice.draft){
 
+            this.emailService.SendEMailToUser({
+                to : client.email,
+                bodyParts : {
+                    name : client.first_name,
+                    invoiceNumber : _invoice.invoiceNumber,
+                    amount : _invoice.order.amount,
+                    due : _invoice.due,
+                    userId,
+                    invoiceUrl :_invoice.invoiceUrl,
+                },},
+                EmailType.InvoiceEmail)
+        }   
+        
         return _invoice;
     }
 

@@ -1,6 +1,7 @@
 import IGenericRepository from "./generic.repository.interface";
 
 export interface IInvoice {
+    clientId : string;
     invoiceNumber: string;
     tapInvoiceId: number;
     invoiceUrl : string;
@@ -25,7 +26,15 @@ export interface IInvoice {
             sms: boolean;
         };
     };
-    customer: object; 
+    customer: {
+        email: string;
+        first_name: string;
+        last_name: string;
+        phone: {
+            country_code: string;
+            number: string;
+        }
+    }; 
     statement_descriptor: string;
     order: {
         amount: number;

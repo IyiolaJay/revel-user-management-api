@@ -130,7 +130,7 @@ export default class AdminAuthService {
 
       subscriptions.forEach(async (s) => {
         await this.ServiceRepository.createActiveService({
-          clientId: _client.clientId,
+          clientId: _client._id.toString(),
           serviceId: s.serviceId as string,
           expireDate: s.expireDate as Date,
         });
@@ -154,7 +154,7 @@ export default class AdminAuthService {
           ...client.establishmentId.map((item) => ({
             estId: item,
             estUrl: client.establishmentUrl,
-            clientId: _client.clientId,
+            clientId: _client._id.toString(),
           })),
         ]),
       });
@@ -164,7 +164,7 @@ export default class AdminAuthService {
   }
 
   async UpdateAdminAccount(adminId : string, updateData : Partial<IAdmin>){
-    const admin = await this.AdminRepository.update({adminId : adminId}, updateData);
+    const admin = await this.AdminRepository.update({_id : adminId}, updateData);
     if(!admin) throw new ApiError(
       httpStatus.NOT_FOUND,
       "Admin account not found"

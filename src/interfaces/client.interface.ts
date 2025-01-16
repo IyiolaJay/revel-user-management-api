@@ -3,8 +3,8 @@ import IGenericRepository from "./generic.repository.interface";
 import { IDevice } from "./token.interface";
 
 export interface IClient {
-  _id?: Schema.Types.ObjectId;
-  clientId :string;
+  _id: Schema.Types.ObjectId;
+  // clientId :string;
   first_name : string;
   last_name : string;
   establishmentId: number[];

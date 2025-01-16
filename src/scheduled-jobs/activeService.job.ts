@@ -24,7 +24,7 @@ export function getActiveServiceJob() {
       estIds = est.establishmentId.map((item) => ({
         estId: item,
         estUrl: est.establishmentUrl,
-        clientId: est.clientId,
+        clientId: est._id,
       }));
     });
 

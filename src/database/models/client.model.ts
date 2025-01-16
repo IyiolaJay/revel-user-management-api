@@ -1,16 +1,9 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { ClientType } from "../../utilities/enums/enum";
 import { IClient } from "../../interfaces/client.interface";
-import { v4 as uuidV4} from "uuid";
 
 const clientSchema = new Schema<IClient>(
   {
-    clientId: {
-      type: String,
-      required: true,
-      unique : true,
-      default : () => uuidV4(),
-    },
     creatorId:{
       type: String,
       required: true,
@@ -83,6 +76,7 @@ const clientSchema = new Schema<IClient>(
     toJSON: {
       virtuals: true,
       transform: (_, ret) => {
+        ret.clientId = ret._id;
         delete ret._id;
         delete ret.password;
         delete ret.device;

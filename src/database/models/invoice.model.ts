@@ -6,6 +6,7 @@ import Counter from "./counter.model";
 const InvoiceSchema: Schema = new Schema<IInvoice>(
   {
     invoiceNumber: { type: String, required: true, unique: true },
+    clientId : { type: String, required: true, ref : 'clients' },
     tapInvoiceId : { type: Number, required: true, unique: true },
     invoiceUrl: { type: String, },
     draft: { type: Boolean, required: true },
@@ -29,7 +30,15 @@ const InvoiceSchema: Schema = new Schema<IInvoice>(
         sms: { type: Boolean, required: true,default : false },
       },
     },
-    customer: { type: Schema.Types.Mixed, required: true },
+    customer: { 
+      email: { type: String, required: true }, 
+      first_name: { type: String, required: true },
+      last_name: { type: String, required: true },
+      phone: { type: {
+        country_code: { type: String, required: true },
+        number: { type: String, required: true },
+      }, required: true },
+    },
     statement_descriptor: { type: String, required: true, default : "test" },
     order: {
       amount: { type: Number, required: true },
@@ -62,6 +71,8 @@ const InvoiceSchema: Schema = new Schema<IInvoice>(
     },
   }
 );
+
+InvoiceSchema.index({"order.amount": 1})
 
 InvoiceSchema.pre("validate", async function (next) {
   const invoice = this as unknown as IInvoice;

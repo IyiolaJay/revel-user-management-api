@@ -1,17 +1,10 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IAdmin } from "../../interfaces/admin.interface";
 import { AdminType } from "../../utilities/enums/enum";
-import { v4 as uuidV4 } from "uuid";
 
 
 const adminSchema = new Schema<IAdmin>(
   {
-    adminId: {
-      type: String,
-      required: true,
-      unique: true,
-      default: () => uuidV4(),
-    },
     email: {
       type: String,
       required: true,
@@ -55,6 +48,7 @@ const adminSchema = new Schema<IAdmin>(
     toJSON: {
       virtuals: true,
       transform: (_, ret) => {
+        ret.adminId = ret._id;
         delete ret._id;
         delete ret.password;
         delete ret.device;

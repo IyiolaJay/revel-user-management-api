@@ -7,6 +7,7 @@ import ServiceRoutes from "./routes/services.routes";
 import CategoryRoutes from "./routes/category.routes";
 import ItemRoutes from "./routes/item.routes";
 import InvoiceRoutes from "./routes/invoice.routes";
+import BulkUploadRoutes from "./routes/bulkUpload.routes";
 /**
  * 
  */
@@ -19,6 +20,7 @@ class App {
   private CategoryRoutes : CategoryRoutes = new CategoryRoutes();
   private ItemRoutes : ItemRoutes = new ItemRoutes();
   private InvoiceRoutes : InvoiceRoutes = new InvoiceRoutes();
+  private BulkUploadRoutes : BulkUploadRoutes = new BulkUploadRoutes();
 
   constructor() {
     this.app = express();
@@ -35,7 +37,7 @@ class App {
     this.app.use("/categories", this.CategoryRoutes.getRouter());
     this.app.use("/items", this.ItemRoutes.getRouter());
     this.app.use("/invoices", this.InvoiceRoutes.getRouter());
-  
+    this.app.use("/bulk-upload", this.BulkUploadRoutes.getRouter());
     //other api routes
 
 

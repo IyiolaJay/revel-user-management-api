@@ -27,10 +27,10 @@ export default class OrderService {
     let user;
 
     //if establishment id is not passed, fetch all receipts based on the user's establishment ids
-    user = await this.ClientRepository.findOneByFilter({
-      clientId: clientId,
-    });
-
+    // user = await this.ClientRepository.findOneByFilter({
+    //   _id: clientId,
+    // });
+    user = await this.ClientRepository.findById(clientId);
     if (!establishmentId) {
 
       return await this.OrderRepository.findAll(offset,limit,{
