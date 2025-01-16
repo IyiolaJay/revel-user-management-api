@@ -28,7 +28,7 @@ export default class BulkUploadService{
       console.log(items);
       return 
     }
-    async ValidateUploadCsvFields(_ : any, csvFile? : Express.Multer.File) : Promise<{isValid: boolean, message: string}> {
+    async ValidateUploadCsvFields(_ : string, csvFile? : Express.Multer.File) : Promise<{isValid: boolean, message: string}> {
         if(!csvFile){
             throw new ApiError(
                 httpStatus.BAD_REQUEST,

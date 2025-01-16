@@ -24,13 +24,9 @@ export default class UserProfileService {
     let user;
 
     if (userType === "admin"){
-        user = await this.AdminRepository.findOneByFilter({
-            adminId: id,
-        });
+        user = await this.AdminRepository.findById(id);
     }else{
-        user = await this.ClientRepository.findOneByFilter({
-            clientId : id,
-        });
+        user = await this.ClientRepository.findById(id);
     }
 
     if (!user)
