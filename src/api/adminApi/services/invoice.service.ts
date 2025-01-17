@@ -65,8 +65,6 @@ export default class InvoiceService {
         //invoiceUrl
         //otherPaymentOptionsLink
         
-        if(!_invoice.draft){
-
             this.emailService.SendEMailToUser({
                 to : client.email,
                 bodyParts : {
@@ -74,11 +72,11 @@ export default class InvoiceService {
                     invoiceNumber : _invoice.invoiceNumber,
                     amount : _invoice.order.amount,
                     due : _invoice.due,
+                    type : _invoice.draft ? 'estimate' : "invoice",
                     userId,
                     invoiceUrl :_invoice.invoiceUrl,
                 },},
                 EmailType.InvoiceEmail)
-        }   
         
         return _invoice;
     }

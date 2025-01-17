@@ -7,6 +7,7 @@ const itemSchema = new Schema<IItem>(
     itemName: {
       type: String,
       required: true,
+      unique : true
     },
     description: {
       type: String,
@@ -23,7 +24,7 @@ const itemSchema = new Schema<IItem>(
       default : "KWD"
     },
     categoryId: {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: "categories",
       required: true,
     },

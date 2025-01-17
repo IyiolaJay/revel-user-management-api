@@ -7,7 +7,7 @@ export interface IItem {
     description : string,
     cost  : number,
     currency : string,
-    categoryId : Schema.Types.ObjectId,
+    categoryId : string,
     categoryName? : string,
 }
 

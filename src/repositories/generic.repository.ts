@@ -66,21 +66,27 @@ export default class GenericRepository<T> implements IGenericRepository<T> {
     await this.model.deleteOne({ _id: id });
   }
 
-  async validateEntityData(data: T[]): Promise<any> {
-    // const validRecords = [];
-    // const invalidRecords = [];
+  async validateEntityData(data: T[]): Promise<{validRecords : T[], invalidRecords : { record: T, validationError: any }[]}> {
+    const validRecords = [];
+    const invalidRecords = [];
   
    
-    // // Step 2: Validate each record
-    // for (const record of data) {
-    //   const model = this.model.validate(record);
-    //   try {
-    //     await model.validate(); 
-    //     validRecords.push(record);
-    //   } catch (validationError) {
-    //     invalidRecords.push({ record, errors: validationError.errors });
-    //   }
-    // }
-    return data;
+    for (const record of data) {
+      // const _record = new this.model(record)
+      try {
+        await this.model.validate(record);
+        validRecords.push(record);
+      } catch (validationError  : any) {
+        invalidRecords.push({ record, validationError: validationError.errors });
+      }
+    }
+    return {
+      validRecords,
+      invalidRecords
+    };
+  }
+
+  async bulkCreate(data: T[]): Promise<void> {
+      await this.model.insertMany(data);
   }
 }

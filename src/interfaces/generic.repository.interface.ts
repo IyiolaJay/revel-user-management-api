@@ -8,5 +8,6 @@ export default interface IGenericRepository<T> {
   // findAllByFilter(filterQuery : FilterQuery<T>) : Promise<T[]>;
   update(filter: FilterQuery<T>, updateData : Partial<T>) :Promise<T | null>,
   delete(id: string)  : Promise<void>;
-  validateEntityData(data : T[]) : Promise<any>;
+  validateEntityData(data : T[]) : Promise<{validRecords : T[], invalidRecords : { record: T, validationError: any }[]}>;
+  bulkCreate(data : T[]) : Promise<void>;
 }

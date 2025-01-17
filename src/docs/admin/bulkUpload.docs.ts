@@ -1,10 +1,42 @@
 /**
  * @openapi
- * /bulk-upload/items:
+ * /bulkUpload/upload:
  *      post:
  *         summary: Create new items from csv
  *         tags:
- *            - Posts
+ *            - Bulk Upload 
+ *         parameters:
+ *            - in : query
+ *              name : entity
+ *              schema:
+ *                type: string
+ *         requestBody:
+ *              required: true
+ *              content:
+ *                  multipart/form-data:
+ *                     schema:
+ *                        $ref: '#/components/schemas/BulkUpload'
+ *         responses:
+ *            "200":
+ *               description: success
+ *
+ *
+ *
+ *
+ */
+
+/**
+ * @openapi
+ * /bulkUpload/validateFields:
+ *      post:
+ *         summary: Create new items from csv
+ *         tags:
+ *            - Bulk Upload
+ *         parameters:
+ *            - in : query
+ *              name : entity
+ *              schema:
+ *                type: string
  *         requestBody:
  *              required: true
  *              content:

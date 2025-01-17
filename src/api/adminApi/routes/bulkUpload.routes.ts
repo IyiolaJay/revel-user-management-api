@@ -19,11 +19,19 @@ export default class BulkUploadRoutes extends BaseRoute{
 
     
     this.router.post(
-      "/items",
+      "/upload",
     //   authenticationMiddleware.AuthorizeUser,
     //   PermissionValidation.PermissionMiddleware([Permissions.CREATE_CLIENT]),
       multerMediaHandler.UploadSingleCSVFile(),
       bulkUploadController.UploadItemCSVFile
+    );
+
+    this.router.post(
+      "/validateFields",
+    //   authenticationMiddleware.AuthorizeUser,
+    //   PermissionValidation.PermissionMiddleware([Permissions.CREATE_CLIENT]),
+      multerMediaHandler.UploadSingleCSVFile(),
+      bulkUploadController.ValidateUploadFields
     );
   }
 }

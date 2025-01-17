@@ -37,7 +37,7 @@ class App {
     this.app.use("/categories", this.CategoryRoutes.getRouter());
     this.app.use("/items", this.ItemRoutes.getRouter());
     this.app.use("/invoices", this.InvoiceRoutes.getRouter());
-    this.app.use("/bulk-upload", this.BulkUploadRoutes.getRouter());
+    this.app.use("/bulkUpload", this.BulkUploadRoutes.getRouter());
     //other api routes
 
 
