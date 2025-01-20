@@ -1,10 +1,9 @@
 import httpStatus from "http-status";
-import { csvParserHelper } from "../../../helpers/csv.parser";
 import ApiError from "../../../utilities/error.base";
-import { IItem } from "../../../interfaces/item.interface";
 import ItemRepository from "../../../repositories/item.repository";
 import { IClientRepository } from "../../../interfaces/client.interface";
 import ClientRepository from "../../../repositories/client.repository";
+import CsvUploadHelper from "../../../helpers/csv.parser";
 
 export default class BulkUploadService{
     private itemRepository: ItemRepository;
@@ -20,7 +19,7 @@ export default class BulkUploadService{
      * Upload CSV file to the database.
      * @param file
      */
-    async UploadItemCSVFile( entity : string, csvFile?: Express.Multer.File): Promise<void> {
+    async UploadItemCSVFile( entity : string, csvFile?: Express.Multer.File): Promise<{unsuccessfulUploads : object[]}> {
         if(!csvFile){
             throw new ApiError(
                 httpStatus.BAD_REQUEST,
@@ -30,20 +29,24 @@ export default class BulkUploadService{
 
         let repository;
 
-        if(entity === "items") repository = this.itemRepository;
-        else repository = this.clientRepository;
+        const records : any = await CsvUploadHelper.csvParserHelper(csvFile);
+        
+        let uploads : any;
+        if(entity === "items") {
+            repository = this.itemRepository
+            uploads = await CsvUploadHelper.getItemCategoryIdFromName(records)
+        
+        }else {
+            repository = this.clientRepository
+        };
 
-        const items : any = await csvParserHelper<IItem>(csvFile);
-        try{
-            await repository.bulkCreate(items)
-        }catch(error : any ){
-            console.log(error);
-            throw new ApiError(
-                httpStatus.UNPROCESSABLE_ENTITY,
-                "Unable to do bulk upload"
-            )
-        }
-        return 
+    
+      
+          const bulkOperationresults = await repository.bulkCreate(uploads)
+       
+        return {
+            unsuccessfulUploads : bulkOperationresults ?? []
+        };
     }
     async ValidateUploadCsvFields(entity : string, csvFile? : Express.Multer.File) : Promise<any> {
         if(!csvFile){
@@ -57,8 +60,16 @@ export default class BulkUploadService{
         if(entity === "items") repository = this.itemRepository;
         else repository = this.clientRepository;
 
-        const record :any = await csvParserHelper<IItem>(csvFile);
-        const result = await repository.validateEntityData(record);
+        const record :any = await CsvUploadHelper.csvParserHelper(csvFile);
+        
+        let upload;
+        if (entity === "items") {
+            upload = await CsvUploadHelper.getItemCategoryIdFromName(record);
+        } else {
+            upload = record; //@TODO Assuming record is already in the correct format for clients
+        }
+        
+        const result = await repository.validateEntityData(upload);
         
         return result.invalidRecords.map(({ record, validationError }) => ({
             record,
