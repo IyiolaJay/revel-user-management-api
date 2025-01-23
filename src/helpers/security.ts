@@ -31,7 +31,7 @@ export default class SecurityHelperService {
   //
   public async GenerateJWT(payload: ITokenData, duration: string) {
     return jwt.sign(payload, this.jwt_secret ?? "", {
-      expiresIn: duration ?? "24h",
+      expiresIn: duration ?? undefined,
     });
   }
 

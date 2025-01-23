@@ -18,7 +18,7 @@ export interface IClient {
   device : IDevice;
   creatorId : string;
   phone? : IPhone;
-  hasAccount : boolean;
+  hasOnboarded : boolean;
   company : string
 }
 

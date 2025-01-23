@@ -6,12 +6,15 @@ import axios from "axios";
 import EmailService from "../../../email/emailer";
 import { EmailType } from "../../../utilities/enums/enum";
 import { IClientRepository } from "../../../interfaces/client.interface";
+import SecurityHelperService from "../../../helpers/security";
 
 export default class InvoiceService {
     private InvoiceRepository: IInvoiceRepository;
     private clientRepository : IClientRepository;
     private tapInvoiceCallService: TapInvoiceCallService = new TapInvoiceCallService(axios);
     private emailService = new EmailService();
+    private SecurityHelperService : SecurityHelperService = new SecurityHelperService()
+    
 
 
     constructor(invoiceRepository: IInvoiceRepository, clientRepository : IClientRepository) {
@@ -57,14 +60,17 @@ export default class InvoiceService {
             tapInvoiceId : tapInvoice.invoice_number,
             invoiceUrl : tapInvoice.url,
         });
-        //name
-        //invoiceNumber
-        //amount
-        //due
-        //userId
-        //invoiceUrl
-        //otherPaymentOptionsLink
-        
+
+
+        const token = await this.SecurityHelperService.GenerateJWT({
+            id : userId,
+            accountType : "client",
+            role : "",
+            permissions : []
+        },
+         "90d"
+        )
+
             this.emailService.SendEMailToUser({
                 to : client.email,
                 bodyParts : {
@@ -75,6 +81,7 @@ export default class InvoiceService {
                     type : _invoice.draft ? 'estimate' : "invoice",
                     userId,
                     invoiceUrl :_invoice.invoiceUrl,
+                    onboardUrl : `https://www.edartee.com/?token=${token}` // replace with env var
                 },},
                 EmailType.InvoiceEmail)
         

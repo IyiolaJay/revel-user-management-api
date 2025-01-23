@@ -103,20 +103,20 @@ export default class AdminAuthService {
     });
 
     //send credentials only client users, 
-    if(client.hasAccount){
-      this.emailService.SendEMailToUser(
-        {
-          to: _client.email,
-          bodyParts: {
-            name: _client.name,
-            email: _client.email,
-            password: genPassword,
-            _id: _client._id,
-          },
-        },
-        EmailType.CredentialsEmail
-      );
-    }
+    // if(client.hasAccount){
+    //   this.emailService.SendEMailToUser(
+    //     {
+    //       to: _client.email,
+    //       bodyParts: {
+    //         name: _client.name,
+    //         email: _client.email,
+    //         password: genPassword,
+    //         _id: _client._id,
+    //       },
+    //     },
+    //     EmailType.CredentialsEmail
+    //   );
+    // }
     
 
     if (subscribedService && subscribedService.length > 0) {

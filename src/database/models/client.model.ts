@@ -33,7 +33,6 @@ const clientSchema = new Schema<IClient>(
     },
     password: {
       type: String,
-      required: true,
       minlength: 8,
     },
     hasSetPassword: {
@@ -62,7 +61,7 @@ const clientSchema = new Schema<IClient>(
       country_code : String,
       number : String
     },
-    hasAccount : {
+    hasOnboarded : {
       type : Boolean,
       required : true,
       default : false

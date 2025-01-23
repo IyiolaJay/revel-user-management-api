@@ -95,17 +95,20 @@
 
 /**
  * @openapi
- * /client/management/upgrade/{clientId}:
+ * /client/management/updatePassword:
  *      patch:
  *         summary: upgrade a customer account to client account.
  *         tags:
  *            - Client
- *         parameters:
- *           - in: path
- *             name: clientId
- *             required: true
- *             schema:
- *               type: string
+ *         requestBody:
+ *           required: true
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   password:
+ *                     type: string
  *         responses:
  *           "200":
  *             description: Client updated successfully

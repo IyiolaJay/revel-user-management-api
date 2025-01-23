@@ -1,4 +1,3 @@
-// import express, { Router } from "express";
 import BaseRoute from "../../../utilities/base.router";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
@@ -27,7 +26,6 @@ export default class ClientAuthRoutes extends BaseRoute{
       PermissionValidation.PermissionMiddleware([Permissions.VIEW_CLIENT]),
       clientAuthController.GetAllClients
     );
-    // Add other routes here...
 
     this.router.patch(
       "/edit/:clientId",
@@ -38,10 +36,10 @@ export default class ClientAuthRoutes extends BaseRoute{
     );
 
     this.router.patch(
-      "/upgrade/:clientId",
+      "/updatePassword",
+      RequestValidator.validateRequestSchema(clientManagementValidators.updatePassword),
       authenticationMiddleware.AuthorizeUser,
-      PermissionValidation.PermissionMiddleware([Permissions.EDIT_CLIENT]),
-      clientAuthController.UpgradeCustomerAccount
+      clientAuthController.UpdateClientPassword
     );
 
     this.router.get(

@@ -3,7 +3,6 @@ import BaseController from "../../../utilities/base.controller";
 import ClientAuthService from "../services/client.management.service";
 import httpStatus from "http-status";
 import ClientRepository from "../../../repositories/client.repository";
-import ServiceRepository from "../../../repositories/service.repository";
 
 export default class ClientAuthController extends BaseController {
   private ClientService: ClientAuthService;
@@ -13,7 +12,6 @@ export default class ClientAuthController extends BaseController {
 
     this.ClientService = new ClientAuthService(
       new ClientRepository(),
-      new ServiceRepository()
     );
   }
 
@@ -48,13 +46,14 @@ export default class ClientAuthController extends BaseController {
       });
     }
   );
-  UpgradeCustomerAccount = this.wrapAsync(
+
+  UpdateClientPassword = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const { clientId } = req.params;
-      const { subscribedService } = req.body;
-      await this.ClientService.upgradeCustomerAccount(
-        clientId as string,
-        subscribedService
+      const { id } = res.locals.user;
+      const { password } = req.body;
+      await this.ClientService.updateClientPassword(
+        id as string,
+        password
       );
       this.sendResponse(res, httpStatus.OK, {
         success: true,
