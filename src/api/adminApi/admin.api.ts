@@ -8,6 +8,7 @@ import CategoryRoutes from "./routes/category.routes";
 import ItemRoutes from "./routes/item.routes";
 import InvoiceRoutes from "./routes/invoice.routes";
 import BulkUploadRoutes from "./routes/bulkUpload.routes";
+import BusinessRoutes from "./routes/business.routes";
 /**
  * 
  */
@@ -21,6 +22,7 @@ class App {
   private ItemRoutes : ItemRoutes = new ItemRoutes();
   private InvoiceRoutes : InvoiceRoutes = new InvoiceRoutes();
   private BulkUploadRoutes : BulkUploadRoutes = new BulkUploadRoutes();
+  private BusinessRoutes : BusinessRoutes = new BusinessRoutes()
 
   constructor() {
     this.app = express();
@@ -38,6 +40,7 @@ class App {
     this.app.use("/items", this.ItemRoutes.getRouter());
     this.app.use("/invoices", this.InvoiceRoutes.getRouter());
     this.app.use("/bulkUpload", this.BulkUploadRoutes.getRouter());
+    this.app.use("/business", this.BusinessRoutes.getRouter())
     //other api routes
 
 

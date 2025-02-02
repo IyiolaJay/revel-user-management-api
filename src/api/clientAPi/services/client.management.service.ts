@@ -66,7 +66,12 @@ export default class ClientAuthService {
 
   async searchClient(offset: number, limit: number, searchText: string) {
     const clients = await this.ClientRepository.findAll(offset, limit, {
-      name: { $regex: new RegExp(searchText, "i") },
+        $or :[
+          {
+            first_name : { $regex: new RegExp(searchText, "i") },
+            last_name : { $regex: new RegExp(searchText, "i") }
+          }
+        ],
     });
 
     if (!clients || clients.data.length === 0) {
