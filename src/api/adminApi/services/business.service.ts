@@ -1,15 +1,19 @@
 import httpStatus from "http-status";
 import { IBusiness, IBusinessAdminRepository, IBusinessAdmins, IBusinessRepository } from "../../../interfaces/business.interface";
 import ApiError from "../../../utilities/error.base";
-import { Schema } from "mongoose";
 import { EmailType } from "../../../utilities/enums/enum";
 import EmailService from "../../../email/emailer";
+import { generateRandomPassword } from "../../../helpers/password";
+import SecurityHelperService from "../../../helpers/security";
+
 
 
 export default class BusinessService {
     private BusinessRepository: IBusinessRepository;
     private BusinessAdminRepository : IBusinessAdminRepository;
     private emailService = new EmailService();
+    private securityHelperService: SecurityHelperService =
+        new SecurityHelperService();
 
 
     constructor(businessRepository: IBusinessRepository, businessAdminRepository : IBusinessAdminRepository) {
@@ -21,7 +25,7 @@ export default class BusinessService {
     /**
      * 
      * @param business 
-     * @param adminId 
+     * @param adminId (system administrator)
      * @returns 
      */
     async CreateBusiness(business: IBusiness, adminId : string) {
@@ -34,20 +38,21 @@ export default class BusinessService {
 
         _business = await this.BusinessRepository.create({
             ...business,
-            createdBy : new Schema.Types.ObjectId(adminId)
+            createdBy : adminId as any
         });
 
-        this.emailService.SendEMailToUser(
+
+        await this.CreateBusinessAdmin(
             {
-              to: _business.businessEmail,
-              bodyParts: {
-                name: _business.businessName,
-                email: _business.businessEmail,
-                _id: _business._id,
-              },
-            },
-            EmailType.CredentialsEmail
-          );
+                adminType : "BUSINESS_SUPER_ADMIN", // change later
+                businessId : _business._id,
+                email : _business.businessEmail,
+                firstName : _business.businessName,
+                lastName : "SUPER ADMIN",
+                phone : _business.phone,    
+            } as IBusinessAdmins,
+            _business._id.toString()
+        )
 
         return _business;
     }
@@ -117,6 +122,7 @@ export default class BusinessService {
     async CreateBusinessAdmin(adminDetails : IBusinessAdmins, businessId : string){
         let businessAdmin = await this.BusinessAdminRepository.findOneByFilter({
             email: { $regex: new RegExp(`^${adminDetails.email}$`, "i") },
+            businessId : businessId
         });
 
         if (businessAdmin)
@@ -126,10 +132,14 @@ export default class BusinessService {
         if (!_business)
             throw new ApiError(httpStatus.NOT_FOUND, "Business does not exist");
 
+
+        const genPassword = generateRandomPassword();
+
         businessAdmin = await this.BusinessAdminRepository.create({
             ...adminDetails,
-            businessId: new Schema.Types.ObjectId(businessId)
-        });
+            businessId: businessId as any,
+            password : await this.securityHelperService.HashPassword(genPassword),
+        })
 
          this.emailService.SendEMailToUser(
               {
@@ -137,6 +147,7 @@ export default class BusinessService {
                 bodyParts: {
                   name: businessAdmin.firstName,
                   email: businessAdmin.email,
+                  password : genPassword,
                   _id: businessAdmin._id,
                 },
               },

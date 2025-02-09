@@ -6,6 +6,7 @@ export interface ITokenData {
     role : string;
     permissions : string[],
     accountType : string, 
+    metaData? : object
   }
   
 

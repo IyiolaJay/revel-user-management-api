@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express, { Express } from 'express';
-import AdminAuthRoutes from "./routes/auth.routes";
+import AdminAuthRoutes from "./routes/admin.routes";
 import AdminProfileRoutes from "./routes/profile.routes";
 import OrderReceiptRoutes from "./routes/order.routes";
 import ServiceRoutes from "./routes/services.routes";

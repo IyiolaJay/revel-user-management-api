@@ -1,6 +1,8 @@
+import { Schema } from "mongoose";
 import IGenericRepository from "./generic.repository.interface";
 
 export interface IInvoice {
+    businessId : Schema.Types.ObjectId;
     clientId : string;
     invoiceNumber: string;
     tapInvoiceId: number;

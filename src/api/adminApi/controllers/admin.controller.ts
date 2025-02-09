@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import BaseController from "../../../utilities/base.controller";
-import AdminService from "../services/auth.service";
+import AdminService from "../services/admin.service";
 import { IAdmin } from "../../../interfaces/admin.interface";
 import AdminRepository from "../../../repositories/admin.repository";
 import httpStatus from "http-status";

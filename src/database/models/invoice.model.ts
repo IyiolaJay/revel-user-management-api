@@ -5,6 +5,7 @@ import Counter from "./counter.model";
 
 const InvoiceSchema: Schema = new Schema<IInvoice>(
   {
+    businessId : {type: Schema.Types.ObjectId, required : true, ref : "businesses"},
     invoiceNumber: { type: String, required: true, unique: true },
     clientId : { type: String, required: true, ref : 'clients' },
     tapInvoiceId : { type: Number, required: true, unique: true },

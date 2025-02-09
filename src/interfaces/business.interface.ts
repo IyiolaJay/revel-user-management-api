@@ -1,11 +1,11 @@
 import { Schema } from "mongoose";
 import IGenericRepository from "./generic.repository.interface";
+import { IDevice } from "./token.interface";
 
 export interface IBusiness {
     _id :  Schema.Types.ObjectId;
     businessName : string;
     businessEmail : string;
-    password : string;
     device : object;
     phone : object;
     addressNumber : string;
@@ -24,7 +24,10 @@ export interface IBusinessAdmins{
     password : string;
     phone : object;
     businessId : Schema.Types.ObjectId;
-    device : object;
+    device : IDevice;
+    adminType : string;
+    hasSetPassword : boolean,
+    permissionSet: string[];
 }
 
 export interface IBusinessRepository extends IGenericRepository<IBusiness>{

@@ -88,8 +88,8 @@ export class BusinessController extends BaseController {
 
   CreateBusinessAdmin = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const { id } = res.locals.user; //businessId in this case
-      const business = await this.businessService.CreateBusinessAdmin(req.body,id);
+      const { businessId } = res.locals.user; //businessAdminId in this case
+      const business = await this.businessService.CreateBusinessAdmin(req.body,businessId);
       this.sendResponse(res, 201, {
         success: true,
         message: "Business Admin created",

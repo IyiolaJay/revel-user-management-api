@@ -1,7 +1,7 @@
 // import express, { Router } from "express";
-import AdminAuthController from "../controllers/auth.controller";
+import AdminAuthController from "../controllers/admin.controller";
 import BaseRoute from "../../../utilities/base.router";
-import adminValidator from "../validators/auth.validators";
+import adminValidator from "../validators/admin.validators";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
 import PermissionValidation from "../../../middlewares/permission.middleware";
@@ -24,27 +24,6 @@ export default class AdminAuthRoutes extends BaseRoute{
       PermissionValidation.PermissionMiddleware([Permissions.CREATE_ADMIN]),
       adminAuthController.AdminAccountCreationController,
     );
-
-    // this.router.post(
-    //   "/login",
-    //   RequestValidator.validateRequestSchema(adminValidator.loginAdmin),
-    //   adminAuthController.AdminAccountLoginController
-    // );
-
-    // this.router.post(
-    //   "/verifyToken",
-    //   authenticationMiddleware.AuthorizeUser,
-    //   RequestValidator.validateRequestSchema(adminValidator.verifyToken),
-    //   adminAuthController.VerifyTokenController
-    // );
-
-    // this.router.patch(
-    //   "/changePassword",
-    //   RequestValidator.validateRequestSchema(adminValidator.changePassword),
-    //   RequestValidator.validateRequestSchema(adminValidator.changePasswordQuery, "query"),
-    //   adminAuthController.ChangePasswordController
-    // );
-
 
     this.router.post(
       "/createClientAccount",

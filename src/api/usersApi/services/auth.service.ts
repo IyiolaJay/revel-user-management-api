@@ -16,6 +16,10 @@ import {
   IClientRepository,
 } from "../../../interfaces/client.interface";
 import { mapPermissionKeysToValues } from "../../../helpers/permissions.mapper";
+import {
+  IBusinessAdmins,
+  IBusinessAdminRepository,
+} from "../../../interfaces/business.interface";
 
 export default class UserAuthService {
   private AdminRepository: IAdminRepository;
@@ -24,98 +28,171 @@ export default class UserAuthService {
   private otpRepository: IOtpRepository;
   private emailService = new EmailService();
   private ClientRepository: IClientRepository;
+  private BusinessAdminRepository: IBusinessAdminRepository;
 
   constructor(
     adminRepository: IAdminRepository,
-    clientRepository: IClientRepository
+    clientRepository: IClientRepository,
+    businessAdminRepository: IBusinessAdminRepository
   ) {
     this.AdminRepository = adminRepository;
     this.otpRepository = new OtpRepository();
     this.ClientRepository = clientRepository;
+    this.BusinessAdminRepository = businessAdminRepository;
   }
 
   /**
    *
-   * @param admin
+   * @param email
+   * @param accountType
    * @returns
    */
-  async LoginAdminAccount(
-    admin: Partial<IAdmin>,
-    deviceInfo: Partial<IDevice>
+  private async getUserDataByEmail(
+    email: string,
+    accountType: "admin" | "client" | "business"
   ) {
-    const adminData = await this.AdminRepository.findOneByFilter({
-      email: { $regex: new RegExp(`^${admin.email}$`, "i") },
+    const repository =
+      accountType === "admin"
+        ? this.AdminRepository
+        : accountType === "client"
+        ? this.ClientRepository
+        : this.BusinessAdminRepository;
+
+    return await repository.findOneByFilter({
+      email: { $regex: new RegExp(`^${email}$`, "i") },
     });
+  }
 
-    if (!adminData)
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
-
-    //check password
-    if (
-      !(await this.securityHelperService.ComparePassword(
-        admin.password!,
-        adminData.password
-      ))
-    )
-      throw new ApiError(
-        httpStatus.UNAUTHORIZED,
-        "Incorrect email or password..."
-      );
-
-    //response data structure to be sent to the client
-    const tokenResponse = {
-      accessToken: await this.securityHelperService.GenerateJWT(
-        {
-          id: adminData._id.toString(),
-          role: adminData.adminType,
-          permissions: mapPermissionKeysToValues(adminData.permissionSet),
-          accountType: "admin",
-        },
-        "15m"
-      ),
-      message: "Verify OTP to complete login, OTP sent to user's email",
-      rememberDevice: false,
-    };
-
-    //
-    //check if remember device is set
-    if (
-      adminData.device &&
-      deviceInfo.userAgent === adminData.device.userAgent &&
-      adminData.device.rememberMeExpires > new Date()
-    ) {
-      return {
-        ...tokenResponse,
-        accessToken: await this.securityHelperService.GenerateJWT(
-          {
-            id: adminData._id.toString(),
-            role: adminData.adminType,
-            permissions: mapPermissionKeysToValues(adminData.permissionSet),
-            accountType: "admin",
-          },
-          "24h"
-        ),
-        message: "Login succesful",
-        rememberDevice: true,
-      };
+  /**
+   * 
+   * @param userData 
+   * @param accountType 
+   * @param duration 
+   * @param message 
+   * @returns 
+   */
+  private async generateTokenResponse(
+    userData:  IAdmin | IClient | IBusinessAdmins,
+    accountType: "admin" | "client" | "business",
+    duration: string,
+    rememberDevice : boolean = false,
+    message?: string,
+    businessId? : string,
+  ) {
+    let tokenData : ITokenData = {
+      id: userData._id.toString(),
+      role:
+        accountType === "client"
+          ? (userData as IClient).clientType
+          : (userData as IAdmin | IBusinessAdmins).adminType,
+      permissions: mapPermissionKeysToValues(userData.permissionSet),
+      accountType: accountType,
     }
 
-    // if login is from a different device
-    // token is sent to user emails
+
+    if((userData as IBusinessAdmins).businessId) tokenData = {
+      ...tokenData,
+      metaData : {
+        businessId
+      }
+    }
+
+    
+    return {
+      accessToken: await this.securityHelperService.GenerateJWT(
+        tokenData,
+        duration
+      ),
+      message:
+        message ?? "Verify OTP to complete login, OTP sent to user's email",
+        rememberDevice
+    };
+  }
+
+  /**
+   * 
+   * @param userData 
+   */
+  private async sendOtpToUser(userData: IAdmin | IClient | IBusinessAdmins) {
     const token = await this.otpRepository.create({
-      ownerId: adminData._id.toString(),
+      ownerId: userData._id.toString(),
       otpToken: this.securityHelperService.generateOtp(),
     });
 
     this.emailService.SendEMailToUser(
       {
-        to: adminData.email,
+        to: userData.email,
         bodyParts: {
           otp: token.otpToken,
         },
       },
       EmailType.VerifyEmail
     );
+  }
+
+  /**
+   *
+   * @param user
+   * @param deviceInfo
+   * @param accountType
+   * @returns
+   */
+  async LoginAccount(
+    user: Partial<IAdmin | IClient | IBusinessAdmins>,
+    deviceInfo: Partial<IDevice>,
+    accountType: "admin" | "client" | "business"
+  ) {
+    const userData = await this.getUserDataByEmail(user.email!, accountType);
+
+    if (!userData)
+      throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
+
+    //check password
+    if (
+      !(await this.securityHelperService.ComparePassword(
+        user.password!,
+        userData.password
+      ))
+    ) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        "Incorrect email or password..."
+      );
+    }
+
+    //response data structure to be sent to the client
+    let tokenResponse;
+    //check if remember device is set
+
+    if (
+      userData.device &&
+      deviceInfo.userAgent === userData.device.userAgent &&
+      userData.device.rememberMeExpires > new Date()
+    ) {
+      tokenResponse = await this.generateTokenResponse(
+        userData,
+        accountType,
+        "24h",
+        true,
+        "Login Successful",
+        //  (userData as IBusinessAdmins).businessId.toString() ?? undefined
+      );
+
+      console.log(tokenResponse)
+    } else{ 
+      //  if device is not saved... verify otp
+      tokenResponse = await this.generateTokenResponse(
+      userData,
+      accountType,
+      "15m",
+      // (userData as IBusinessAdmins).businessId.toString() ?? undefined
+    );  
+  }
+
+    // if login is from a different device
+    // token is sent to user emails
+    await this.sendOtpToUser(userData);
+
     return tokenResponse;
   }
 
@@ -144,35 +221,26 @@ export default class UserAuthService {
 
     //
     // if remember device is set to true
-    if (rememberDevice && owner.accountType === "client") {
-      // const user = await this.ClientRepository.findOneByFilter({
-      //   clientId: owner.id,
-      // });
+    if (rememberDevice) {
+      const repository =
+      owner.accountType === "client"
+        ? this.ClientRepository
+        : owner.accountType === "admin"
+        ? this.AdminRepository
+        : this.BusinessAdminRepository;
 
-      await this.ClientRepository.update({clientId: owner.id}, {
+      await repository.update(
+      { _id: owner.id },
+      {
         device: {
-          rememberMeExpires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
-          ipAddress: deviceInfo.ipAddress as string,
-          userAgent: deviceInfo.userAgent as string,
+        rememberMeExpires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
+        ipAddress: deviceInfo.ipAddress as string,
+        userAgent: deviceInfo.userAgent as string,
         },
-      });
+      }
+      );
     }
-    //
-    if (rememberDevice && owner.accountType === "admin") {
-      // const user = await this.AdminRepository.findOneByFilter({
-      //   adminId: owner.id,
-      // });
-
-      // console.log(user);
-      await this.AdminRepository.update({adminId : owner.id}, {
-        device: {
-          rememberMeExpires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // remember device for 30 days
-          ipAddress: deviceInfo.ipAddress as string,
-          userAgent: deviceInfo.userAgent as string,
-        },
-      });
-    }
-
+    
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
         {
@@ -184,7 +252,7 @@ export default class UserAuthService {
         "24h"
       ),
       accessTokenExpiration: 24,
-      accountType: owner.accountType,
+      accountType: owner.accountType, 
     };
   }
 
@@ -200,10 +268,14 @@ export default class UserAuthService {
       user = await this.AdminRepository.findOneByFilter({
         adminId: id,
       });
-    } else {
+    } else if (path === "client") {
       user = await this.ClientRepository.findOneByFilter({
         clientId: id,
       });
+    }else {
+      user = await this.BusinessAdminRepository.findOneByFilter({
+        businessId : id,
+      })
     }
 
     if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
@@ -218,100 +290,22 @@ export default class UserAuthService {
     }
 
     if (path === "admin")
-      await this.AdminRepository.update({_id : user._id}, {
-        password: await this.securityHelperService.HashPassword(password),
-        hasSetPassword: true,
-      });
-    else
-      await this.ClientRepository.update({_id : user._id}, {
-        password: await this.securityHelperService.HashPassword(password),
-        hasSetPassword: true,
-      });
-  }
-
-  /**
-   *
-   * @param client
-   * @returns
-   */
-  async LoginClientAccount(
-    client: Partial<IClient>,
-    deviceInfo: Partial<IDevice>
-  ) {
-    const clientData = await this.ClientRepository.findOneByFilter({
-      email: { $regex: new RegExp(`^${client.email}$`, "i") },
-    });
-
-    if (!clientData)
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid login details...");
-
-    //check password
-    if (
-      !(await this.securityHelperService.ComparePassword(
-        client.password!,
-        clientData.password
-      ))
-    ) {
-      throw new ApiError(
-        httpStatus.UNAUTHORIZED,
-        "Incorrect email or password..."
-      );
-    }
-
-    //response data structure to be sent to the client
-    const tokenResponse =  {
-      accessToken: await this.securityHelperService.GenerateJWT(
+      await this.AdminRepository.update(
+        { _id: user._id },
         {
-          id: clientData._id.toString(),
-          role: clientData.clientType,
-          permissions: clientData.permissionSet,
-          accountType: "client",
-        },
-        "15m"
-      ),
-      message: "Verify OTP to complete login, OTP sent to user's email",
-      rememberDevice : false,
-    };
-
-    //check if remember device was set
-    if (
-      deviceInfo.userAgent === clientData.device.userAgent &&
-      clientData.device.rememberMeExpires > new Date()
-    ) {
-      return {
-        ...tokenResponse,
-        accessToken: await this.securityHelperService.GenerateJWT(
-          {
-            id: clientData._id.toString(),
-            role: clientData.clientType,
-            permissions: clientData.permissionSet,
-            accountType: "client",
-          },
-          "24h"
-        ),
-        message : "Login Successful",
-        rememberDevice : true,
-        
-      }
-    }
-
-    // if login is from a different device
-    // token is sent to user emails
-    const token = await this.otpRepository.create({
-      ownerId: clientData._id.toString(),
-      otpToken: this.securityHelperService.generateOtp(),
-    });
-
-    this.emailService.SendEMailToUser(
-      {
-        to: clientData.email,
-        bodyParts: {
-          otp: token.otpToken,
-        },
-      },
-      EmailType.VerifyEmail
-    );
-
-    return tokenResponse;
+          password: await this.securityHelperService.HashPassword(password),
+          hasSetPassword: true,
+        }
+      );
+    else
+      await this.ClientRepository.update(
+        { _id: user._id },
+        {
+          password: await this.securityHelperService.HashPassword(password),
+          hasSetPassword: true,
+        }
+      );
   }
+
+  // async LoginAdminAcount
 }

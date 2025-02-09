@@ -76,7 +76,7 @@ class AuthenticationMiddleware {
       ) {
         req.body.loginType = "admin";
       } else {
-        throw new ApiError(httpStatus.NOT_FOUND, "Account does not exist");
+        req.body.loginType = "business";
       }
       next();
     } catch (error: any) {

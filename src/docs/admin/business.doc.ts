@@ -17,8 +17,6 @@
  *                 format: email
  *               businessName:
  *                 type: string
- *               password:
- *                 type: string
  *               phone:
  *                 type: object
  *                 properties:
@@ -63,8 +61,6 @@
  *                 type: string
  *                 format: email
  *               businessName:
- *                 type: string
- *               password:
  *                 type: string
  *               phone:
  *                 type: object
@@ -121,4 +117,37 @@
  *     responses:
  *       200:
  *         description: Business deleted successfully
+ */
+
+/**
+ * @openapi
+ * /business/admin/create:
+ *   post:
+ *     summary: Create a business admin
+ *     tags:
+ *       - Business
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               phone:
+ *                 type: object
+ *                 properties:
+ *                   country_code:
+ *                     type: string
+ *                   number:
+ *                     type: string
+ *     responses:
+ *       201:
+ *         description: Business created successfully
  */

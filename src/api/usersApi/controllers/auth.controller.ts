@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import BaseController from "../../../utilities/base.controller";
-import { IAdmin } from "../../../interfaces/admin.interface";
 import AdminRepository from "../../../repositories/admin.repository";
 import httpStatus from "http-status";
 import ClientRepository from "../../../repositories/client.repository";
-import { IClient } from "../../../interfaces/client.interface";
 import UserAuthService from "../services/auth.service";
+import BusinessAdminRepository from "../../../repositories/businessAdmins.repository";
 
 export default class UserAuthController extends BaseController {
   private UserAuthService: UserAuthService;
@@ -15,7 +14,8 @@ export default class UserAuthController extends BaseController {
 
     this.UserAuthService = new UserAuthService(
       new AdminRepository(),
-      new ClientRepository()
+      new ClientRepository(),
+      new BusinessAdminRepository()
     );
   }
 
@@ -36,18 +36,7 @@ export default class UserAuthController extends BaseController {
       let token;
 
       const device = (req as any).deviceInfo;
-
-      if (loginType === "admin") {
-        token = await this.UserAuthService.LoginAdminAccount(
-          req.body as IAdmin,
-          device
-        );
-      } else {
-        token = await this.UserAuthService.LoginClientAccount(
-          req.body as IClient,
-          device
-        );
-      }
+      token = await this.UserAuthService.LoginAccount(req.body, device, loginType)
 
       this.sendResponse(res, httpStatus.OK, {
         success: true,

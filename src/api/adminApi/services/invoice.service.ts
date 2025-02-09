@@ -22,7 +22,7 @@ export default class InvoiceService {
         this.clientRepository = clientRepository;
     }
 
-    async CreateInvoice(invoice: IInvoice, userId: string) {
+    async CreateInvoice(invoice: IInvoice, userId: string, businessId : string) {
         let _invoice = await this.InvoiceRepository.findOneByFilter({
             invoiceNumber: { $regex: new RegExp(`^${invoice.invoiceNumber}$`, "i") },
         });
@@ -57,6 +57,7 @@ export default class InvoiceService {
         
         _invoice = await this.InvoiceRepository.create({
             ...invoiceInstance._doc,
+            businessId,
             tapInvoiceId : tapInvoice.invoice_number,
             invoiceUrl : tapInvoice.url,
         });

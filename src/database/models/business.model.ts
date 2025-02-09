@@ -13,9 +13,6 @@ const businessSchema = new Schema<IBusiness>(
       required: true,
       unique: true,
     },
-    password: {
-      type: String,
-    },
     phone : {
       country_code : String,
       number : String
@@ -46,7 +43,7 @@ const businessSchema = new Schema<IBusiness>(
       required : true,
       type : Schema.Types.ObjectId,
       ref : "admins"
-    }
+    },
   },
   {
     timestamps: true,
@@ -57,7 +54,6 @@ const businessSchema = new Schema<IBusiness>(
       transform: (_, ret) => {
         ret.businessId = ret._id;
         delete ret._id;
-        delete ret.password;
         delete ret.device;
         return ret;
       },
