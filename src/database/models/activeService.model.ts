@@ -8,9 +8,10 @@ const activeServiceSchema = new Schema<IActiveService>(
       required : true,
       ref : "services"
     },
-    clientId: {
+    businessId: {
       type: String,
       required : true,
+      ref : "businesses"
     },
     startDate : {
         type : Date,

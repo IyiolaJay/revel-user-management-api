@@ -5,7 +5,7 @@ import DbConnection from "./database/connection";
 import mongoose from "mongoose";
 import { createSuperAdmin } from "./database/seeders/admin.seed";
 import {setUpRedisClient} from "./redis/redis"
-import { getActiveServiceJob } from "./scheduled-jobs/activeService.job";
+// import { getActiveServiceJob } from "./scheduled-jobs/activeService.job";
 
 
 const port = config.get("PORT") ?? 5000;
@@ -17,7 +17,7 @@ const startApp = async (app: App, port: number) => {
   await createSuperAdmin();
   await setUpRedisClient()
   await app.start(port);
-  getActiveServiceJob();
+  // getActiveServiceJob();
 
 };
 

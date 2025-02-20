@@ -1,5 +1,4 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { ClientType } from "../../utilities/enums/enum";
 import { IClient } from "../../interfaces/client.interface";
 
 const clientSchema = new Schema<IClient>(
@@ -8,15 +7,10 @@ const clientSchema = new Schema<IClient>(
       type: String,
       required: true,
     },
-    establishmentId: {
-      type: [Number],
-      required: true,
-      default : []
-    },
-    establishmentUrl: {
+    businessId:{
       type: String,
       required: true,
-      default : " "
+      ref : "businesses"
     },
     email: {
       type: String,
@@ -40,17 +34,11 @@ const clientSchema = new Schema<IClient>(
       required: true,
       default : false
     },
-    clientType: {
-      type: String,
-      required: true,
-      enum: Object.keys(ClientType),
-      default: "CLIENT_USER",
-    },
-    permissionSet: {
-      type: [String],
-      required: true,
-      default: [],
-    },
+    // permissionSet: {
+    //   type: [String],
+    //   required: true,
+    //   default: [],
+    // },
     device: 
     {
       userAgent: String,
@@ -66,7 +54,6 @@ const clientSchema = new Schema<IClient>(
       required : true,
       default : false
     },
-    company : String,
   },
   {
     timestamps: true,

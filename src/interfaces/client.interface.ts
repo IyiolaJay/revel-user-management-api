@@ -4,7 +4,7 @@ import { IDevice } from "./token.interface";
 
 export interface IClient {
   _id: Schema.Types.ObjectId;
-  // clientId :string;
+  businessId :string;
   first_name : string;
   last_name : string;
   establishmentId: number[];
@@ -13,13 +13,11 @@ export interface IClient {
   name: string;
   password : string;
   hasSetPassword : boolean,
-  clientType : string;
   permissionSet : string[];
   device : IDevice;
   creatorId : string;
   phone? : IPhone;
   hasOnboarded : boolean;
-  company : string
 }
 
 interface IPhone{

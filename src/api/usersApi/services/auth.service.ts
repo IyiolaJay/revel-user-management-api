@@ -20,6 +20,7 @@ import {
   IBusinessAdmins,
   IBusinessAdminRepository,
 } from "../../../interfaces/business.interface";
+import { mapAdminTypeKeyToValue } from "../../../helpers/role.mapper";
 
 export default class UserAuthService {
   private AdminRepository: IAdminRepository;
@@ -77,14 +78,13 @@ export default class UserAuthService {
     duration: string,
     rememberDevice : boolean = false,
     message?: string,
-    businessId? : string,
   ) {
     let tokenData : ITokenData = {
       id: userData._id.toString(),
       role:
         accountType === "client"
-          ? (userData as IClient).clientType
-          : (userData as IAdmin | IBusinessAdmins).adminType,
+          ? "CLIENT"
+          : mapAdminTypeKeyToValue((userData as IAdmin | IBusinessAdmins).adminType)!,
       permissions: mapPermissionKeysToValues(userData.permissionSet),
       accountType: accountType,
     }
@@ -93,11 +93,10 @@ export default class UserAuthService {
     if((userData as IBusinessAdmins).businessId) tokenData = {
       ...tokenData,
       metaData : {
-        businessId
+        businessId : (userData as IBusinessAdmins).businessId
       }
     }
 
-    
     return {
       accessToken: await this.securityHelperService.GenerateJWT(
         tokenData,
@@ -178,7 +177,6 @@ export default class UserAuthService {
         //  (userData as IBusinessAdmins).businessId.toString() ?? undefined
       );
 
-      console.log(tokenResponse)
     } else{ 
       //  if device is not saved... verify otp
       tokenResponse = await this.generateTokenResponse(

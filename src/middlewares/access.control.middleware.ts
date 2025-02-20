@@ -13,8 +13,13 @@ export default class AccessControl {
    */
   public static restrictTo = (allowedTypes: AdminType[], allowSuperAdmin: boolean = true) => (_: Request, res: Response, next: NextFunction) => {
     const user: ITokenData = res.locals.user;
+    
+    //allow super admin
+    if(user.role === AdminType.SUPER_ADMIN && allowSuperAdmin) {
+      return next();
+    };
 
-    if (!user || (!allowedTypes.includes(user.role as AdminType) && !(allowSuperAdmin && user.role === AdminType.SUPER_ADMIN))) {
+    if (!user || !allowedTypes.includes(user.role as AdminType)) {
       throw new ApiError(
         httpStatus.FORBIDDEN,
         "You do not have the required access to complete this action"

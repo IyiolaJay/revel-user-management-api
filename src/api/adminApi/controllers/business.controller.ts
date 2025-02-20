@@ -3,6 +3,9 @@ import BaseController from "../../../utilities/base.controller";
 import BusinessRepository from "../../../repositories/business.repository";
 import BusinessService from "../services/business.service";
 import BusinessAdminRepository from "../../../repositories/businessAdmins.repository";
+import ClientRepository from "../../../repositories/client.repository";
+import { IClient } from "../../../interfaces/client.interface";
+import httpStatus from "http-status";
 
 export class BusinessController extends BaseController {
   private businessService: BusinessService;
@@ -11,7 +14,8 @@ export class BusinessController extends BaseController {
     super();
     this.businessService = new BusinessService(
       new BusinessRepository(),
-      new BusinessAdminRepository()
+      new BusinessAdminRepository(),
+      new ClientRepository()
     );
   }
 
@@ -23,7 +27,7 @@ export class BusinessController extends BaseController {
         business,
         id
       );
-      this.sendResponse(res, 201, {
+      this.sendResponse(res, httpStatus.CREATED, {
         success: true,
         message: "Business created",
         data: createdBusiness,
@@ -39,7 +43,7 @@ export class BusinessController extends BaseController {
         isNaN(Number(limit)) ? 10 : Number(limit),
         filters
       );
-      this.sendResponse(res, 200, {
+      this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: "Businesses fetched",
         data: businesses,
@@ -54,7 +58,7 @@ export class BusinessController extends BaseController {
         businessId!,
         req.body
       );
-      this.sendResponse(res, 200, {
+      this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: "Business updated",
         data: business,
@@ -78,7 +82,7 @@ export class BusinessController extends BaseController {
     async (req: Request, res: Response, _: NextFunction) => {
       const { businessId } = req.params;
       const business = await this.businessService.DeleteBusiness(businessId!);
-      this.sendResponse(res, 200, {
+      this.sendResponse(res, httpStatus.OK, {
         success: true,
         message: "Business deleted",
         data: business,
@@ -90,12 +94,42 @@ export class BusinessController extends BaseController {
     async (req: Request, res: Response, _: NextFunction) => {
       const { businessId } = res.locals.user; //businessAdminId in this case
       const business = await this.businessService.CreateBusinessAdmin(req.body,businessId);
-      this.sendResponse(res, 201, {
+      this.sendResponse(res, httpStatus.CREATED, {
         success: true,
         message: "Business Admin created",
         data: business,
       });
     }
   );
+
+  AddTapCredentials = this.wrapAsync(
+    async (req: Request, res: Response, _: NextFunction) => {
+      const { businessId } = res.locals.user.metaData;
+      const {secretKey} = req.body;
+      await this.businessService.AddTapPaymentsCredentials(
+        secretKey,
+        businessId
+      );
+      this.sendResponse(res, httpStatus.OK, {
+        success: true,
+        message: "Tap credentials added",
+        data: null,
+      });
+    }
+  );
+
+  ClientAccountCreation = this.wrapAsync(
+      async (req: Request, res: Response, _: NextFunction) => {
+        const {id, metaData} = res.locals.user;
+
+        await this.businessService.CreateClientAccount(req.body as IClient, id, metaData.businessId);
+        this.sendResponse(res, httpStatus.CREATED, {
+          success: true,
+          message:
+            "Client account created",
+          data: null,
+        });
+      }
+    );
 
 }

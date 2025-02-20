@@ -13,36 +13,43 @@ const businessSchema = new Schema<IBusiness>(
       required: true,
       unique: true,
     },
-    phone : {
-      country_code : String,
-      number : String
+    phone: {
+      country_code: String,
+      number: String,
     },
-    device: 
-      {
-        userAgent: String,
-        ipAddress: String,
-        rememberMeExpires: Date,
-      },
-    addressNumber : {
-      required : true,
+    device: {
+      userAgent: String,
+      ipAddress: String,
+      rememberMeExpires: Date,
+    },
+    addressNumber: {
+      required: true,
       type: String,
     },
-    city : {
-      required : true,
+    city: {
+      required: true,
       type: String,
     },
-    state : {
-      required : true,
+    state: {
+      required: true,
       type: String,
     },
-     country: {
-      required : true,
+    country: {
+      required: true,
       type: String,
     },
-    createdBy : {
-      required : true,
-      type : Schema.Types.ObjectId,
-      ref : "admins"
+    tapEncryptedKeys: {
+      key: String,
+      iv: String,
+    },
+    businessOwner: {
+      first_name: { type: String, required: true,},
+      last_name: { type: String ,required: true,},
+    },
+    createdBy: {
+      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "admins",
     },
   },
   {
@@ -60,9 +67,6 @@ const businessSchema = new Schema<IBusiness>(
     },
   }
 );
-
-
-
 
 const Business: Model<IBusiness> = mongoose.model("businesses", businessSchema);
 

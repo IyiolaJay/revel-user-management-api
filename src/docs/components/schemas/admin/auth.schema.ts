@@ -27,9 +27,8 @@
  *          type: object
  *          required:
  *             - email
- *             - name
- *             - establishmentId
- *             - establishmentUrl
+ *             - first_name
+ *             - last_name
  *          properties:
  *             email:
  *                type: string
@@ -40,18 +39,6 @@
  *             last_name:
  *                type: string
  *                example: John Doe
- *             establishmentId:
- *                type: array
- *                items:
- *                   type: number
- *                example: [101, 102]
- *             establishmentUrl:
- *                type: string
- *                example: "https://example.com"
- *             hasAccount:
- *                type: boolean
- *             company:
- *                type: string
  *             phone:
  *                type: object
  *                properties:
@@ -59,11 +46,6 @@
  *                  type: string
  *                 number:
  *                  type: string
- *             subscribedService:
- *                type: array
- *                items:
- *                   type: string
- *                example : ["674f1b4b9a7d1e216e34d8fc"]
  */
 
 

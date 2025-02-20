@@ -5,7 +5,7 @@
  *   post:
  *     summary: User account login (admin/client)
  *     tags:
- *       - Users
+ *       - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -42,7 +42,7 @@
  *      post:
  *         summary: Verify Token
  *         tags:
- *            - Users
+ *            - Authentication
  *         parameters:
  *           - in : query
  *             name: rememberDevice
@@ -84,7 +84,7 @@
  * /user/changePassword:
  *      patch:
  *         tags:
- *            - Users
+ *            - Authentication
  *         parameters:
  *           - in: query
  *             name: adminId
@@ -108,7 +108,7 @@
  * /profile:
  *      get:
  *         tags:
- *            - Users
+ *            - Authentication
  *         responses:
  *           "200":
  *             description: success and no content
@@ -121,7 +121,7 @@
  *      get:
  *         summary: Get client users.
  *         tags:
- *            - Users
+ *            - Authentication
  *         parameters:
  *           - in: query
  *             name: offset

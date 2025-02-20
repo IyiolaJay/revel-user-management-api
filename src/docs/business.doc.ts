@@ -24,6 +24,13 @@
  *                     type: string
  *                   number:
  *                     type: string
+ *               businessOwner:
+ *                 type: object
+ *                 properties:
+ *                   first_name:
+ *                     type: string
+ *                   last_name:
+ *                     type: string
  *               addressNumber:
  *                 type: string
  *               city:
@@ -39,7 +46,7 @@
 
 /**
  * @openapi
- * /business/{businessId}:
+ * /business/update/{businessId}:
  *   patch:
  *     summary: Update an existing business
  *     tags:
@@ -119,6 +126,28 @@
  *         description: Business deleted successfully
  */
 
+
+/**
+ * @openapi
+ * /business/addTapKey:
+ *   patch:
+ *     summary: Update an existing business
+ *     tags:
+ *       - Business
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               secretKey:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Business updated successfully
+ */
+
 /**
  * @openapi
  * /business/admin/create:
@@ -140,6 +169,10 @@
  *                 type: string
  *               lastName:
  *                 type: string
+ *               permissionSet:
+ *                  type: array
+ *                  items:
+ *                    type: string
  *               phone:
  *                 type: object
  *                 properties:
@@ -150,4 +183,24 @@
  *     responses:
  *       201:
  *         description: Business created successfully
+ */
+
+
+/**
+ * @openapi
+ * /business/createClient:
+ *      post:
+ *         summary: Create a client for a business
+ *         tags:
+ *            - Business
+ *         requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                     schema:
+ *                        $ref: '#/components/schemas/ClientCreation'
+ *         responses:
+ *            "201":
+ *               description: created
+ *
  */

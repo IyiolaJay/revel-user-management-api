@@ -13,8 +13,18 @@ export interface IBusiness {
     state : string;
     country : string;
     createdBy : Schema.Types.ObjectId;
+    tapEncryptedKeys : ITapCredentials;
+    businessOwner : IBusinessOwner;
 }
 
+interface IBusinessOwner{
+    first_name : string;
+    last_name : string;
+}
+export interface ITapCredentials {
+    key : string;
+    iv : string;
+}
 
 export interface IBusinessAdmins{
     _id  :  Schema.Types.ObjectId;

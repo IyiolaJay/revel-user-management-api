@@ -24,18 +24,9 @@ export default class AdminAuthRoutes extends BaseRoute{
       PermissionValidation.PermissionMiddleware([Permissions.CREATE_ADMIN]),
       adminAuthController.AdminAccountCreationController,
     );
-
-    this.router.post(
-      "/createClientAccount",
-      RequestValidator.validateRequestSchema(adminValidator.createClient),
-      authenticationMiddleware.AuthorizeUser,
-      PermissionValidation.PermissionMiddleware([Permissions.CREATE_CLIENT]),
-      adminAuthController.ClientAccountCreationController
-    );
  
     this.router.get(
       "/permissions",
-      // authenticationMiddleware.AuthorizeUser,
       adminAuthController.GetPermissionsController
     );
 

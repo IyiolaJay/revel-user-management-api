@@ -6,10 +6,10 @@ export enum AdminType{
     BUSINESS_REGULAR_ADMIN = "BUSINESS REGULAR ADMIN"
 }
 
-export enum ClientType{
-    CLIENT_ADMIN = "CLIENT ADMIN",
-    CLIENT_USER = "CLIENT USER"
-}
+// export enum ClientType{
+//     CLIENT_ADMIN = "CLIENT ADMIN",
+//     CLIENT_USER = "CLIENT USER"
+// }
 
 export enum Currency{
     GHS = "GHANA CEDIS",

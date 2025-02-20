@@ -48,7 +48,7 @@ const businessAdminSchema = new Schema<IBusinessAdmins>(
     permissionSet: {
       type: [String],
       required: true,
-      default: [],
+      default: ['ALL'],
     },
   },
   {

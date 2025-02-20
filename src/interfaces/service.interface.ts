@@ -15,7 +15,8 @@ export interface IService{
 
 export interface IActiveService{
     serviceId : string;
-    clientId : string;
+    // clientId : string;
+    businessId : string;
     startDate : Date;
     expireDate : Date;
 }

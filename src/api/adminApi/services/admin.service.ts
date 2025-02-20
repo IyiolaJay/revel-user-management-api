@@ -5,30 +5,18 @@ import SecurityHelperService from "../../../helpers/security";
 import { generateRandomPassword } from "../../../helpers/password";
 import EmailService from "../../../email/emailer";
 import { EmailType } from "../../../utilities/enums/enum";
-import {
-  IClient,
-  IClientRepository,
-} from "../../../interfaces/client.interface";
 import { mapPermisionValuesToKeys } from "../../../helpers/permissions.mapper";
-import { IServiceRepository } from "../../../interfaces/service.interface";
-import { cacheData, getCacheData } from "../../../redis/redis.cache";
 
 export default class AdminAuthService {
   private AdminRepository: IAdminRepository;
-  private ServiceRepository: IServiceRepository;
   private securityHelperService: SecurityHelperService =
     new SecurityHelperService();
   private emailService = new EmailService();
-  private ClientRepository: IClientRepository;
 
   constructor(
     adminRepository: IAdminRepository,
-    clientRepository: IClientRepository,
-    serviceRepository: IServiceRepository
   ) {
     this.AdminRepository = adminRepository;
-    this.ServiceRepository = serviceRepository;
-    this.ClientRepository = clientRepository;
   }
 
   /**
@@ -78,90 +66,90 @@ export default class AdminAuthService {
    * @param client
    * @returns
    */
-  async CreateClientAccount(
-    client: IClient,
-    creatorId: string,
-    subscribedService?: string[]
-  ) {
-    let _client = await this.ClientRepository.findOneByFilter({
-      email: { $regex: new RegExp(`^${client.email}$`, "i") },
-    });
+  // async CreateClientAccount(
+  //   client: IClient,
+  //   creatorId: string,
+  //   subscribedService?: string[]
+  // ) {
+  //   let _client = await this.ClientRepository.findOneByFilter({
+  //     email: { $regex: new RegExp(`^${client.email}$`, "i") },
+  //   });
 
-    if (_client) {
-      throw new ApiError(
-        httpStatus.CONFLICT,
-        "Client account exists with this email"
-      );
-    }
+  //   if (_client) {
+  //     throw new ApiError(
+  //       httpStatus.CONFLICT,
+  //       "Client account exists with this email"
+  //     );
+  //   }
 
-    const genPassword = generateRandomPassword();
+  //   const genPassword = generateRandomPassword();
 
-    _client = await this.ClientRepository.create({
-      ...client,
-      creatorId,
-      password: await this.securityHelperService.HashPassword(genPassword),
-    });
+  //   _client = await this.ClientRepository.create({
+  //     ...client,
+  //     creatorId,
+  //     password: await this.securityHelperService.HashPassword(genPassword),
+  //   });
 
-    //send credentials only client users, 
-    // if(client.hasAccount){
-    //   this.emailService.SendEMailToUser(
-    //     {
-    //       to: _client.email,
-    //       bodyParts: {
-    //         name: _client.name,
-    //         email: _client.email,
-    //         password: genPassword,
-    //         _id: _client._id,
-    //       },
-    //     },
-    //     EmailType.CredentialsEmail
-    //   );
-    // }
+  //   //send credentials only client users, 
+  //   // if(client.hasAccount){
+  //   //   this.emailService.SendEMailToUser(
+  //   //     {
+  //   //       to: _client.email,
+  //   //       bodyParts: {
+  //   //         name: _client.name,
+  //   //         email: _client.email,
+  //   //         password: genPassword,
+  //   //         _id: _client._id,
+  //   //       },
+  //   //     },
+  //   //     EmailType.CredentialsEmail
+  //   //   );
+  //   // }
     
 
-    if (subscribedService && subscribedService.length > 0) {
-      const currentDate = new Date();
-      currentDate.setMonth(currentDate.getMonth() + 6);
+  //   if (subscribedService && subscribedService.length > 0) {
+  //     const currentDate = new Date();
+  //     currentDate.setMonth(currentDate.getMonth() + 6);
 
-      const subscriptions = subscribedService.map((service) => ({
-        serviceId: service,
-        expireDate: currentDate,
-      }));
+  //     const subscriptions = subscribedService.map((service) => ({
+  //       serviceId: service,
+  //       expireDate: currentDate,
+  //     }));
 
-      subscriptions.forEach(async (s) => {
-        await this.ServiceRepository.createActiveService({
-          clientId: _client._id.toString(),
-          serviceId: s.serviceId as string,
-          expireDate: s.expireDate as Date,
-        });
-      });
-      // await this.ServiceRepository.createActiveService({
-      //   clientId: _client.clientId,
-      //   serviceId: defaultService.serviceId as string,
-      //   expireDate: defaultService.expireDate as Date,
-      // });
+  //     subscriptions.forEach(async (s) => {
+  //       await this.ServiceRepository.createActiveService({
+  //         clientId: _client._id.toString(),
+  //         serviceId: s.serviceId as string,
+  //         expireDate: s.expireDate as Date,
+  //       });
+  //     });
+  //     // await this.ServiceRepository.createActiveService({
+  //     //   clientId: _client.clientId,
+  //     //   serviceId: defaultService.serviceId as string,
+  //     //   expireDate: defaultService.expireDate as Date,
+  //     // });
 
-      const cachedEstablishment = JSON.parse(
-        (await getCacheData("acs_01")) ?? "[]"
-      );
+  //     const cachedEstablishment = JSON.parse(
+  //       (await getCacheData("acs_01")) ?? "[]"
+  //     );
 
-      //caching data for realtime middleware service
-      // this block will add the new user establishment IDs for
-      await cacheData({
-        key: "acs_01",
-        value: JSON.stringify([
-          ...cachedEstablishment,
-          ...client.establishmentId.map((item) => ({
-            estId: item,
-            estUrl: client.establishmentUrl,
-            clientId: _client._id.toString(),
-          })),
-        ]),
-      });
-    }
+  //     //caching data for realtime middleware service
+  //     // this block will add the new user establishment IDs for
+  //     await cacheData({
+  //       key: "acs_01",
+  //       value: JSON.stringify([
+  //         ...cachedEstablishment,
+  //         ...client.establishmentId.map((item) => ({
+  //           estId: item,
+  //           estUrl: client.establishmentUrl,
+  //           clientId: _client._id.toString(),
+  //         })),
+  //       ]),
+  //     });
+  //   }
 
-    return;
-  }
+  //   return;
+  // }
 
   async UpdateAdminAccount(adminId : string, updateData : Partial<IAdmin>){
     const admin = await this.AdminRepository.update({_id : adminId}, updateData);
