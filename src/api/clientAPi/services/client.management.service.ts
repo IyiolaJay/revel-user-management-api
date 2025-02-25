@@ -5,6 +5,7 @@ import {
 } from "../../../interfaces/client.interface";
 import ApiError from "../../../utilities/error.base";
 import SecurityHelperService from "../../../helpers/security";
+import { generateRandomPassword } from "../../../helpers/password";
 
 export default class ClientAuthService {
   private ClientRepository: IClientRepository;
@@ -13,6 +14,8 @@ export default class ClientAuthService {
   constructor(clientRepository: IClientRepository) {
     this.ClientRepository = clientRepository;
   }
+
+
 
   async FetchAllClients(offset: number = 1, limit: number = 20, filters: any) {
     return await this.ClientRepository.findAll(offset, limit, filters);
@@ -78,5 +81,40 @@ export default class ClientAuthService {
       throw new ApiError(httpStatus.NOT_FOUND, "No clients found");
     }
     return clients;
+  }
+
+
+  
+  /**
+   *
+   * @param client
+   * @returns
+   */
+  async CreateClientAccount(
+    client: IClient,
+    creatorId: string,
+    businessId : string
+  ) {
+    let _client = await this.ClientRepository.findOneByFilter({
+      email: { $regex: new RegExp(`^${client.email}$`, "i") },
+    });
+
+    if (_client) {
+      throw new ApiError(
+        httpStatus.CONFLICT,
+        "Client account exists with this email"
+      );
+    }
+
+    const genPassword = generateRandomPassword();
+
+    _client = await this.ClientRepository.create({
+      ...client,
+      creatorId,
+      businessId,
+      password: await this.SecurityHelperService.HashPassword(genPassword),
+    });
+
+    return;
   }
 }

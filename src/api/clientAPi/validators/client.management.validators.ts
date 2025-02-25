@@ -31,8 +31,21 @@ const updatePassword = RequestValidator.requestItemsStructure({
 });
 
 
+const createClient = RequestValidator.requestItemsStructure({
+  email: Joi.string().email().required(),
+  first_name: Joi.string().required(),
+  last_name: Joi.string().required(),
+  phone: Joi.object({
+    country_code: Joi.string().required(),
+    number: Joi.string().required(),
+  }),
+});
+
+
+
 export default {
     updateClient,
     searchClient,
-    updatePassword
+    updatePassword,
+    createClient
 }

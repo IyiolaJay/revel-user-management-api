@@ -69,14 +69,5 @@ export default class BusinessRoutes extends BaseRoute {
       businessController.UpdateBusiness
     );
 
-    this.router.post(
-      "/createClient",
-      RequestValidator.validateRequestSchema(businessValidators.createClient),
-      authenticationMiddleware.AuthorizeUser,
-      AccessControl.restrictTo([AdminType.BUSINESS_REGULAR_ADMIN, AdminType.BUSINESS_SUPER_ADMIN], false),
-      PermissionValidation.PermissionMiddleware([Permissions.CREATE_CLIENT]),
-      businessController.ClientAccountCreation
-    );
-
   }
 }

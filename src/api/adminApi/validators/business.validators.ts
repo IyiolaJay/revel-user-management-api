@@ -18,7 +18,11 @@ const createBusiness = RequestValidator.requestItemsStructure({
         first_name : Joi.string().required(),
         last_name : Joi.string().required()
     }).required(),
-    permissionSet : Joi.array().items(Joi.string().valid(...Object.values(Permissions)))
+    permissionSet : Joi.array().items(Joi.string().valid(...Object.values(Permissions))),
+    establishments : Joi.array().items(Joi.object({
+        establishmentId : Joi.number().required(),
+        establishmentUrl : Joi.string().uri().required()
+    })).required()
 });
 
 const updateBusiness = RequestValidator.requestItemsStructure({
@@ -40,20 +44,8 @@ const addTapCredentials = RequestValidator.requestItemsStructure({
 
 
 
-const createClient = RequestValidator.requestItemsStructure({
-    email: Joi.string().email().required(),
-    first_name: Joi.string().required(),
-    last_name: Joi.string().required(),
-    phone: Joi.object({
-      country_code: Joi.string().required(),
-      number: Joi.string().required(),
-    }),
-  });
-
-
 export default {
     createBusiness,
     updateBusiness,
     addTapCredentials,
-    createClient
 }

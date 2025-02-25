@@ -3,6 +3,7 @@ import BaseController from "../../../utilities/base.controller";
 import ClientAuthService from "../services/client.management.service";
 import httpStatus from "http-status";
 import ClientRepository from "../../../repositories/client.repository";
+import { IClient } from "../../../interfaces/client.interface";
 
 export default class ClientAuthController extends BaseController {
   private ClientService: ClientAuthService;
@@ -15,13 +16,31 @@ export default class ClientAuthController extends BaseController {
     );
   }
 
+  ClientAccountCreation = this.wrapAsync(
+    async (req: Request, res: Response, _: NextFunction) => {
+      const {id, metaData} = res.locals.user;
+
+      await this.ClientService.CreateClientAccount(req.body as IClient, id, metaData.businessId);
+      this.sendResponse(res, httpStatus.CREATED, {
+        success: true,
+        message:
+          "Client account created",
+        data: null,
+      });
+    }
+  );
+
   GetAllClients = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
       const { offset, limit, ...filters } = req.query;
+      const {businessId}  = res.locals.user.metaData;
       const clients = await this.ClientService.FetchAllClients(
         Number(offset),
         Number(limit),
-        filters
+        {
+          ...filters,
+          businessId
+        },
       );
       this.sendResponse(res, httpStatus.OK, {
         success: true,

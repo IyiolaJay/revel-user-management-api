@@ -1,6 +1,25 @@
 /**
  * @openapi
- * /client/management/getClients:
+ * /clients:
+ *      post:
+ *         summary: Create a client for a business
+ *         tags:
+ *            - Client
+ *         requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                     schema:
+ *                        $ref: '#/components/schemas/ClientCreation'
+ *         responses:
+ *            "201":
+ *               description: created
+ *
+ */
+
+/**
+ * @openapi
+ * /clients:
  *      get:
  *         summary: Get client account.
  *         tags:
@@ -28,7 +47,7 @@
 
 /**
  * @openapi
- * /client/orders/getEstablishmentOrders:
+ * /clients/orders/getEstablishmentOrders:
  *      get:
  *         summary: Get order receipts for an establishment.
  *         tags:
@@ -61,7 +80,7 @@
 
 /**
  * @openapi
- * /client/management/edit/{clientId}:
+ * /clients/management/edit/{clientId}:
  *      patch:
  *         summary: Edit an existing client account.
  *         tags:
@@ -95,7 +114,7 @@
 
 /**
  * @openapi
- * /client/management/updatePassword:
+ * /clients/management/updatePassword:
  *      patch:
  *         summary: upgrade a customer account to client account.
  *         tags:
@@ -116,7 +135,7 @@
 
 /**
  * @openapi
- * /client/management/search:
+ * /clients/management/search:
  *      get:
  *         summary: upgrade a customer account to client account.
  *         tags:

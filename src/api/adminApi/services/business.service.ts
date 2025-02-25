@@ -11,10 +11,8 @@ import EmailService from "../../../email/emailer";
 import { generateRandomPassword } from "../../../helpers/password";
 import SecurityHelperService from "../../../helpers/security";
 import Encryptor from "../../../utilities/encryptor";
-import {
-  IClient,
-  IClientRepository,
-} from "../../../interfaces/client.interface";
+import { IEstablishment, IEstablishmentRepository } from "../../../interfaces/establishment.interface";
+
 
 export default class BusinessService {
   private BusinessRepository: IBusinessRepository;
@@ -23,16 +21,16 @@ export default class BusinessService {
   private securityHelperService: SecurityHelperService =
     new SecurityHelperService();
   private encryptor: Encryptor = new Encryptor();
-  private ClientRepository : IClientRepository
+  private EstablishmentRepository: IEstablishmentRepository;
 
   constructor(
     businessRepository: IBusinessRepository,
     businessAdminRepository: IBusinessAdminRepository,
-    clientRepository: IClientRepository
+    establishmentRepository :IEstablishmentRepository
   ) {
     this.BusinessRepository = businessRepository;
     this.BusinessAdminRepository = businessAdminRepository;
-    this.ClientRepository = clientRepository
+    this.EstablishmentRepository = establishmentRepository
   }
 
   /**
@@ -41,7 +39,7 @@ export default class BusinessService {
    * @param adminId (system administrator)
    * @returns
    */
-  async CreateBusiness(business: IBusiness, adminId: string) {
+  async CreateBusiness(business: any, adminId: string) {
     let _business = await this.BusinessRepository.findOneByFilter({
       businessName: { $regex: new RegExp(`^${business.businessName}$`, "i") },
     });
@@ -49,10 +47,21 @@ export default class BusinessService {
     if (_business)
       throw new ApiError(httpStatus.CONFLICT, "Business already exists");
 
+    let {establishments, ...newBusiness } = business
+
     _business = await this.BusinessRepository.create({
-      ...business,
+      ...newBusiness,
       createdBy: adminId as any,
     });
+
+    this.EstablishmentRepository.bulkCreate(establishments.map((e : IEstablishment ) =>({
+      ...e,
+      businessId : _business._id
+    })))
+
+
+
+
 
     await this.CreateBusinessAdmin(
       {
@@ -192,36 +201,36 @@ export default class BusinessService {
     return;
   }
 
-  /**
-   *
-   * @param client
-   * @returns
-   */
-  async CreateClientAccount(
-    client: IClient,
-    creatorId: string,
-    businessId : string
-  ) {
-    let _client = await this.ClientRepository.findOneByFilter({
-      email: { $regex: new RegExp(`^${client.email}$`, "i") },
-    });
+  // /**
+  //  *
+  //  * @param client
+  //  * @returns
+  //  */
+  // async CreateClientAccount(
+  //   client: IClient,
+  //   creatorId: string,
+  //   businessId : string
+  // ) {
+  //   let _client = await this.ClientRepository.findOneByFilter({
+  //     email: { $regex: new RegExp(`^${client.email}$`, "i") },
+  //   });
 
-    if (_client) {
-      throw new ApiError(
-        httpStatus.CONFLICT,
-        "Client account exists with this email"
-      );
-    }
+  //   if (_client) {
+  //     throw new ApiError(
+  //       httpStatus.CONFLICT,
+  //       "Client account exists with this email"
+  //     );
+  //   }
 
-    const genPassword = generateRandomPassword();
+  //   const genPassword = generateRandomPassword();
 
-    _client = await this.ClientRepository.create({
-      ...client,
-      creatorId,
-      businessId,
-      password: await this.securityHelperService.HashPassword(genPassword),
-    });
+  //   _client = await this.ClientRepository.create({
+  //     ...client,
+  //     creatorId,
+  //     businessId,
+  //     password: await this.securityHelperService.HashPassword(genPassword),
+  //   });
 
-    return;
-  }
+  //   return;
+  // }
 }

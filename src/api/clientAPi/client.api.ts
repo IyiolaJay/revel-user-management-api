@@ -18,7 +18,8 @@ class App {
 
   private setupAppRoutes(): void {
 
-    this.app.use("/management",this.ClientManagementRoutes.getRouter())
+    // this.app.use("/management",this.ClientManagementRoutes.getRouter())
+    this.app.use(this.ClientManagementRoutes.getRouter())
     this.app.use("/orders",this.OrderRoutes.getRouter())
 
 

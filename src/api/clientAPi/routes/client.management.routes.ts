@@ -2,10 +2,12 @@ import BaseRoute from "../../../utilities/base.router";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
 import ClientAuthController from "../controllers/client.management.controller";
-import filterValidators from "../validators";
+// import filterValidators from "../validators";
 import clientManagementValidators from "../validators/client.management.validators";
 import PermissionValidation from "../../../middlewares/permission.middleware";
 import { Permissions } from "../../../utilities/enums/permissions.enum";
+import AccessControl from "../../../middlewares/access.control.middleware";
+import { AdminType } from "../../../utilities/enums/enum";
 
 
 export default class ClientAuthRoutes extends BaseRoute{
@@ -19,10 +21,20 @@ export default class ClientAuthRoutes extends BaseRoute{
     const authenticationMiddleware :  AuthenticationMiddleware = new AuthenticationMiddleware();
     
 
-    this.router.get(
-      "/getClients",
-      RequestValidator.validateRequestSchema(filterValidators.paginationParams, "query"),
+    this.router.post(
+      "/",
+      RequestValidator.validateRequestSchema(clientManagementValidators.createClient),
       authenticationMiddleware.AuthorizeUser,
+      AccessControl.restrictTo([AdminType.BUSINESS_REGULAR_ADMIN, AdminType.BUSINESS_SUPER_ADMIN], false),
+      PermissionValidation.PermissionMiddleware([Permissions.CREATE_CLIENT]),
+      clientAuthController.ClientAccountCreation
+    );
+
+    this.router.get(
+      "/",
+      // RequestValidator.validateRequestSchema(filterValidators.paginationParams, "query"),
+      authenticationMiddleware.AuthorizeUser,
+      AccessControl.restrictTo([AdminType.BUSINESS_SUPER_ADMIN,AdminType.BUSINESS_REGULAR_ADMIN]),
       PermissionValidation.PermissionMiddleware([Permissions.VIEW_CLIENT]),
       clientAuthController.GetAllClients
     );

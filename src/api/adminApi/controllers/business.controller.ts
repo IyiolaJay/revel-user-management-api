@@ -3,9 +3,8 @@ import BaseController from "../../../utilities/base.controller";
 import BusinessRepository from "../../../repositories/business.repository";
 import BusinessService from "../services/business.service";
 import BusinessAdminRepository from "../../../repositories/businessAdmins.repository";
-import ClientRepository from "../../../repositories/client.repository";
-import { IClient } from "../../../interfaces/client.interface";
 import httpStatus from "http-status";
+import EstablishmentRepository from "../../../repositories/establishment.repository";
 
 export class BusinessController extends BaseController {
   private businessService: BusinessService;
@@ -15,7 +14,7 @@ export class BusinessController extends BaseController {
     this.businessService = new BusinessService(
       new BusinessRepository(),
       new BusinessAdminRepository(),
-      new ClientRepository()
+      new EstablishmentRepository()
     );
   }
 
@@ -118,18 +117,18 @@ export class BusinessController extends BaseController {
     }
   );
 
-  ClientAccountCreation = this.wrapAsync(
-      async (req: Request, res: Response, _: NextFunction) => {
-        const {id, metaData} = res.locals.user;
+  // ClientAccountCreation = this.wrapAsync(
+  //     async (req: Request, res: Response, _: NextFunction) => {
+  //       const {id, metaData} = res.locals.user;
 
-        await this.businessService.CreateClientAccount(req.body as IClient, id, metaData.businessId);
-        this.sendResponse(res, httpStatus.CREATED, {
-          success: true,
-          message:
-            "Client account created",
-          data: null,
-        });
-      }
-    );
+  //       await this.businessService.CreateClientAccount(req.body as IClient, id, metaData.businessId);
+  //       this.sendResponse(res, httpStatus.CREATED, {
+  //         success: true,
+  //         message:
+  //           "Client account created",
+  //         data: null,
+  //       });
+  //     }
+  //   );
 
 }
