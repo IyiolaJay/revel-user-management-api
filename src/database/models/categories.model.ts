@@ -8,6 +8,11 @@ const categorySchema = new Schema<ICategory>(
       required : true,
       unique : true
     },
+    businessId : {
+      type : String,
+      required : true,
+      ref : 'businesses'
+    },
   },
   {
     timestamps: true,

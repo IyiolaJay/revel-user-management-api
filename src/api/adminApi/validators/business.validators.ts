@@ -1,6 +1,5 @@
 import Joi from "joi";
 import RequestValidator from "../../../middlewares/schema.middleware";
-import { Permissions } from "../../../utilities/enums/permissions.enum";
 
 
 const createBusiness = RequestValidator.requestItemsStructure({
@@ -18,7 +17,6 @@ const createBusiness = RequestValidator.requestItemsStructure({
         first_name : Joi.string().required(),
         last_name : Joi.string().required()
     }).required(),
-    permissionSet : Joi.array().items(Joi.string().valid(...Object.values(Permissions))),
     establishments : Joi.array().items(Joi.object({
         establishmentId : Joi.number().required(),
         establishmentUrl : Joi.string().uri().required()

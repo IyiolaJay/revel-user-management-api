@@ -30,6 +30,7 @@ async CreateItem(item: IItem, categoryName: string) {
     if (!_category){
         _category = await this.CategoryRepository.create({
             categoryName: categoryName,
+            businessId : ""
         });
     }
     

@@ -13,7 +13,8 @@ export class CategoryController extends BaseController {
 
    CreateCategory = this.wrapAsync(
     async (req: Request, res: Response, _ : NextFunction) => {
-      const category = await this.categoryService.CreateCategory(req.body);
+      const {businessId} = res.locals.user.metadata;
+      const category = await this.categoryService.CreateCategory({...req.body, businessId: businessId});
       this.sendResponse(res, 201, {
         success: true,
         message: "Category created",
