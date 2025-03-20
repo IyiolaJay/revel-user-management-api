@@ -47,7 +47,7 @@ class App {
     //
     this.app.use(`${this.apiPrefix}`, this.userApi.getApp())
     this.app.use(`${this.apiPrefix}`, this.adminApi.getApp()) //admin-api
-    this.app.use(`${this.apiPrefix}/clients`, this.clientApi.getApp())
+    this.app.use(`${this.apiPrefix}`, this.clientApi.getApp())
   }
 
 

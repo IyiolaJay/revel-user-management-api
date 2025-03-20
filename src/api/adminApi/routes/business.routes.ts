@@ -45,17 +45,6 @@ export default class BusinessRoutes extends BaseRoute {
       businessController.DeleteBusiness
     );
 
-    this.router.patch(
-      "/addTapKey",
-      RequestValidator.validateRequestSchema(businessValidators.addTapCredentials),
-      authenticationMiddleware.AuthorizeUser,
-      AccessControl.restrictTo([AdminType.BUSINESS_REGULAR_ADMIN,AdminType.BUSINESS_SUPER_ADMIN], false),
-      PermissionValidation.PermissionMiddleware([
-        Permissions.EDIT_BUSINESS,
-        Permissions.CREATE_BUSINESS,
-      ]),
-      businessController.AddTapCredentials
-    );
 
     this.router.patch(
       "/update/:businessId",

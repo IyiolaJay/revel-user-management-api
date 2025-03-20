@@ -22,7 +22,7 @@ export default class ClientAuthRoutes extends BaseRoute{
     
 
     this.router.post(
-      "/",
+      "/clients",
       RequestValidator.validateRequestSchema(clientManagementValidators.createClient),
       authenticationMiddleware.AuthorizeUser,
       AccessControl.restrictTo([AdminType.BUSINESS_REGULAR_ADMIN, AdminType.BUSINESS_SUPER_ADMIN], false),
@@ -31,7 +31,7 @@ export default class ClientAuthRoutes extends BaseRoute{
     );
 
     this.router.get(
-      "/",
+      "/clients",
       // RequestValidator.validateRequestSchema(filterValidators.paginationParams, "query"),
       authenticationMiddleware.AuthorizeUser,
       AccessControl.restrictTo([AdminType.BUSINESS_SUPER_ADMIN,AdminType.BUSINESS_REGULAR_ADMIN]),
@@ -40,7 +40,7 @@ export default class ClientAuthRoutes extends BaseRoute{
     );
 
     this.router.patch(
-      "/edit/:clientId",
+      "/clients/edit/:clientId",
       RequestValidator.validateRequestSchema(clientManagementValidators.updateClient),
       authenticationMiddleware.AuthorizeUser,
       PermissionValidation.PermissionMiddleware([Permissions.EDIT_CLIENT]),
@@ -48,15 +48,14 @@ export default class ClientAuthRoutes extends BaseRoute{
     );
 
     this.router.patch(
-      "/updatePassword",
+      "/clients/updatePassword",
       RequestValidator.validateRequestSchema(clientManagementValidators.updatePassword),
       authenticationMiddleware.AuthorizeUser,
       clientAuthController.UpdateClientPassword
     );
 
     this.router.get(
-      "/search",
-      // authenticationMiddleware.AuthorizeUser,
+      "/clients/search",
       RequestValidator.validateRequestSchema(clientManagementValidators.searchClient, "query"),
       clientAuthController.SearchClient
     );

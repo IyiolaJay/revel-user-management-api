@@ -6,31 +6,25 @@ import {
   IBusinessRepository,
 } from "../../../interfaces/business.interface";
 import ApiError from "../../../utilities/error.base";
-import { EmailType } from "../../../utilities/enums/enum";
-import EmailService from "../../../email/emailer";
-import { generateRandomPassword } from "../../../helpers/password";
-import SecurityHelperService from "../../../helpers/security";
-import Encryptor from "../../../utilities/encryptor";
-import { IEstablishment, IEstablishmentRepository } from "../../../interfaces/establishment.interface";
-
+import {
+  IEstablishment,
+  IEstablishmentRepository,
+} from "../../../interfaces/establishment.interface";
+import BusinessManagementService from "../../clientAPi/services/business.managament.service";
 
 export default class BusinessService {
   private BusinessRepository: IBusinessRepository;
   private BusinessAdminRepository: IBusinessAdminRepository;
-  private emailService = new EmailService();
-  private securityHelperService: SecurityHelperService =
-    new SecurityHelperService();
-  private encryptor: Encryptor = new Encryptor();
   private EstablishmentRepository: IEstablishmentRepository;
 
   constructor(
     businessRepository: IBusinessRepository,
     businessAdminRepository: IBusinessAdminRepository,
-    establishmentRepository :IEstablishmentRepository
+    establishmentRepository: IEstablishmentRepository
   ) {
     this.BusinessRepository = businessRepository;
     this.BusinessAdminRepository = businessAdminRepository;
-    this.EstablishmentRepository = establishmentRepository
+    this.EstablishmentRepository = establishmentRepository;
   }
 
   /**
@@ -47,23 +41,26 @@ export default class BusinessService {
     if (_business)
       throw new ApiError(httpStatus.CONFLICT, "Business already exists");
 
-    let {establishments, ...newBusiness } = business
+    let { establishments, ...newBusiness } = business;
 
     _business = await this.BusinessRepository.create({
       ...newBusiness,
       createdBy: adminId as any,
     });
 
-    this.EstablishmentRepository.bulkCreate(establishments.map((e : IEstablishment ) =>({
-      ...e,
-      businessId : _business._id
-    })))
+    if(establishments.length > 0){
+      this.EstablishmentRepository.bulkCreate(
+        establishments.map((e: IEstablishment) => ({
+          ...e,
+          businessId: _business._id,
+        }))
+      );
+    }
 
-
-
-
-
-    await this.CreateBusinessAdmin(
+    await new BusinessManagementService(
+      this.BusinessRepository,
+      this.BusinessAdminRepository
+    ).CreateBusinessAdmin(
       {
         adminType: "BUSINESS_SUPER_ADMIN",
         businessId: _business._id,
@@ -140,97 +137,4 @@ export default class BusinessService {
     await this.BusinessRepository.delete(businessId);
     return;
   }
-
-  /**
-   *
-   * @param adminDetails
-   * @param businessId
-   * @returns
-   */
-  async CreateBusinessAdmin(adminDetails: IBusinessAdmins, businessId: string) {
-    let businessAdmin = await this.BusinessAdminRepository.findOneByFilter({
-      email: { $regex: new RegExp(`^${adminDetails.email}$`, "i") },
-      businessId: businessId,
-    });
-
-    if (businessAdmin)
-      throw new ApiError(httpStatus.CONFLICT, "Business admin already exists");
-
-    const _business = await this.BusinessRepository.findById(businessId);
-    if (!_business)
-      throw new ApiError(httpStatus.NOT_FOUND, "Business does not exist");
-
-    const genPassword = generateRandomPassword();
-
-    businessAdmin = await this.BusinessAdminRepository.create({
-      ...adminDetails,
-      businessId: businessId as any,
-      password: await this.securityHelperService.HashPassword(genPassword),
-    });
-
-    this.emailService.SendEMailToUser(
-      {
-        to: businessAdmin.email,
-        bodyParts: {
-          name: businessAdmin.firstName,
-          email: businessAdmin.email,
-          password: genPassword,
-          _id: businessAdmin._id,
-        },
-      },
-      EmailType.CredentialsEmail
-    );
-
-    return businessAdmin;
-  }
-
-  async AddTapPaymentsCredentials(key: string, businessId: string) {
-    const encrypted = this.encryptor.encrypt(key);
-
-    await this.BusinessRepository.update(
-      {
-        _id: businessId,
-      },
-      {
-        tapEncryptedKeys: {
-          key: encrypted.key,
-          iv: encrypted.iv,
-        },
-      }
-    );
-    return;
-  }
-
-  // /**
-  //  *
-  //  * @param client
-  //  * @returns
-  //  */
-  // async CreateClientAccount(
-  //   client: IClient,
-  //   creatorId: string,
-  //   businessId : string
-  // ) {
-  //   let _client = await this.ClientRepository.findOneByFilter({
-  //     email: { $regex: new RegExp(`^${client.email}$`, "i") },
-  //   });
-
-  //   if (_client) {
-  //     throw new ApiError(
-  //       httpStatus.CONFLICT,
-  //       "Client account exists with this email"
-  //     );
-  //   }
-
-  //   const genPassword = generateRandomPassword();
-
-  //   _client = await this.ClientRepository.create({
-  //     ...client,
-  //     creatorId,
-  //     businessId,
-  //     password: await this.securityHelperService.HashPassword(genPassword),
-  //   });
-
-  //   return;
-  // }
 }

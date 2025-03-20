@@ -94,27 +94,6 @@
 
 /**
  * @openapi
- * /business/addTapKey:
- *   patch:
- *     summary: Add Tap credentials to a business
- *     tags:
- *       - Business
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               secretKey:
- *                 type: string
- *     responses:
- *       200:
- *         description: Tap credentials added successfully
- */
-
-/**
- * @openapi
  * /business/update/{businessId}:
  *   patch:
  *     summary: Update a business
@@ -156,4 +135,55 @@
  *     responses:
  *       200:
  *         description: Business updated successfully
+ */
+
+/**
+ * @openapi
+ * /business/admin:
+ *   post:
+ *     summary: Create a business admin
+ *     tags:
+ *       - Business
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               permissionSet:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       201:
+ *         description: Business created successfully
+ */
+
+/**
+ * @openapi
+ * /business/addTapKey:
+ *   put:
+ *     summary: Add Tap credentials to a business
+ *     tags:
+ *       - Business
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               secretKey:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Tap credentials added successfully
  */

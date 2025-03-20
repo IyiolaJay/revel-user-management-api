@@ -88,47 +88,4 @@ export class BusinessController extends BaseController {
       });
     }
   );
-
-  CreateBusinessAdmin = this.wrapAsync(
-    async (req: Request, res: Response, _: NextFunction) => {
-      const { businessId } = res.locals.user; //businessAdminId in this case
-      const business = await this.businessService.CreateBusinessAdmin(req.body,businessId);
-      this.sendResponse(res, httpStatus.CREATED, {
-        success: true,
-        message: "Business Admin created",
-        data: business,
-      });
-    }
-  );
-
-  AddTapCredentials = this.wrapAsync(
-    async (req: Request, res: Response, _: NextFunction) => {
-      const { businessId } = res.locals.user.metaData;
-      const {secretKey} = req.body;
-      await this.businessService.AddTapPaymentsCredentials(
-        secretKey,
-        businessId
-      );
-      this.sendResponse(res, httpStatus.OK, {
-        success: true,
-        message: "Tap credentials added",
-        data: null,
-      });
-    }
-  );
-
-  // ClientAccountCreation = this.wrapAsync(
-  //     async (req: Request, res: Response, _: NextFunction) => {
-  //       const {id, metaData} = res.locals.user;
-
-  //       await this.businessService.CreateClientAccount(req.body as IClient, id, metaData.businessId);
-  //       this.sendResponse(res, httpStatus.CREATED, {
-  //         success: true,
-  //         message:
-  //           "Client account created",
-  //         data: null,
-  //       });
-  //     }
-  //   );
-
 }

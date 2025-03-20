@@ -6,14 +6,14 @@ import axios from "axios";
 import EmailService from "../../../email/emailer";
 import { EmailType } from "../../../utilities/enums/enum";
 import { IClientRepository } from "../../../interfaces/client.interface";
-import SecurityHelperService from "../../../helpers/security";
+// import SecurityHelperService from "../../../helpers/security";
 
 export default class InvoiceService {
     private InvoiceRepository: IInvoiceRepository;
     private clientRepository : IClientRepository;
     private tapInvoiceCallService: TapInvoiceCallService = new TapInvoiceCallService(axios);
     private emailService = new EmailService();
-    private SecurityHelperService : SecurityHelperService = new SecurityHelperService()
+    // private SecurityHelperService : SecurityHelperService = new SecurityHelperService()
     
 
 
@@ -30,12 +30,8 @@ export default class InvoiceService {
         if (_invoice)
             throw new ApiError(httpStatus.CONFLICT, "Invoice already exists");
 
-        const client =await this.clientRepository.findById(invoice.clientId);
-
-        if (!client)
-            throw new ApiError(httpStatus.NOT_FOUND, "Client does not exist");
-
-
+        let isOnboarded = await this.clientRepository.findById(invoice.clientId) ? true : false;
+           
 
         //create invoice on tap
         const invoiceNumber = await this.InvoiceRepository.getNextInvoiceOrEstimateNumber(invoice.draft ? "estimate" : "invoice");
@@ -63,26 +59,27 @@ export default class InvoiceService {
         });
 
 
-        const token = await this.SecurityHelperService.GenerateJWT({
-            id : userId,
-            accountType : "client",
-            role : "",
-            permissions : []
-        },
-         "90d"
-        )
+        // const token = await this.SecurityHelperService.GenerateJWT({
+        //     id : userId,
+        //     accountType : "client",
+        //     role : "",
+        //     permissions : []
+        // },
+        //  "90d"
+        // )
 
             this.emailService.SendEMailToUser({
-                to : client.email,
+                to : invoice.customer.email,
                 bodyParts : {
-                    name : client.first_name,
+                    name : invoice.customer.first_name,
                     invoiceNumber : _invoice.invoiceNumber,
                     amount : _invoice.order.amount,
                     due : _invoice.due,
                     type : _invoice.draft ? 'estimate' : "invoice",
                     userId,
                     invoiceUrl :_invoice.invoiceUrl,
-                    onboardUrl : `https://www.edartee.com/?token=${token}` // replace with env var
+                    onboardUrl : `https://www.edartee.com/?businessId=${businessId}&email=${invoice.customer.email}&first_name=${invoice.customer.first_name}&last_name${invoice.customer.last_name}`, // replace with env var
+                    isOnboarded
                 },},
                 EmailType.InvoiceEmail)
         

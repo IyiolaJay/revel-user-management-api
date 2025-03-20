@@ -29,27 +29,6 @@ const changePasswordQuery = RequestValidator.requestItemsStructure({
   userId: Joi.string().required(),
 });
 
-const createClient = RequestValidator.requestItemsStructure({
-  email: Joi.string().email().required(),
-  first_name: Joi.string().required(),
-  last_name: Joi.string().required(),
-  establishmentId: Joi.array().items(Joi.number().required()),
-  establishmentUrl: Joi.string()
-  .custom((value, _) => {
-    if (!value.startsWith('http://') && !value.startsWith('https://')) {
-      return `https://${value}`; // Prepend https:// if not already present
-    }
-    return value; // Leave the value unchanged if it starts with http:// or https://
-  }, 'Prepend https:// if missing'),
-  subscribedService: Joi.array().items(Joi.string().required()),
-  hasAccount : Joi.boolean().default(false),
-  phone: Joi.object({
-    country_code: Joi.string().required(),
-    number: Joi.string().required(),
-  }),
-  company : Joi.string()
-});
-
 const updateAdmin = RequestValidator.requestItemsStructure({
   email: Joi.string().email(),
   name: Joi.string(),
@@ -62,7 +41,7 @@ const updateAdmin = RequestValidator.requestItemsStructure({
 
 export default {
   createAdmin,
-  createClient,
+  // createClient,
   loginAdmin,
   verifyToken,
   changePassword,
