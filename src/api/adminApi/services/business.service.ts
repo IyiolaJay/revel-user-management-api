@@ -48,7 +48,7 @@ export default class BusinessService {
       createdBy: adminId as any,
     });
 
-    if(establishments.length > 0){
+    if(establishments && establishments.length > 0){
       this.EstablishmentRepository.bulkCreate(
         establishments.map((e: IEstablishment) => ({
           ...e,
