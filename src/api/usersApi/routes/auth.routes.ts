@@ -1,11 +1,9 @@
-// import express, { Router } from "express";
 import AdminAuthController from "../controllers/auth.controller";
 import BaseRoute from "../../../utilities/base.router";
 import authValidator from "../validators/auth.validators";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
-// import PermissionValidation from "../../../middlewares/permission.middleware";
-// import { Permissions } from "../../../utilities/enums/permissions.enum";
+
 
 export default class AdminAuthRoutes extends BaseRoute{
   constructor() {
@@ -17,11 +15,6 @@ export default class AdminAuthRoutes extends BaseRoute{
     const adminAuthController :  AdminAuthController = new AdminAuthController();
     const authenticationMiddleware :  AuthenticationMiddleware = new AuthenticationMiddleware();
     
-    // this.router.post(
-    //   "/createAdmin",
-    //   RequestValidator.validateRequestSchema(authValidator.createAdmin),
-    //   adminAuthController.AdminAccountCreationController
-    // );
 
     this.router.post(
       "/login",
@@ -43,24 +36,9 @@ export default class AdminAuthRoutes extends BaseRoute{
       "/changePassword",
       RequestValidator.validateRequestSchema(authValidator.changePassword),
       RequestValidator.validateRequestSchema(authValidator.changePasswordQuery, "query"),
+      authenticationMiddleware.AuthorizeUser,
       adminAuthController.ChangePasswordController
     );
-
-
-    // this.router.post(
-    //   "/createClientAccount",
-    //   RequestValidator.validateRequestSchema(authValidator.createClient),
-    //   authenticationMiddleware.AuthorizeUser,
-    //   PermissionValidation.PermissionMiddleware([Permissions.CREATE_CLIENT]),
-    //   adminAuthController.ClientAccountCreationController
-    // );
- 
-    // this.router.get(
-    //   "/permissions",
-    //   // authenticationMiddleware.AuthorizeUser,
-    //   adminAuthController.GetPermissionsController
-    // );
-
 
     // Add other routes here...
   }

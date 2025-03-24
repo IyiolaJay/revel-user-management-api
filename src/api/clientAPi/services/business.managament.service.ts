@@ -10,7 +10,7 @@ import EmailService from "../../../email/emailer";
 import { generateRandomPassword } from "../../../helpers/password";
 import SecurityHelperService from "../../../helpers/security";
 import Encryptor from "../../../utilities/encryptor";
-
+import config from "config"
 
 export default class BusinessManagementService {
   private BusinessRepository: IBusinessRepository;
@@ -22,13 +22,11 @@ export default class BusinessManagementService {
 
   constructor(
     businessRepository: IBusinessRepository,
-    businessAdminRepository: IBusinessAdminRepository,
+    businessAdminRepository: IBusinessAdminRepository
   ) {
     this.BusinessRepository = businessRepository;
     this.BusinessAdminRepository = businessAdminRepository;
   }
-
- 
 
   /**
    *
@@ -57,6 +55,16 @@ export default class BusinessManagementService {
       password: await this.securityHelperService.HashPassword(genPassword),
     });
 
+    const temporaryToken = await this.securityHelperService.GenerateJWT({
+      accountType: "business",
+      id: businessAdmin._id.toString(),
+      role: "business",
+      metaData: { businessId: businessId },
+      permissions : []
+    },
+    "1h"
+  )
+
     this.emailService.SendEMailToUser(
       {
         to: businessAdmin.email,
@@ -65,6 +73,7 @@ export default class BusinessManagementService {
           email: businessAdmin.email,
           password: genPassword,
           _id: businessAdmin._id,
+          changePasswordUrl : `${config.get("CLIENT_URL")}?id=${businessAdmin._id}&token=${temporaryToken}`
         },
       },
       EmailType.CredentialsEmail
@@ -72,7 +81,7 @@ export default class BusinessManagementService {
 
     return businessAdmin;
   }
-
+  
   async AddTapPaymentsCredentials(key: string, businessId: string) {
     const encrypted = this.encryptor.encrypt(key);
 
@@ -89,6 +98,4 @@ export default class BusinessManagementService {
     );
     return;
   }
-
- 
 }

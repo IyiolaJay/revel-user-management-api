@@ -20,7 +20,7 @@ const createBusiness = RequestValidator.requestItemsStructure({
     establishments : Joi.array().items(Joi.object({
         establishmentId : Joi.number().required(),
         establishmentUrl : Joi.string().uri().required()
-    })).required()
+    }))
 });
 
 const updateBusiness = RequestValidator.requestItemsStructure({

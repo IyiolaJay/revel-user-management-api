@@ -14,6 +14,7 @@ export default {
     TAP_BASE_URL : process.env.TAP_BASE_URL,
     ENCRYPTION_KEY : process.env.ENCRYPTION_KEY,
     ENCRYPTION_IV : process.env.ENCRYPTION_IV,
-    ALGORITHM : process.env.ALGORITHM
+    ALGORITHM : process.env.ALGORITHM,
+    CLIENT_URL : process.env.CLIENT_URL,
   };
   

@@ -104,7 +104,8 @@ export default class UserAuthService {
       ),
       message:
         message ?? "Verify OTP to complete login, OTP sent to user's email",
-        rememberDevice
+      rememberDevice,
+      accountType : accountType
     };
   }
 
@@ -162,7 +163,7 @@ export default class UserAuthService {
     //response data structure to be sent to the client
     let tokenResponse;
     //check if remember device is set
-
+    console.log(accountType);
     if (
       userData.device &&
       deviceInfo.userAgent === userData.device.userAgent &&

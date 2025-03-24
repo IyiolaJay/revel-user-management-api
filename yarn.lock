@@ -1779,7 +1779,7 @@ require-directory@^2.1.1:
     node-cron "^3.0.3"
     nodemailer "^6.9.16"
     redis "^4.7.0"
-    revel-user-management "file:../../../AppData/Local/Yarn/Cache/v6/npm-revel-user-management-1.0.0-a7129074-8711-487a-90f7-46df970f30e4-1742465149599/node_modules/revel-user-management"
+    revel-user-management "file:../../../AppData/Local/Yarn/Cache/v6/npm-revel-user-management-1.0.0-85ffe4b8-319f-4eb6-8428-b2c0fdd68a99-1742803083804/node_modules/revel-user-management"
     swagger-jsdoc "^6.2.8"
     swagger-ui-express "^5.0.1"
     ts-node "^10.9.2"

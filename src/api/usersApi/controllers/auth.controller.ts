@@ -44,6 +44,7 @@ export default class UserAuthController extends BaseController {
         data: {
           accessToken: token.accessToken,
           rememberDevice: token.rememberDevice ?? false,
+          accountType : token.accountType
         },
       });
     }
