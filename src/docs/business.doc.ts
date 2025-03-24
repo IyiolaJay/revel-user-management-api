@@ -24,7 +24,7 @@
  *                     type: string
  *                   number:
  *                     type: string
- *               addressNumber:
+ *               address:
  *                 type: string
  *               city:
  *                 type: string

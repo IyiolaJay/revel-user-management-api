@@ -54,9 +54,14 @@ export interface IInvoice {
         order: string;
     };
     retry_for_captured: boolean;
-    createdBy : string
+    createdBy : string,
+    paymentMethod : "TAP PAYMENT" | "BANK TRANSFER" |  "CASH" | "CHEQUE",
+    status : "PENDING" | "COMPLETED"
 }
 
+export enum PaymentMethods {
+
+}
 
 export interface ICounter {
     seq: number;

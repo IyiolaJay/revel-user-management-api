@@ -22,7 +22,7 @@ const businessSchema = new Schema<IBusiness>(
       ipAddress: String,
       rememberMeExpires: Date,
     },
-    addressNumber: {
+    address: {
       required: true,
       type: String,
     },

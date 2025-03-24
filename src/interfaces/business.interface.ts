@@ -8,7 +8,7 @@ export interface IBusiness {
     businessEmail : string;
     device : object;
     phone : object;
-    addressNumber : string;
+    address : string;
     city : string;
     state : string;
     country : string;

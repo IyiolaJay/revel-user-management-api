@@ -1,13 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 import { IInvoice } from "../../interfaces/invoice.interface";
 import Counter from "./counter.model";
-// import AutoIncrement from 'mongoose-sequence';
+import config from "config"
+
 
 const InvoiceSchema: Schema = new Schema<IInvoice>(
   {
     businessId : {type: Schema.Types.ObjectId, required : true, ref : "businesses"},
     invoiceNumber: { type: String, required: true, unique: true },
-    clientId : { type: String, required: true, ref : 'clients' },
+    clientId : { type: String, ref : 'clients', default : "" },
     tapInvoiceId : { type: Number, required: true, unique: true },
     invoiceUrl: { type: String, },
     draft: { type: Boolean, required: true },
@@ -47,7 +48,7 @@ const InvoiceSchema: Schema = new Schema<IInvoice>(
       currency: { type: String, required: true, default : "KWD" },
     },
     post: {
-      url: { type: String, required: true, default : "www.edartee.com" },
+      url: { type: String, required: true, default : `${config.get("API_HOST")}/api/v1/payments/success` },
     },
     redirect: {
       url: { type: String, required: true, default : "www.edartee.com" },
@@ -58,6 +59,8 @@ const InvoiceSchema: Schema = new Schema<IInvoice>(
     },
     retry_for_captured: { type: Boolean, required: true, default : true },
     createdBy: { type: String, required: true },
+    paymentMethod: { type: String, required: true, default : "TAP PAYMENT" , enum : ["TAP PAYMENT", "BANK TRANSFER", "CASH", "CHEQUE"]},
+    status: { type: String, required: true, default : "PENDING" , enum : ["PENDING", "COMPLETED",]},
   },
   {
     timestamps: true,

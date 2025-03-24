@@ -20,7 +20,7 @@ export default class InvoiceController extends BaseController {
     async (req: Request, res: Response, _: NextFunction) => {
       const invoice = req.body;
       const { id } = res.locals.user;
-      const {businessId} = res.locals.user.metadata
+      const {businessId} = res.locals.user.metaData
       const createdInvoice = await this.invoiceService.CreateInvoice(
         invoice,
         id,

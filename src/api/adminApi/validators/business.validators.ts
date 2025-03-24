@@ -9,7 +9,7 @@ const createBusiness = RequestValidator.requestItemsStructure({
         country_code: Joi.string().required(),
         number: Joi.string().required()
     }).required(),
-    addressNumber: Joi.string().required(),
+    address: Joi.string().required(),
     city: Joi.string().required(),
     state: Joi.string().required(),
     country: Joi.string().required(),
