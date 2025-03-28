@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import BaseController from "../../../utilities/base.controller";
 import BulkUploadService from "../services/bulkUpload.service";
-import ItemRepository from "../../../repositories/item.repository";
+import ItemRepository from "../../../repositories/offering.repository";
 import ClientRepository from "../../../repositories/client.repository";
 
 export class BulkUploadController extends BaseController {

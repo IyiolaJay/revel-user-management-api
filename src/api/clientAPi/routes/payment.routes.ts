@@ -12,9 +12,15 @@ export default class PaymentRoutes extends BaseRoute{
         const authenticationMiddleware :  AuthenticationMiddleware = new AuthenticationMiddleware();
 
         this.router.post(
-            "/payments/success",
+            "/callback",
             authenticationMiddleware.AuthorizeUser,
             paymentController.TapPaymentCallback,
+        )
+
+        this.router.post(
+            "/upload-payment-proof",
+            // authenticationMiddleware.AuthorizeUser,
+            paymentController.UploadPaymentProof,
         )
     }
 }

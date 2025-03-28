@@ -1,10 +1,10 @@
 /**
  * @openapi
- * /items/createItem:
+ * /offerings:
  *   post:
- *     summary: Create a new category
+ *     summary: Create a new product or service
  *     tags:
- *       - Category & Items
+ *       - Category & Offerings
  *     requestBody:
  *       required: true
  *       content:
@@ -12,7 +12,7 @@
  *           schema:
  *             type: object
  *             properties:
- *               itemName:
+ *               name:
  *                 type: string
  *               cost:
  *                 type: string
@@ -23,19 +23,25 @@
  *               categoryName:
  *                 type: string
  *                 example: Electronics
+ *               type:
+ *                 type: string
+ *                 required : true
+ *                 enum:
+ *                   - PRODUCT
+ *                   - SERVICE
  *     responses:
  *       201:
- *         description: Category created successfully
+ *         description: Offering created
  */
 
 
 /**
  * @openapi
- * /items/getItems:
+ * /offerings:
  *   get:
- *     summary: Get all items
+ *     summary: Get all offerings
  *     tags:
- *       - Category & Items
+ *       - Category & Offerings
  *     parameters:
  *       - in: query
  *         name: offset
@@ -47,26 +53,26 @@
  *         schema:
  *           type: integer
  *       - in: query
- *         name: itemName
+ *         name: name
  *         schema:
  *           type: string
  *           example: Electronics
  *     responses:
  *       200:
- *          description: Items fetched
+ *          description: Offerings fetched
  */
 
 
 /**
  * @openapi
- * /items/editItem/{itemid}:
+ * /offerings:
  *   patch:
- *     summary: Edit an existing item
+ *     summary: Edit an existing offering
  *     tags:
- *       - Category & Items
+ *       - Category & Offerings
  *     parameters:
  *       - in: path
- *         name: itemId
+ *         name: offeringId
  *         required: true
  *         schema:
  *           type: string
@@ -77,9 +83,9 @@
  *           schema:
  *             type: object
  *             properties:
- *               itemName:
+ *               name:
  *                 type: string
  *     responses:
  *       200:
- *         description: Category updated successfully
+ *         description: Offering updated successfully
  */

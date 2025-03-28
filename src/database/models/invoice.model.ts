@@ -48,7 +48,7 @@ const InvoiceSchema: Schema = new Schema<IInvoice>(
       currency: { type: String, required: true, default : "KWD" },
     },
     post: {
-      url: { type: String, required: true, default : `${config.get("API_HOST")}/api/v1/payments/success` },
+      url: { type: String, required: true, default : `${config.get("API_HOST")}/api/v1/payments/callback` },
     },
     redirect: {
       url: { type: String, required: true, default : "www.edartee.com" },

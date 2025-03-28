@@ -1,13 +1,13 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IItem } from "../../interfaces/item.interface";
+import { IOffering } from "../../interfaces/offering.interface";
 import { Currency } from "../../utilities/enums/enum";
 
-const itemSchema = new Schema<IItem>(
+const offeringSchema = new Schema<IOffering>(
   {
-    itemName: {
+    name: {
       type: String,
       required: true,
-      unique : true
+      unique: true,
     },
     description: {
       type: String,
@@ -20,12 +20,26 @@ const itemSchema = new Schema<IItem>(
     currency: {
       type: String,
       required: true,
-      enum : Object.keys(Currency),
-      default : "KWD"
+      enum: Object.keys(Currency),
+      default: "KWD",
     },
     categoryId: {
       type: String,
       ref: "categories",
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ["PRODUCT", "SERVICE"],
+    },
+    businessId: {
+      type: String,
+      ref: "businesses",
+      default: null,
+    },
+    createdBy: {
+      type: String,
       required: true,
     },
   },
@@ -43,7 +57,6 @@ const itemSchema = new Schema<IItem>(
   }
 );
 
+const Offering: Model<IOffering> = mongoose.model("offerings", offeringSchema);
 
-const Item: Model<IItem> = mongoose.model("items", itemSchema);
-
-export default Item;
+export default Offering;

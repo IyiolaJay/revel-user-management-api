@@ -1,36 +1,36 @@
 import AuthenticationMiddleware from "../../../middlewares/authentication.middleware";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import BaseRoute from "../../../utilities/base.router";
-import { ItemController } from "../controllers/item.controller";
-import itemValidator from "../validators/item.validator";
+import OfferingController from "../controllers/offering.controller";
+import offeringValidator from "../validators/offering.validator";
 
-export default class ItemRoutes extends BaseRoute {
+export default class OfferingRoutes extends BaseRoute {
     constructor() {
         super();
     }
 
     protected override setupRoutes(): void {
-        const itemController: ItemController = new ItemController();
+        const offeringController: OfferingController = new OfferingController();
         const authenticationMiddleware: AuthenticationMiddleware = new AuthenticationMiddleware();
 
         this.router.post(
-            "/createItem",
+            "/offerings",
             authenticationMiddleware.AuthorizeUser,
-            RequestValidator.validateRequestSchema(itemValidator.createItemSchema),
-            itemController.CreateItem
+            RequestValidator.validateRequestSchema(offeringValidator.createOfferingSchema),
+            offeringController.CreateOffering
         );
 
         this.router.get(
-            "/getItems",
+            "/offerings",
             authenticationMiddleware.AuthorizeUser,
-            itemController.GetItems
+            offeringController.GetOfferings
         );
 
         this.router.patch(
-            "/editItem/:itemId",
+            "/offerings/:offeringId",
             authenticationMiddleware.AuthorizeUser,
-            RequestValidator.validateRequestSchema(itemValidator.updateItemSchema),
-            itemController.EditItem
+            RequestValidator.validateRequestSchema(offeringValidator.updateOfferingSchema),
+            offeringController.EditOffering
         );
     }
 }

@@ -4,7 +4,7 @@
  *   post:
  *     summary: Create a new category
  *     tags:
- *       - Category & Items
+ *       - Category & Offerings
  *     requestBody:
  *       required: true
  *       content:
@@ -26,7 +26,7 @@
  *   get:
  *     summary: Get all categories
  *     tags:
- *       - Category & Items
+ *       - Category & Offerings
  *     parameters:
  *       - in: query
  *         name: offset
@@ -54,7 +54,7 @@
  *   patch:
  *     summary: Edit an existing category
  *     tags:
- *       - Category & Items
+ *       - Category & Offerings
  *     parameters:
  *       - in: path
  *         name: categoryId

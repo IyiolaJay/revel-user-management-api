@@ -73,7 +73,7 @@ export default class UserAuthController extends BaseController {
 
   ChangePasswordController = this.wrapAsync(
     async (req: Request, res: Response, _: NextFunction) => {
-      const userId = req.query.clientId ?? req.query.adminId;
+      const userId = req.query.id;
       const path = req.query.clientId ? "client" : "admin";
 
       const { password } = req.body;

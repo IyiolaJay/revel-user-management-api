@@ -5,7 +5,7 @@ import AdminProfileRoutes from "./routes/profile.routes";
 import OrderReceiptRoutes from "./routes/order.routes";
 import ServiceRoutes from "./routes/services.routes";
 import CategoryRoutes from "./routes/category.routes";
-import ItemRoutes from "./routes/item.routes";
+import OfferingRoutes from "./routes/offering.routes";
 import InvoiceRoutes from "./routes/invoice.routes";
 import BulkUploadRoutes from "./routes/bulkUpload.routes";
 import BusinessRoutes from "./routes/business.routes";
@@ -19,7 +19,7 @@ class App {
   private OrderReceiptRoutes : OrderReceiptRoutes = new OrderReceiptRoutes();
   private ServiceRoutes : ServiceRoutes = new ServiceRoutes();
   private CategoryRoutes : CategoryRoutes = new CategoryRoutes();
-  private ItemRoutes : ItemRoutes = new ItemRoutes();
+  private OfferingRoutes : OfferingRoutes = new OfferingRoutes();
   private InvoiceRoutes : InvoiceRoutes = new InvoiceRoutes();
   private BulkUploadRoutes : BulkUploadRoutes = new BulkUploadRoutes();
   private BusinessRoutes : BusinessRoutes = new BusinessRoutes()
@@ -37,10 +37,10 @@ class App {
     this.app.use(`${resource}/orders`,this.OrderReceiptRoutes.getRouter())
     this.app.use("/services",this.ServiceRoutes.getRouter())
     this.app.use("/categories", this.CategoryRoutes.getRouter());
-    this.app.use("/items", this.ItemRoutes.getRouter());
     this.app.use("/invoices", this.InvoiceRoutes.getRouter());
     this.app.use("/bulkUpload", this.BulkUploadRoutes.getRouter());
     this.app.use("/business", this.BusinessRoutes.getRouter())
+    this.app.use(this.OfferingRoutes.getRouter());
     //other api routes
 
 

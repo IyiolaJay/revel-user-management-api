@@ -2,16 +2,17 @@ import Joi from "joi";
 import RequestValidator from "../../../middlewares/schema.middleware";
 import { Currency } from "../../../utilities/enums/enum";
 
-const createItemSchema = RequestValidator.requestItemsStructure({
-    itemName: Joi.string().required(),
+const createOfferingSchema = RequestValidator.requestItemsStructure({
+    name: Joi.string().required(),
     cost: Joi.number().required(),
     currency: Joi.string().required().valid(...Object.keys(Currency)),
     description: Joi.string(),
     categoryName : Joi.string().required(),
+    type : Joi.string().valid("PRODUCT", "SERVICE").required(),
 });
 
-const updateItemSchema = RequestValidator.requestItemsStructure({
-    itemName: Joi.string(),
+const updateOfferingSchema = RequestValidator.requestItemsStructure({
+    name: Joi.string(),
     cost: Joi.number(),
     description: Joi.string(),
     categoryId : Joi.string(),
@@ -20,6 +21,6 @@ const updateItemSchema = RequestValidator.requestItemsStructure({
 
 
 export default {
-    createItemSchema,
-    updateItemSchema,
+    createOfferingSchema,
+    updateOfferingSchema,
 };

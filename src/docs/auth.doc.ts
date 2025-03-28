@@ -87,7 +87,7 @@
  *            - Authentication
  *         parameters:
  *           - in: query
- *             name: adminId
+ *             name: id
  *             required: true
  *             schema:
  *               type: string
